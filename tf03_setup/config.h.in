@@ -1,0 +1,5 @@
+
+#define tf03_sdk_MAJOR_VERSION (@tf03_sdk_MAJOR_VERSION@)
+#define tf03_sdk_MINOR_VERSION (@tf03_sdk_MINOR_VERSION@)
+#define tf03_sdk_PATCH_VERSION (@tf03_sdk_PATCH_VERSION@)
+#define tf03_sdk_VERSION_STRING "@tf03_sdk_VERSION@"

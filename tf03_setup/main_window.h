@@ -6,6 +6,7 @@
 #include <QElapsedTimer>
 #include "lingual.h"
 #include <unordered_map>
+#include <config.h>
 
 class CommandEchoHandler;
 class Driver;
@@ -52,7 +53,7 @@ private:
   const Lingual kDisconnectPushButtonText = {"Disconnect", "断开"};
   const Lingual kWindowTitle = {"TF03 Setup", "TF03 配置客户端"};
 
-  const QString kVersion = "v1.0.0";
+  const QString kVersion = tf03_sdk_VERSION_STRING;
 
   Lingual connect_button_current_lingual_;
 

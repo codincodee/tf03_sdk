@@ -1,3 +1,8 @@
+configure_file(
+  config.h.in
+    "${CMAKE_CURRENT_BINARY_DIR}/config.h" @ONLY
+)
+
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
@@ -34,6 +39,7 @@ add_executable(
     command_echo_handler.h
     firmware_module.cpp
     firmware_module.h
+    config.h.in
 )
 
 target_link_libraries(
