@@ -12,6 +12,7 @@ endif()
 
 add_executable(
   tf03_setup
+  WIN32
     main.cpp
     driver_parsers.cpp
     driver_commands.cpp
@@ -39,6 +40,7 @@ target_link_libraries(
   tf03_setup
     Qt5::Widgets
     Qt5::SerialPort
+    Qt5::WinMain
 )
 
 install(TARGETS tf03_setup
