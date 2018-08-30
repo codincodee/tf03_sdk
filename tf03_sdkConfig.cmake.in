@@ -1,0 +1,16 @@
+# - Config file for the tf03_sdk package
+# It defines the following variables
+#  tf03_sdk_INCLUDE_DIRS - include directories for tf03_sdk
+#  tf03_sdk_LIBRARIES    - libraries to link against
+#  tf03_sdk_EXECUTABLE   - the tf02_traffic executable
+
+# Compute paths
+get_filename_component(tf03_sdk_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+set(tf03_sdk_INCLUDE_DIRS "@CONF_INCLUDE_DIRS@")
+
+# Our library dependencies (contains definitions for IMPORTED targets)
+include("${tf03_sdk_CMAKE_DIR}/tf03_sdkTargets.cmake")
+
+# These are IMPORTED targets created by tf03_sdkTargets.cmake
+set(tf03_sdk_LIBRARIES tf0x_drivers tf0x_common)
+set(tf03_sdk_EXECUTABLE tf02_traffic tf03_test  )
