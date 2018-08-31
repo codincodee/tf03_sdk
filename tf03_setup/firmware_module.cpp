@@ -227,9 +227,9 @@ void UpgradeFirmwareWidgets::HandleStop() {
   progress->setVisible(false);
   button_lingual = kUpgradeLingual;
   button->setText(which_lingual(button_lingual));
-  bin_file.clear();
-  browse_lingual = kSelectBinaryLingual;
-  browse->setText(which_lingual(browse_lingual));
+//   bin_file.clear();
+//  browse_lingual = kSelectBinaryLingual;
+//  browse->setText(which_lingual(browse_lingual));
   driver->SetBufferCleanerBytesDefault();
   if (set_respond_all_button) {
     set_respond_all_button(true);
