@@ -18,8 +18,8 @@ std::unordered_map<char, Lingual> Driver::kEchoStatusIDMap{
 };
 
 Driver::Driver()
-  : baud_rate_(115200),
-    buffer_cleaner_from_bytes_(kDefaultBufferCleanerBytes) {
+  : baud_rate_(115200) {
+  buffer_cleaner_from_bytes_.store(kDefaultBufferCleanerBytes);
 }
 
 void Driver::SetBufferCleanerBytes(const int &bytes) {
@@ -122,7 +122,7 @@ void Driver::ProcessBufferInWorkThread(QByteArray &buffer) {
       }
     }
     if (parsed_cnt == 0) {
-      if (buffer.size() > buffer_cleaner_from_bytes_) {
+      if (buffer.size() > buffer_cleaner_from_bytes_.load()) {
         buffer.clear();
       }
       break;
