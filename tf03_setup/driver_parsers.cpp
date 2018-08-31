@@ -1,6 +1,7 @@
 #include "driver.h"
 #include <QDebug>
 #include <iostream>
+#include <QElapsedTimer>
 
 void Driver::LoadAllParsers(std::vector<ReceiveParser> &parsers) {
   parsers.clear();
@@ -330,6 +331,21 @@ bool Driver::ParseNineByteMeasure(
   memcpy(&measure->amp, msg.data() + 4, 2);
   parsed.type = MessageType::measure;
   parsed.data = std::move(measure);
+
+//  static QElapsedTimer timer;
+//  static bool init = true;
+//  static int cnt = 0;
+//  if (init) {
+//    init = false;
+//    timer.start();
+//  }
+//  ++cnt;
+//  auto elapse = timer.elapsed();
+//  if (elapse > 1000) {
+//    qDebug() << cnt * 1000.0 / elapse;
+//    cnt = 0;
+//    timer.restart();
+//  }
   return true;
 }
 
