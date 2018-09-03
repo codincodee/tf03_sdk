@@ -14,7 +14,8 @@ std::unordered_map<char, Lingual> Driver::kEchoStatusIDMap{
   {0x50, {"CAN Send ID", "CAN发送ID"}},
   {0x51, {"CAN Receive ID", "CAN接收ID"}},
   {0x52, {"CAN Baud Rate", "CAN波特率"}},
-  {0x4f, {"Out-range Value", "超量程输出值"}}
+  {0x4f, {"Out-range Value", "超量程输出值"}},
+  {0x56, {"Write Serial Number", "写入序列号"}}
 };
 
 Driver::Driver()
@@ -79,7 +80,6 @@ void Driver::WorkThread() {
     HandleIncomingCommandInWorkThread();
     if (serial_port_->waitForReadyRead(100)) {
       buffer_ += serial_port_->readAll();
-//       qDebug() << buffer_;
       ProcessBufferInWorkThread(buffer_);
     }
   }

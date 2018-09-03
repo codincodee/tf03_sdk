@@ -76,6 +76,7 @@ class Driver
   void SendFirmwareMultiSegment(
       const uint16_t& id, const std::vector<QByteArray>& segments);
   void RequestVersion();
+  void WriteSerialNumber(const QString& sn);
 
   void SetBufferCleanerBytes(const int& bytes);
   void SetBufferCleanerBytesDefault();

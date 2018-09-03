@@ -125,9 +125,10 @@ bool Driver::ParseSerialNumberEcho(
   parsed.type = MessageType::serial_number;
   std::unique_ptr<SerialNumberEcho> data(new SerialNumberEcho);
   auto len = msg[1] - 5;
-  data->sn = QString(len, 0);
+  auto sn = QByteArray(len, 0);
   data->status = (msg[3] == char(0x00));
-  memcpy(data->sn.data(), msg.data() + 4, len);
+  memcpy(sn.data(), msg.data() + 4, len);
+  data->sn = sn;
   parsed.data = std::move(data);
   return true;
 }

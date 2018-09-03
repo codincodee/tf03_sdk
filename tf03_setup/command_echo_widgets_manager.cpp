@@ -61,7 +61,7 @@ void CommandEchoWidgetsManager::SetRespondAllButtonClick(bool respond) {
 
 void CommandEchoWidgetsManager::SetupUIGrid(QGridLayout *layout) {
   auto widget_num = widgets_.size();
-  constexpr int kRowMax = 20;
+  constexpr int kRowMax = 15;
   auto column_num = widgets_.size() / kRowMax + 1;
   auto parent = parent_widget_;
 
@@ -145,6 +145,8 @@ void CommandEchoWidgetsManager::LoadWidgets() {
   #ifdef SUPPORT_DEVEL_MODE_PROTOCOL_
   AddWidgets(
       std::shared_ptr<SetProtocolWidgets>(new SetProtocolWidgets));
+  AddWidgets(
+      std::shared_ptr<WriteSerialNumberWidgets>(new WriteSerialNumberWidgets));
   #endif
   AddWidgets(
       std::shared_ptr<RequestVersionWidgets>(new RequestVersionWidgets));

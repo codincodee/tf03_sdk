@@ -206,4 +206,14 @@ struct RequestVersionWidgets : public CommandEchoWidgets {
   QLabel* label;
 };
 
+////////////////////// WriteSerialNumberWidgets /////////////////////////////
+
+struct WriteSerialNumberWidgets : public CommandEchoWidgets {
+  WriteSerialNumberWidgets();
+  void ButtonClicked() override;
+  void SetOptionLingual() override;
+  QLineEdit* edit;
+  const int kSNLength = 14;
+};
+
 #endif // COMMAND_ECHO_WIDGETS_H

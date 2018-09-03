@@ -172,6 +172,15 @@ void Driver::RequestVersion() {
   });
 }
 
+void Driver::WriteSerialNumber(const QString &sn) {
+//  QString ns = sn;
+//  std::reverse_copy(sn.begin(), sn.end(), ns.begin());
+  EnqueueCommand([this, sn](){
+    return SendMessage(
+        CommonCommand((0x56), QByteArray(1, 0x01) + sn.toLocal8Bit()));
+  });
+}
+
 void Driver::SetTransTypeSerial() {
   EnqueueCommand([this](){
     return SendMessage(CommonCommand(char(0x45), QByteArray(1, 0x01)));

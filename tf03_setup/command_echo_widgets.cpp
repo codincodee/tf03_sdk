@@ -518,3 +518,34 @@ void RequestVersionWidgets::Update() {
     button->setDisabled(false);
   }
 }
+
+////////////////////// WriteSerialNumberWidgets /////////////////////////////
+
+WriteSerialNumberWidgets::WriteSerialNumberWidgets() {
+  id = 0x56;
+  edit = new QLineEdit;
+  option = edit;
+  edit->setInputMask(QString(kSNLength, 'n'));
+  edit->setMaxLength(kSNLength);
+  edit->setCursorPosition(0);
+  item_lingual = {"Write Serial Number", "写入序列号"};
+}
+
+void WriteSerialNumberWidgets::ButtonClicked() {
+  CommandEchoWidgets::ButtonClicked();
+  auto sn = edit->text();
+  if (sn.size() != kSNLength) {
+    return;
+  }
+  driver->WriteSerialNumber(sn);
+}
+
+void WriteSerialNumberWidgets::SetOptionLingual() {
+  edit->setPlaceholderText(
+      which_lingual(
+          {
+            "Only accept " + QString::number(kSNLength) + " "
+            "alphabets, numbers, or their combinations.",
+            "接受" + QString::number(kSNLength) + "个字母或数字的组合。"
+          }));
+}
