@@ -13,15 +13,15 @@ Lingual& Lingual::operator+(const Lingual& lingual) {
 }
 
 Language gCurrentLanguage = Language::chinese;
-std::shared_mutex gCurrentLanguageMutex;
+std::shared_timed_mutex gCurrentLanguageMutex;
 
 Language current_language() {
-  std::shared_lock<std::shared_mutex> lock(gCurrentLanguageMutex);
+  std::shared_lock<std::shared_timed_mutex> lock(gCurrentLanguageMutex);
   return gCurrentLanguage;
 }
 
 void set_current_language(const Language &language) {
-  std::unique_lock<std::shared_mutex> lock(gCurrentLanguageMutex);
+  std::unique_lock<std::shared_timed_mutex> lock(gCurrentLanguageMutex);
   gCurrentLanguage = language;
 }
 

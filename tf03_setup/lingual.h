@@ -17,7 +17,7 @@ enum class Language {
 };
 
 extern Language gCurrentLanguage;
-extern std::shared_mutex gCurrentLanguageMutex;
+extern std::shared_timed_mutex gCurrentLanguageMutex;
 
 Language current_language();
 void set_current_language(const Language& language);
