@@ -45,8 +45,8 @@ private:
   QElapsedTimer frequency_timer_;
   unsigned long last_freq_measure_id_ = 0;
   const Lingual kLanguageLabelText = {"Language", "语言"};
-  const Lingual kDistanceLabelText = {"Distance (cm)", "距离 （厘米）"};
-  const Lingual kFrequencyLabelText = {"Frequency (Hz)", "频率 （赫兹）"};
+  const Lingual kDistanceLabelText = {"Distance (cm)", "距离 （cm）"};
+  const Lingual kFrequencyLabelText = {"Frequency (Hz)", "频率 （Hz）"};
   const Lingual kPortNameLabelText = {"Port", "端口"};
   const Lingual kBaudRateLabelText = {"Baud Rate", "波特率"};
   const Lingual kConnectPushButtonText = {"Connect", "连接"};

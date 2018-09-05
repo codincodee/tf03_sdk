@@ -50,10 +50,6 @@ struct UpgradeFirmwareWidgets : public CommandEchoWidgets {
   const Lingual kSelectBinaryLingual =
       {"Select Firmware File", "选择固件文件"};
   const Lingual kBinaryReady = {"Firmware File Ready", "固件文件就绪"};
-  const Lingual kMsgBoxErrorTitle = {"Error", "错误"};
-  const Lingual kMsgBoxInfoTitle = {"Info", "提示"};
-  const Lingual kMsgBoxAbort = {"Abort", "放弃"};
-  const Lingual kMsgBoxOk = {"Ok", "确定"};
   const Lingual kSerial = {"Serial Port", "串口"};
   const Lingual kCAN = {"CAN", "CAN"};
 

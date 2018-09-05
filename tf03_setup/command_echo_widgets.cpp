@@ -7,6 +7,7 @@
 #include "command_echo_handler.h"
 #include <QLineEdit>
 #include <QSizePolicy>
+#include <QMessageBox>
 
 ////////////////////// CommandEchoWidgets /////////////////////////////
 
@@ -142,9 +143,16 @@ SetFrequencyWidgets::SetFrequencyWidgets() : CommandEchoWidgets() {
   combo->addItem("40");
   combo->addItem("50");
   combo->addItem("100");
+  combo->addItem("200");
+  combo->addItem("300");
+  combo->addItem("400");
   combo->addItem("500");
+  combo->addItem("600");
+  combo->addItem("700");
+  combo->addItem("800");
+  combo->addItem("900");
   combo->addItem("1000");
-  item_lingual = {"Frequency (Hz)", "频率 (赫兹)"};
+  item_lingual = {"Frequency (Hz)", "帧率 (Hz)"};
   option = combo;
 }
 
@@ -164,7 +172,7 @@ void SetFrequencyWidgets::Update() {
     auto str = QString::number(echo_handler->Frequency());
     status_lingual = kSuccessLingual;
     status_lingual.eng += ": " + str + "Hz";
-    status_lingual.chn += ": " + str + "赫兹";
+    status_lingual.chn += ": " + str + "Hz";
     status->setText(which_lingual(status_lingual));
     button->setDisabled(false);
   }
@@ -208,7 +216,7 @@ OutputSwitchWidgets::OutputSwitchWidgets() {
   id = 0x07;
   combo = new QComboBox;
   option = combo;
-  item_lingual = {"Output Switch", "输出开关"};
+  item_lingual = {"Output Switch", "输出模式"};
 }
 
 void OutputSwitchWidgets::ButtonClicked() {
@@ -254,7 +262,7 @@ void OutputSwitchWidgets::SetOptionLingual() {
 
 MeasureTriggerWidgets::MeasureTriggerWidgets() {
   id = 0x04;
-  item_lingual = {"Trigger Once", "单次触发"};
+  item_lingual = {"Trigger Once", "指令触发"};
   button_lingual = {"Trigger", "触发"};
   SetOptionWidgetUINull();
   SetStatusLabelUINull();
@@ -273,7 +281,7 @@ void MeasureTriggerWidgets::Update() {
 FlashSettingsWidgets::FlashSettingsWidgets() {
   id = 0x11;
   timeout = 3000;
-  item_lingual = {"Flash Settings", "写入设置"};
+  item_lingual = {"Save Settings", "保存配置"};
   SetOptionWidgetUINull();
 }
 
@@ -287,11 +295,23 @@ void FlashSettingsWidgets::ButtonClicked() {
 RestoreFactoryWidgets::RestoreFactoryWidgets() {
   id = 0x10;
   timeout = 3000;
-  item_lingual = {"Restore Factory", "出厂设置"};
+  item_lingual = {"Restore Factory", "恢复出厂设置"};
   SetWidgetUINullLabel(option);
 }
 
 void RestoreFactoryWidgets::ButtonClicked() {
+  QMessageBox box(button);
+  box.setWindowTitle(which_lingual(kMsgBoxInfoTitle));
+  box.setText(
+      which_lingual(
+          {"Are you sure to restore factory?",
+           "确定恢复出厂设置？"}));
+  box.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
+  box.setButtonText(QMessageBox::Ok, which_lingual(kMsgBoxOk));
+  box.setButtonText(QMessageBox::Cancel, which_lingual(kMsgBoxCancel));
+  if (box.exec() != QMessageBox::Ok) {
+    return;
+  }
   CommandEchoWidgets::ButtonClicked();
   driver->RestoreFactory();
 }
@@ -300,7 +320,7 @@ void RestoreFactoryWidgets::ButtonClicked() {
 
 SetSerialBaudRateWidgets::SetSerialBaudRateWidgets() {
   id = 0x06;
-  item_lingual = {"Baud Rate", "设置波特率"};
+  item_lingual = {"Baud Rate", "串口波特率"};
   combo = new QComboBox;
   auto baud_rates = Driver::BaudRates();
   for (auto& rate : baud_rates) {
@@ -476,6 +496,7 @@ SetOutRangeValueWidgets::SetOutRangeValueWidgets() {
   item_lingual = {"Out-range Value", "超量程输出值"};
   edit = new QLineEdit;
   SetLineEditIntValidity(edit, 0, 65534);
+  edit->setPlaceholderText(edit->placeholderText() + " (cm)");
   option = edit;
 }
 

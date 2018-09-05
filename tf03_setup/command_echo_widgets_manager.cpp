@@ -153,17 +153,17 @@ void CommandEchoWidgetsManager::LoadWidgets() {
   AddWidgets(
       std::shared_ptr<SerialNumberWidgets>(new SerialNumberWidgets));
   AddWidgets(
+      std::shared_ptr<SetSerialBaudRateWidgets>(new SetSerialBaudRateWidgets));
+  AddWidgets(
       std::shared_ptr<SetFrequencyWidgets>(new SetFrequencyWidgets));
+  AddWidgets(
+      std::shared_ptr<SetOutputFormatWidgets>(new SetOutputFormatWidgets));
   AddWidgets(
       std::shared_ptr<OutputSwitchWidgets>(new OutputSwitchWidgets));
   AddWidgets(
       std::shared_ptr<MeasureTriggerWidgets>(new MeasureTriggerWidgets));
   AddWidgets(
-      std::shared_ptr<SetSerialBaudRateWidgets>(new SetSerialBaudRateWidgets));
-  AddWidgets(
       std::shared_ptr<SetPortTypeWidgets>(new SetPortTypeWidgets));
-  AddWidgets(
-      std::shared_ptr<SetOutputFormatWidgets>(new SetOutputFormatWidgets));
   AddWidgets(
       std::shared_ptr<SetOutRangeValueWidgets>(new SetOutRangeValueWidgets));
   AddWidgets(

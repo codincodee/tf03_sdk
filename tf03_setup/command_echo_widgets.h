@@ -37,6 +37,11 @@ struct CommandEchoWidgets : public QObject
   const Lingual kSuccessLingual = {"Successful", "成功"};
   const Lingual kFailLingual = {"Failed", "失败"};
   const Lingual kUnknownLingual = {"Unknown", "未知错误"};
+  const Lingual kMsgBoxErrorTitle = {"Error", "错误"};
+  const Lingual kMsgBoxInfoTitle = {"Info", "提示"};
+  const Lingual kMsgBoxAbort = {"Abort", "放弃"};
+  const Lingual kMsgBoxOk = {"Ok", "确定"};
+  const Lingual kMsgBoxCancel = {"Cancel", "取消"};
 
   QElapsedTimer timer;
 
@@ -100,10 +105,10 @@ struct OutputSwitchWidgets : public CommandEchoWidgets {
   void Update() override;
   void SetOptionLingual() override;
   QComboBox* combo;
-  const Lingual kSwitchOnLingual = {"ON", "开"};
-  const Lingual kSwitchOffLingual = {"OFF", "关"};
-  const Lingual kOutputOnLingual = {"Output On", "已开"};
-  const Lingual kOutputOffLingual = {"Output Off", "已关"};
+  const Lingual kSwitchOnLingual = {"Automated", "连续输出"};
+  const Lingual kSwitchOffLingual = {"Manual", "指令触发"};
+  const Lingual kOutputOnLingual = {"Automated", "连续输出"};
+  const Lingual kOutputOffLingual = {"Manual", "指令触发"};
 };
 
 ////////////////////// MeasureTriggerWidgets /////////////////////////////
@@ -144,7 +149,7 @@ struct SetPortTypeWidgets : public CommandEchoWidgets {
   void ButtonClicked() override;
   void SetOptionLingual() override;
   QComboBox* combo;
-  const Lingual kSerial = {"Serial", "串口"};
+  const Lingual kSerial = {"Serial Port", "串口"};
   const Lingual kCAN = {"CAN", "CAN"};
 };
 
@@ -156,7 +161,7 @@ struct SetOutputFormatWidgets : public CommandEchoWidgets {
   void SetOptionLingual() override;
   void Update() override;
   QComboBox* combo;
-  const Lingual kNineBytes = {"9 Bytes", "9字节"};
+  const Lingual kNineBytes = {"Standard", "标准串口"};
   const Lingual kPixhawk = {"Pixhawk", "Pixhawk"};
 };
 

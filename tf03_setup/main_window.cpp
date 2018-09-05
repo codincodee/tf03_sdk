@@ -7,12 +7,19 @@
 #include "command_echo_handler.h"
 #include "command_echo_widgets_manager.h"
 #include <QSerialPortInfo>
+#include <QDesktopWidget>
 
 MainWindow::MainWindow(QWidget *parent) :
   QMainWindow(parent),
   ui(new Ui::MainWindow)
 {
   ui->setupUi(this);
+
+  QRect desktop = QApplication::desktop()->availableGeometry();
+  auto window = this->rect();
+  this->move(desktop.topLeft() - window.topLeft());
+  this->move(QPoint(desktop.width() / 2 - window.width() / 2, 0));
+
   driver_.reset(new Driver);
   driver_->Open();
    timer_id_ = startTimer(100);
@@ -48,11 +55,11 @@ void MainWindow::timerEvent(QTimerEvent *event) {
   if (event->timerId() != timer_id_) {
     return;
   }
-  if (driver_->DetectAndAutoConnect()) {
-    connect_button_current_lingual_ = kDisconnectPushButtonText;
-    ui->ConnectPushButton->setText(
-        which_lingual(connect_button_current_lingual_));
-  }
+//  if (driver_->DetectAndAutoConnect()) {
+//    connect_button_current_lingual_ = kDisconnectPushButtonText;
+//    ui->ConnectPushButton->setText(
+//        which_lingual(connect_button_current_lingual_));
+//  }
   UpdatePortNameComboBox();
 
   MeasureBasic measure;
@@ -63,7 +70,7 @@ void MainWindow::timerEvent(QTimerEvent *event) {
     if (elapse > 1000) {
       auto id_diff = measure.id - last_freq_measure_id_;
       float frequency = id_diff / (elapse / 1000.0f);
-      ui->FrequencyDisplayLabel->setText(QString::number(frequency, 'f', 2));
+      ui->FrequencyDisplayLabel->setText(QString::number(std::ceil(frequency)));
       last_freq_measure_id_ = measure.id;
       frequency_timer_.restart();
     }
