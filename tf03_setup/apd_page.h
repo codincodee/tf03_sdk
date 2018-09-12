@@ -1,7 +1,7 @@
 #ifndef APD_PAGE_H
 #define APD_PAGE_H
 
-struct MeasureBasic;
+struct MeasureDevel;
 // #include <QLayout>
 class QLayout;
 class DistanceOverTimeChart;
@@ -16,7 +16,7 @@ public:
   ~APDPage();
   void SetPlotLayout(QLayout* layout);
   bool Initialize();
-  void IncomingMeasure(const MeasureBasic& measure);
+  void IncomingMeasure(const MeasureDevel& measure);
 private:
   QLayout* plot_layout_ = nullptr;
   QtCharts::QChartView* main_chart_view_ = nullptr;

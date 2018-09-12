@@ -55,8 +55,20 @@ struct UpdateFirmwareEcho : public ParsedBase {
 };
 
 struct MeasureBasic : public ParsedBase {
+  ~MeasureBasic();
   unsigned short dist;
   unsigned short amp;
 };
 
+struct MeasureDevel : public MeasureBasic {
+  unsigned short raw_dist1;
+  unsigned short raw_dist2;
+  unsigned short raw_dist3;
+  unsigned short dist1;
+  unsigned short dist2;
+  unsigned short dist3;
+  unsigned char apd;
+  unsigned short volt;
+  unsigned short temp;
+};
 #endif // PARSED_H

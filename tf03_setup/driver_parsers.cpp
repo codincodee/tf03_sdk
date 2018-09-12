@@ -262,8 +262,17 @@ bool Driver::ParseDevelModeMeasure(
     return false;
   }
   parsed.type = MessageType::measure;
-  std::unique_ptr<MeasureBasic> data(new MeasureBasic);
-  memcpy(&data->dist, msg.data() + 10, 2);
+  std::unique_ptr<MeasureDevel> data(new MeasureDevel);
+  memcpy(&data->raw_dist1, msg.data() + 4, 2);
+  memcpy(&data->raw_dist2, msg.data() + 6, 2);
+  memcpy(&data->raw_dist3, msg.data() + 8, 2);
+  memcpy(&data->dist1, msg.data() + 10, 2);
+  memcpy(&data->dist2, msg.data() + 12, 2);
+  memcpy(&data->dist3, msg.data() + 14, 2);
+  memcpy(&data->apd, msg.data() + 16, 1);
+  memcpy(&data->volt, msg.data() + 17, 2);
+  memcpy(&data->temp, msg.data() + 19, 2);
+  data->dist = data->dist1;
   data->amp = 0;
   data->id = measure_id_++;
   parsed.data = std::move(data);

@@ -60,47 +60,86 @@ void CommandEchoWidgetsManager::SetRespondAllButtonClick(bool respond) {
 }
 
 void CommandEchoWidgetsManager::SetupUIGrid(QGridLayout *layout) {
+  qDebug() << __FUNCTION__ << __LINE__;
   auto widget_num = widgets_.size();
+  qDebug() << __FUNCTION__ << __LINE__;
   constexpr int kRowMax = 15;
+  qDebug() << __FUNCTION__ << __LINE__;
   auto column_num = widgets_.size() / kRowMax + 1;
+  qDebug() << __FUNCTION__ << __LINE__;
   auto parent = parent_widget_;
+  qDebug() << __FUNCTION__ << __LINE__;
 
   std::vector<QGridLayout*> layouts;
+  qDebug() << __FUNCTION__ << __LINE__;
   {
+    qDebug() << __FUNCTION__ << __LINE__;
     int col = 0;
+    qDebug() << __FUNCTION__ << __LINE__;
     for (int i = 0; i < column_num; ++i) {
+      qDebug() << __FUNCTION__ << __LINE__;
       auto sub_layout = new QGridLayout;
+      qDebug() << __FUNCTION__ << __LINE__;
       layouts.push_back(sub_layout);
+      qDebug() << __FUNCTION__ << __LINE__;
       if (i != 0) {
+        qDebug() << __FUNCTION__ << __LINE__;
         QFrame* vline = new QFrame(parent);
+        qDebug() << __FUNCTION__ << __LINE__;
         vline->setFrameShape(QFrame::VLine);
+        qDebug() << __FUNCTION__ << __LINE__;
         vline->setLineWidth(1);
+        qDebug() << __FUNCTION__ << __LINE__;
         layout->addWidget(vline, 0, col++);
+        qDebug() << __FUNCTION__ << __LINE__;
       }
+      qDebug() << __FUNCTION__ << __LINE__;
       layout->addLayout(sub_layout, 0, col++);
+      qDebug() << __FUNCTION__ << __LINE__;
     }
+    qDebug() << __FUNCTION__ << __LINE__;
   }
+  qDebug() << __FUNCTION__ << __LINE__;
 
   int row = 0;
+  qDebug() << __FUNCTION__ << __LINE__;
   auto id = 0;
+  qDebug() << __FUNCTION__ << __LINE__;
   while (id < widgets_.size()) {
+    qDebug() << __FUNCTION__ << __LINE__;
     for (int i = 0; i < column_num; ++i) {
+      qDebug() << __FUNCTION__ << __LINE__;
       if (id >= widgets_.size()) {
+        qDebug() << __FUNCTION__ << __LINE__;
         break;
       }
+      qDebug() << __FUNCTION__ << __LINE__;
       int column = 0;
+      qDebug() << __FUNCTION__ << __LINE__;
       layouts[i]->addWidget(widgets_[id]->item, row, column++);
+      qDebug() << __FUNCTION__ << __LINE__;
       if (widgets_[id]->option) {
+        qDebug() << __FUNCTION__ << __LINE__;
         layouts[i]->addWidget(widgets_[id]->option, row, column++);
+        qDebug() << __FUNCTION__ << __LINE__;
       } else {
+        qDebug() << __FUNCTION__ << __LINE__;
         ++column;
+        qDebug() << __FUNCTION__ << __LINE__;
       }
+      qDebug() << __FUNCTION__ << __LINE__;
       layouts[i]->addWidget(widgets_[id]->button, row, column++);
+      qDebug() << __FUNCTION__ << __LINE__;
       layouts[i]->addWidget(widgets_[id]->status, row, column++);
+      qDebug() << __FUNCTION__ << __LINE__;
       ++id;
+      qDebug() << __FUNCTION__ << __LINE__;
     }
+    qDebug() << __FUNCTION__ << __LINE__;
     ++row;
+    qDebug() << __FUNCTION__ << __LINE__;
   }
+  qDebug() << __FUNCTION__ << __LINE__;
 }
 
 void CommandEchoWidgetsManager::SetDriver(std::shared_ptr<Driver> driver) {

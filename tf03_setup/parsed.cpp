@@ -3,3 +3,7 @@
 ParsedBase::~ParsedBase() {
 
 }
+
+MeasureBasic::~MeasureBasic() {
+
+}

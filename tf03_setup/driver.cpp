@@ -6,6 +6,11 @@
 #include <QElapsedTimer>
 #include "static_unique_ptr_cast.h"
 
+std::unique_ptr<MeasureDevel> ToMeasureDevel(
+    std::unique_ptr<MeasureBasic>& basic) {
+  return static_unique_ptr_cast<MeasureDevel>(std::move(basic));
+}
+
 std::unordered_map<char, Lingual> Driver::kEchoStatusIDMap{
   {0x44, {"Communication Protocol", "通信协议"}},
   {0x11, {"Save Settings to Flash", "写入设置"}},
@@ -66,6 +71,14 @@ bool Driver::LastMeasure(MeasureBasic &measure) {
   } else {
     return false;
   }
+}
+
+std::unique_ptr<MeasureBasic> Driver::LastMeasure() {
+  latest_measure_mutex_.lock();
+  auto measure =
+      static_unique_ptr_cast<MeasureBasic>(std::move(latest_measure_.data));
+  latest_measure_mutex_.unlock();
+  return measure;
 }
 
 void Driver::WorkThread() {

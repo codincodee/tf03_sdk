@@ -38,7 +38,7 @@ bool APDPage::Initialize() {
   return true;
 }
 
-void APDPage::IncomingMeasure(const MeasureBasic &measure) {
+void APDPage::IncomingMeasure(const MeasureDevel &measure) {
   if (!main_chart_) {
     return;
   }

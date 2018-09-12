@@ -23,6 +23,9 @@ QByteArray to_bytes(const T& value) {
   return buffer;
 }
 
+std::unique_ptr<MeasureDevel> ToMeasureDevel(
+    std::unique_ptr<MeasureBasic>& basic);
+
 enum class MessageType {
   measure,
   status,
@@ -52,6 +55,7 @@ class Driver
   bool Open();
   bool Close();
   bool LastMeasure(MeasureBasic& measure);
+  std::unique_ptr<MeasureBasic> LastMeasure();
   void SetDevelMode();
   void SetReleaseMode();
   void SetFrequency(const unsigned short& frequency);

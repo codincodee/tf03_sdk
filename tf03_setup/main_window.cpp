@@ -102,7 +102,11 @@ void MainWindow::timerEvent(QTimerEvent *event) {
   UpdatePortNameComboBox();
 
   MeasureBasic measure;
-  auto new_measure = driver_->LastMeasure(measure);
+  auto measure_basic = driver_->LastMeasure();
+  if (measure_basic) {
+    measure = *measure_basic;
+  }
+  auto new_measure = (measure_basic != nullptr);
   auto elapse = frequency_timer_.elapsed();
   if (new_measure) {
     ui->DistanceDisplayLabel->setText(QString::number(measure.dist));
@@ -124,7 +128,10 @@ void MainWindow::timerEvent(QTimerEvent *event) {
   command_echo_widgets_manager_->Update();
 
   if (apd_page_) {
-    apd_page_->IncomingMeasure(measure);
+    auto measure_devel = ToMeasureDevel(measure_basic);
+    if (measure_devel) {
+      apd_page_->IncomingMeasure(*measure_devel);
+    }
   }
 }
 
