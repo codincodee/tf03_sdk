@@ -3,6 +3,7 @@
 #include <QtCharts/QChartView>
 #include <QLayout>
 #include "parsed.h"
+#include <QDebug>
 
 APDPage::APDPage()
 {
@@ -33,6 +34,7 @@ bool APDPage::Initialize() {
   if (plot_layout_) {
     plot_layout_->addWidget(main_chart_view_);
   }
+  main_chart_->SetTimeSpan(400);
   return true;
 }
 
@@ -40,7 +42,5 @@ void APDPage::IncomingMeasure(const MeasureBasic &measure) {
   if (!main_chart_) {
     return;
   }
-  static int cnt = 0;
-  main_chart_->AddPoint(measure.dist / 100.f, cnt);
-  cnt += 100;
+  main_chart_->AddPoint(measure.dist / 100.f, measure.id);
 }

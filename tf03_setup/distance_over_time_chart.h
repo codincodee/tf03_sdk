@@ -18,6 +18,7 @@ public:
   float GetMax() const;
   void SetCeiling(const float& ceiling);
   void SetFloor(const float& floor);
+  void SetTimeSpan(const int& span);
   QtCharts::QLineSeries* Series();
   float CurrentStandardDeviation();
   void CurrentAverageAndStandardDeviation(float& average, float& stddev);
@@ -33,6 +34,7 @@ private:
   float max_;
   float ceiling_;
   float floor_;
+  int time_span_;
 };
 
 #endif // DISTANCE_OVER_TIME_CHART_H

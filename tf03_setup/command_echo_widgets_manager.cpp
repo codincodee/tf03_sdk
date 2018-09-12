@@ -177,17 +177,27 @@ void CommandEchoWidgetsManager::LoadWidgets() {
   AddWidgets(
       std::shared_ptr<RestoreFactoryWidgets>(new RestoreFactoryWidgets));
 
+  qDebug() << __FUNCTION__ << __LINE__;
   if (ui_grid_) {
+    qDebug() << __FUNCTION__ << __LINE__;
     SetupUIGrid(ui_grid_);
+    qDebug() << __FUNCTION__ << __LINE__;
   }
+  qDebug() << __FUNCTION__ << __LINE__;
 
   if (firmware_grid_) {
+    qDebug() << __FUNCTION__ << __LINE__;
     firmware_widgets_.reset(new UpgradeFirmwareWidgets);
+    qDebug() << __FUNCTION__ << __LINE__;
     firmware_widgets_->set_respond_all_button =
         std::bind(
             &CommandEchoWidgetsManager::SetRespondAllButtonClick, this,
             std::placeholders::_1);
+    qDebug() << __FUNCTION__ << __LINE__;
     ConfigWidgets(firmware_widgets_);
+    qDebug() << __FUNCTION__ << __LINE__;
     SetupFirmwareUIGrid(firmware_grid_);
+    qDebug() << __FUNCTION__ << __LINE__;
   }
+  qDebug() << __FUNCTION__ << __LINE__;
 }

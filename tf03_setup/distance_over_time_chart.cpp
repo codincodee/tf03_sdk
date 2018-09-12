@@ -28,7 +28,7 @@ bool DistanceOverTimeChart::AddPoint(
   *line_series << QPointF(millisecond, meter);
 
   while (line_series->count()) {
-    if ((line_series->at(0).x() + 4000) < millisecond) {
+    if ((line_series->at(0).x() + time_span_) < millisecond) {
       line_series->removePoints(0, 1);
     } else {
       break;
@@ -85,7 +85,7 @@ bool DistanceOverTimeChart::AddPoint(
 }
 
 DistanceOverTimeChart::DistanceOverTimeChart()
-    : ceiling_(20.0f), floor_(5.0f) {
+    : ceiling_(20.0f), floor_(5.0f), time_span_(4000) {
   line_series_ = new QtCharts::QLineSeries;
   this->addSeries(line_series_);
   this->setTitle("Distance (m) - Time Elapse (ms)");
@@ -110,6 +110,10 @@ void DistanceOverTimeChart::SetCeiling(const float &ceiling) {
 
 void DistanceOverTimeChart::SetFloor(const float &floor) {
   floor_ = floor;
+}
+
+void DistanceOverTimeChart::SetTimeSpan(const int &span) {
+  time_span_ = span;
 }
 
 QtCharts::QLineSeries* DistanceOverTimeChart::Series() {
