@@ -68,20 +68,23 @@ qDebug() << __FUNCTION__ << __LINE__;
 
   SetupUIText();
   qDebug() << __FUNCTION__ << __LINE__;
+
 #ifndef USE_APD_EXPERIMENT_PAGE
   ui->tabWidget->removeTab(1);
 #else
   apd_page_.reset(new APDPage);
 #endif
-  qDebug() << __FUNCTION__ << __LINE__;
   if (apd_page_) {
-    qDebug() << __FUNCTION__ << __LINE__;
     apd_page_->SetPlotLayout(ui->APDPagePlotVerticalLayout);
-    qDebug() << __FUNCTION__ << __LINE__;
+    apd_page_->SetAPDDisplayLabel(ui->APDPageAPDVoltageLabel);
+    apd_page_->SetTemperatureDisplayLabel(ui->APDPageTemperatureLabel);
+    apd_page_->SetStartPushButton(ui->APDPageStartPushButton);
+    apd_page_->SetProgressBar(ui->APDPageProgressBar);
+    apd_page_->SetAPDFromLineEdit(ui->APDPageAPDFromLineEdit);
+    apd_page_->SetAPDToLineEdit(ui->APDPageAPDToLineEdit);
+    apd_page_->SetThresholdLineEdit(ui->APDPageThresholdLineEdit);
     apd_page_->Initialize();
-    qDebug() << __FUNCTION__ << __LINE__;
   }
-  qDebug() << __FUNCTION__ << __LINE__;
 }
 
 MainWindow::~MainWindow()
@@ -91,6 +94,12 @@ MainWindow::~MainWindow()
 
 
 void MainWindow::timerEvent(QTimerEvent *event) {
+#ifdef USE_APD_EXPERIMENT_PAGE
+  if (apd_page_) {
+    apd_page_->Update();
+  }
+#endif
+
   if (event->timerId() != timer_id_) {
     return;
   }

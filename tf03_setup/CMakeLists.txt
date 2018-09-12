@@ -49,6 +49,8 @@ add_executable(
     distance_over_time_chart.h
     apd_page.cpp
     apd_page.h
+    utils.cpp
+    utils.h
 )
 
 target_link_libraries(
