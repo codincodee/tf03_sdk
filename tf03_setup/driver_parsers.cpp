@@ -389,7 +389,7 @@ bool Driver::ParsePixhawkMeasure(
   std::unique_ptr<MeasureBasic> measure(new MeasureBasic);
   ++measure_id_;
   measure->id = measure_id_;
-  measure->dist = dist * 100;
+  measure->dist = std::round(dist * 100);
   parsed.type = MessageType::measure;
   parsed.data = std::move(measure);
   return true;
