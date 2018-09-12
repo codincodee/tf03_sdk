@@ -181,6 +181,32 @@ void Driver::WriteSerialNumber(const QString &sn) {
   });
 }
 
+void Driver::SetAPD(const uint8_t &voltage) {
+  char c;
+  memcpy(&c, &voltage, 1);
+  EnqueueCommand([this, c](){
+    return SendMessage(CommonCommand(char(0x40), QByteArray(1, c)));
+  });
+}
+
+void Driver::SetAutoGainAdjust(const bool &on) {
+  EnqueueCommand([this, on](){
+    return SendMessage(CommonCommand(char(0x4E), QByteArray(1, on ? 0 : 1)));
+  });
+}
+
+void Driver::SetAdaptiveAPD(const bool &on) {
+  EnqueueCommand([this, on](){
+    return SendMessage(CommonCommand(char(0x4C), QByteArray(1, on ? 0 : 1)));
+  });
+}
+
+void Driver::SetAPDClosedLoop(const bool &on) {
+  EnqueueCommand([this, on](){
+    return SendMessage(CommonCommand(char(0x4D), QByteArray(1, on ? 0 : 1)));
+  });
+}
+
 void Driver::SetTransTypeSerial() {
   EnqueueCommand([this](){
     return SendMessage(CommonCommand(char(0x45), QByteArray(1, 0x01)));

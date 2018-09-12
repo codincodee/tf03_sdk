@@ -216,6 +216,17 @@ void CommandEchoWidgetsManager::LoadWidgets() {
   AddWidgets(
       std::shared_ptr<RestoreFactoryWidgets>(new RestoreFactoryWidgets));
 
+#ifdef SUPPORT_DEVEL_MODE_PROTOCOL_
+  AddWidgets(
+      std::shared_ptr<SetAPDWidgets>(new SetAPDWidgets));
+  AddWidgets(
+      std::shared_ptr<AutoGainAdjustWidgets>(new AutoGainAdjustWidgets));
+  AddWidgets(
+      std::shared_ptr<AdaptiveAPDWidgets>(new AdaptiveAPDWidgets));
+  AddWidgets(
+      std::shared_ptr<APDClosedLoopWidgets>(new APDClosedLoopWidgets));
+#endif
+
   qDebug() << __FUNCTION__ << __LINE__;
   if (ui_grid_) {
     qDebug() << __FUNCTION__ << __LINE__;

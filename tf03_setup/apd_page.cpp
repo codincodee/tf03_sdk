@@ -9,6 +9,9 @@
 #include <QProgressBar>
 #include "utils.h"
 #include <QLineEdit>
+#include <QElapsedTimer>
+#include "command_echo_handler.h"
+#include "driver.h"
 
 APDPage::APDPage()
 {
@@ -59,6 +62,14 @@ void APDPage::SetStartPushButton(QPushButton *button) {
   start_button_ = button;
 }
 
+void APDPage::SetDriver(std::shared_ptr<Driver> driver) {
+  driver_ = driver;
+}
+
+void APDPage::SetCmdEchoHandler(std::shared_ptr<CommandEchoHandler> echoes) {
+  echoes_ = echoes;
+}
+
 bool APDPage::Initialize() {
   if (!start_button_) {
     return false;
@@ -75,6 +86,9 @@ bool APDPage::Initialize() {
   if (!threshold_edit_) {
     return false;
   }
+  if (!driver_) {
+    return false;
+  }
   main_chart_ = new DistanceOverTimeChart();
   main_chart_->SetCeiling(150.0f);
   main_chart_->SetFloor(5.0f);
@@ -89,6 +103,10 @@ bool APDPage::Initialize() {
   SetLineEditIntValidity(apd_from_edit_, 0, 1000);
   SetLineEditIntValidity(apd_to_edit_, 0, 1000);
   SetLineEditIntValidity(threshold_edit_, 0, 1000);
+  apd_from_edit_->setText("150");
+  apd_to_edit_->setText("180");
+  threshold_edit_->setText("20");
+  ongoing_ = false;
   return true;
 }
 
@@ -105,7 +123,56 @@ void APDPage::IncomingMeasure(const MeasureDevel &measure) {
 }
 
 void APDPage::Update() {
+  if (!ongoing_) {
+    return;
+  }
 
+  if (apd_cmd_ > apd_to_) {
+    ongoing_ = false;
+    start_button_->setText(kStartButtonStop);
+    OnStop();
+    return;
+  }
+
+  bool echoed = echoes_->IsCommandEchoed(kSetAPDCmdID);
+  bool success = false;
+  if (echoed) {
+    success = echoes_->IsCommandSucceeded(kSetAPDCmdID);
+  }
+
+  if (timeout_) {
+    if (timeout_->elapsed() > 1000) {
+      qDebug() << __LINE__;
+      if (!echoed) {
+        driver_->SetAPD(apd_cmd_);
+        timeout_->restart();
+        return;
+      }
+      if (!success) {
+        driver_->SetAPD(apd_cmd_);
+        timeout_->restart();
+        return;
+      }
+    }
+  }
+
+  // echoed & succeeded
+  timeout_.reset();
+  if (!timer_) {
+    timer_.reset(new QElapsedTimer);
+    timer_->restart();
+  } else {
+    if (timer_->elapsed() > 4000) {
+      apd_cmd_ += 1;
+      driver_->SetAPD(apd_cmd_);
+      qDebug() << "Setting: " << apd_cmd_;
+      timer_.reset();
+      if (!timeout_) {
+        timeout_.reset(new QElapsedTimer);
+      }
+      timeout_->restart();
+    }
+  }
 }
 
 void APDPage::OnStartButtonClicked() {
@@ -117,8 +184,28 @@ void APDPage::OnStartButtonClicked() {
     if (!ok) return;
     threshold_ = threshold_edit_->text().toInt(&ok);
     if (!ok) return;
+
+    apd_cmd_ = apd_from_;
+    OnStart();
+    timeout_.reset(new QElapsedTimer);
+    timeout_->restart();
+    driver_->SetAPD(apd_cmd_);
+    ongoing_ = true;
     start_button_->setText(kStartButtonStop);
   } else if (start_button_->text() == kStartButtonStop) {
+    ongoing_ = false;
+    OnStop();
     start_button_->setText(kStartButtonStart);
   }
+}
+
+void APDPage::OnStart() {
+  driver_->SetAPDClosedLoop(true);
+  driver_->SetAutoGainAdjust(false);
+  driver_->SetAdaptiveAPD(false);
+}
+
+void APDPage::OnStop() {
+  driver_->SetAutoGainAdjust(true);
+  driver_->SetAdaptiveAPD(true);
 }

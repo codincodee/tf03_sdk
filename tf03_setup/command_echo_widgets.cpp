@@ -570,3 +570,100 @@ void WriteSerialNumberWidgets::SetOptionLingual() {
             "接受" + QString::number(kSNLength) + "个字母或数字的组合。"
           }));
 }
+
+////////////////////// SetAPDWidgets /////////////////////////////
+
+SetAPDWidgets::SetAPDWidgets() {
+  id = 0x40;
+  item_lingual = {"Set APD", "APD偏压"};
+  edit = new QLineEdit;
+  SetLineEditIntValidity(edit, 70, 200);
+  option = edit;
+}
+
+void SetAPDWidgets::ButtonClicked() {
+  CommandEchoWidgets::ButtonClicked();
+  bool ok;
+  uint8_t value = edit->text().toInt(&ok);
+  if (!ok) {
+    return;
+  }
+  driver->SetAPD(value);
+}
+
+////////////////////// AutoGainAdjustWidgets /////////////////////////////
+
+AutoGainAdjustWidgets::AutoGainAdjustWidgets() {
+  id = 0x4E;
+  item_lingual = {"Auto Gain", "自动增益调节"};
+  combo = new QComboBox;
+  option = combo;
+}
+
+void AutoGainAdjustWidgets::SetOptionLingual() {
+  combo->clear();
+  combo->addItem(which_lingual(kOnLingual));
+  combo->addItem(which_lingual(kOffLingual));
+}
+
+void AutoGainAdjustWidgets::ButtonClicked() {
+  CommandEchoWidgets::ButtonClicked();
+  auto text = combo->currentText();
+  if (lingual_equal(text, kOnLingual)) {
+    driver->SetAutoGainAdjust(true);
+  } else if (lingual_equal(text, kOffLingual)) {
+    driver->SetAutoGainAdjust(false);
+  }
+}
+
+////////////////////// AdaptiveAPDWidgets /////////////////////////////
+
+AdaptiveAPDWidgets::AdaptiveAPDWidgets() {
+  id = 0x4C;
+  item_lingual = {"Adaptive APD", "APD电压自动调节"};
+  combo = new QComboBox;
+  option = combo;
+}
+
+void AdaptiveAPDWidgets::SetOptionLingual() {
+  combo->clear();
+  combo->addItem(which_lingual(kOnLingual));
+  combo->addItem(which_lingual(kOffLingual));
+}
+
+void AdaptiveAPDWidgets::ButtonClicked() {
+  CommandEchoWidgets::ButtonClicked();
+  auto text = combo->currentText();
+  if (lingual_equal(text, kOnLingual)) {
+    driver->SetAdaptiveAPD(true);
+  } else if (lingual_equal(text, kOffLingual)) {
+    driver->SetAdaptiveAPD(false);
+  }
+}
+
+////////////////////// APDClosedLoopWidgets /////////////////////////////
+
+APDClosedLoopWidgets::APDClosedLoopWidgets() {
+  id = 0x4D;
+  item_lingual = {"APD Closed-loop", "APD闭环调节"};
+  combo = new QComboBox;
+  option = combo;
+}
+
+void APDClosedLoopWidgets::SetOptionLingual() {
+  combo->clear();
+  combo->addItem(which_lingual(kOnLingual));
+  combo->addItem(which_lingual(kOffLingual));
+}
+
+void APDClosedLoopWidgets::ButtonClicked() {
+  CommandEchoWidgets::ButtonClicked();
+  auto text = combo->currentText();
+  if (lingual_equal(text, kOnLingual)) {
+    driver->SetAPDClosedLoop(true);
+  } else if (lingual_equal(text, kOffLingual)) {
+    driver->SetAPDClosedLoop(false);
+  }
+}
+
+

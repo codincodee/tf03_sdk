@@ -20,7 +20,11 @@ std::unordered_map<char, Lingual> Driver::kEchoStatusIDMap{
   {0x51, {"CAN Receive ID", "CAN接收ID"}},
   {0x52, {"CAN Baud Rate", "CAN波特率"}},
   {0x4f, {"Out-range Value", "超量程输出值"}},
-  {0x56, {"Write Serial Number", "写入序列号"}}
+  {0x56, {"Write Serial Number", "写入序列号"}},
+  {0x40, {"Set APD", "配置APD偏压"}},
+  {0x4E, {"Auto Gain Adjust", "自动增益调节"}},
+  {0x4C, {"Adaptive APD", "APD自动调节"}},
+  {0x4D, {"APD Closed-loop", "APD闭环调节"}}
 };
 
 Driver::Driver()

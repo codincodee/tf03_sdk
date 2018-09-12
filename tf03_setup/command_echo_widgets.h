@@ -42,6 +42,8 @@ struct CommandEchoWidgets : public QObject
   const Lingual kMsgBoxAbort = {"Abort", "放弃"};
   const Lingual kMsgBoxOk = {"Ok", "确定"};
   const Lingual kMsgBoxCancel = {"Cancel", "取消"};
+  const Lingual kOnLingual = {"ON", "开"};
+  const Lingual kOffLingual = {"OFF", "关"};
 
   QElapsedTimer timer;
 
@@ -219,6 +221,41 @@ struct WriteSerialNumberWidgets : public CommandEchoWidgets {
   void SetOptionLingual() override;
   QLineEdit* edit;
   const int kSNLength = 14;
+};
+
+////////////////////// SetAPDWidgets /////////////////////////////
+
+struct SetAPDWidgets : public CommandEchoWidgets {
+  SetAPDWidgets();
+  void ButtonClicked() override;
+  QLineEdit* edit;
+};
+
+////////////////////// AutoGainAdjustWidgets /////////////////////////////
+
+struct AutoGainAdjustWidgets : public CommandEchoWidgets {
+  AutoGainAdjustWidgets();
+  void ButtonClicked() override;
+  void SetOptionLingual() override;
+  QComboBox* combo;
+};
+
+////////////////////// AdaptiveAPDWidgets /////////////////////////////
+
+struct AdaptiveAPDWidgets : public CommandEchoWidgets {
+  AdaptiveAPDWidgets();
+  void ButtonClicked() override;
+  void SetOptionLingual() override;
+  QComboBox* combo;
+};
+
+////////////////////// APDClosedLoopWidgets /////////////////////////////
+
+struct APDClosedLoopWidgets : public CommandEchoWidgets {
+  APDClosedLoopWidgets();
+  void ButtonClicked() override;
+  void SetOptionLingual() override;
+  QComboBox* combo;
 };
 
 #endif // COMMAND_ECHO_WIDGETS_H

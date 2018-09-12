@@ -2,6 +2,8 @@
 #define APD_PAGE_H
 
 #include <QObject>
+#include <QElapsedTimer>
+#include <memory>
 
 struct MeasureDevel;
 // #include <QLayout>
@@ -14,6 +16,9 @@ class QLabel;
 class QPushButton;
 class QProgressBar;
 class QLineEdit;
+class QElapsedTimer;
+class Driver;
+class CommandEchoHandler;
 
 class APDPage : public QObject
 {
@@ -29,12 +34,16 @@ public:
   void SetAPDFromLineEdit(QLineEdit* edit);
   void SetAPDToLineEdit(QLineEdit* edit);
   void SetThresholdLineEdit(QLineEdit* edit);
+  void SetDriver(std::shared_ptr<Driver> driver);
+  void SetCmdEchoHandler(std::shared_ptr<CommandEchoHandler> echoes);
   bool Initialize();
   void IncomingMeasure(const MeasureDevel& measure);
   void Update();
 public slots:
   void OnStartButtonClicked();
 private:
+  void OnStart();
+  void OnStop();
   QLayout* plot_layout_ = nullptr;
   QtCharts::QChartView* main_chart_view_ = nullptr;
   DistanceOverTimeChart* main_chart_ = nullptr;
@@ -50,6 +59,13 @@ private:
   int apd_from_;
   int apd_to_;
   int threshold_;
+  int apd_cmd_;
+  bool ongoing_ = false;
+  std::shared_ptr<QElapsedTimer> timeout_;
+  std::shared_ptr<QElapsedTimer> timer_;
+  std::shared_ptr<Driver> driver_;
+  std::shared_ptr<CommandEchoHandler> echoes_;
+  const char kSetAPDCmdID = 0x40;
 };
 
 #endif // APD_PAGE_H

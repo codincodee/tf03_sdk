@@ -51,6 +51,7 @@ MainWindow::MainWindow(QWidget *parent) :
   command_echo_widgets_manager_->SetEchoHandler(command_echo_handler_);
 qDebug() << __FUNCTION__ << __LINE__;
   command_echo_widgets_manager_->SetupFirmwareLayout(ui->FirmwareGridLayout);
+  command_echo_widgets_manager_->SetParentWidget(this);
   qDebug() << __FUNCTION__ << __LINE__;
   command_echo_widgets_manager_->LoadWidgets();
   qDebug() << __FUNCTION__ << __LINE__;
@@ -83,6 +84,8 @@ qDebug() << __FUNCTION__ << __LINE__;
     apd_page_->SetAPDFromLineEdit(ui->APDPageAPDFromLineEdit);
     apd_page_->SetAPDToLineEdit(ui->APDPageAPDToLineEdit);
     apd_page_->SetThresholdLineEdit(ui->APDPageThresholdLineEdit);
+    apd_page_->SetDriver(driver_);
+    apd_page_->SetCmdEchoHandler(command_echo_handler_);
     apd_page_->Initialize();
   }
 }

@@ -81,6 +81,10 @@ class Driver
       const uint16_t& id, const std::vector<QByteArray>& segments);
   void RequestVersion();
   void WriteSerialNumber(const QString& sn);
+  void SetAPD(const uint8_t& voltage);
+  void SetAutoGainAdjust(const bool& on);
+  void SetAdaptiveAPD(const bool& on);
+  void SetAPDClosedLoop(const bool& on);
 
   void SetBufferCleanerBytes(const int& bytes);
   void SetBufferCleanerBytesDefault();
