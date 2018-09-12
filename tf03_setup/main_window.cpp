@@ -43,6 +43,9 @@ MainWindow::MainWindow(QWidget *parent) :
   }
 
   SetupUIText();
+#ifndef USE_APD_EXPERIMENT_PAGE
+  ui->tabWidget->removeTab(1);
+#endif
 }
 
 MainWindow::~MainWindow()
@@ -105,6 +108,7 @@ void MainWindow::SetupUIText() {
   ui->BaudRateLabel->setText(which_lingual(kBaudRateLabelText));
   ui->ConnectPushButton->setText(
       which_lingual(connect_button_current_lingual_));
+  ui->tabWidget->setTabText(0, which_lingual({"Setup", "配置"}));
   this->setWindowTitle(which_lingual(kWindowTitle) +  " v" + kVersion);
 
   if (command_echo_widgets_manager_) {

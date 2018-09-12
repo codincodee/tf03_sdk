@@ -15,6 +15,10 @@ if (SUPPORT_DEVEL_MODE_PROTOCOL)
   add_definitions(-DSUPPORT_DEVEL_MODE_PROTOCOL_)
 endif()
 
+if (USE_APD_EXPERIMENT_PAGE)
+  add_definitions(-DUSE_APD_EXPERIMENT_PAGE)
+endif()
+
 add_executable(
   tf03_setup
   WIN32
