@@ -9,6 +9,7 @@ set(CMAKE_AUTOUIC ON)
 
 find_package(Qt5Widgets)
 find_package(Qt5SerialPort REQUIRED)
+find_package(Qt5Charts REQUIRED)
 # find_package(Qt5Charts)
 
 if (SUPPORT_DEVEL_MODE_PROTOCOL)
@@ -44,6 +45,10 @@ add_executable(
     firmware_module.cpp
     firmware_module.h
     config.h.in
+    distance_over_time_chart.cpp
+    distance_over_time_chart.h
+    apd_page.cpp
+    apd_page.h
 )
 
 target_link_libraries(
@@ -51,6 +56,7 @@ target_link_libraries(
     Qt5::Widgets
     Qt5::SerialPort
     Qt5::WinMain
+    Qt5::Charts
 )
 
 install(TARGETS tf03_setup

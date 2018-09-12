@@ -8,6 +8,7 @@
 #include "command_echo_widgets_manager.h"
 #include <QSerialPortInfo>
 #include <QDesktopWidget>
+#include "apd_page.h"
 
 MainWindow::MainWindow(QWidget *parent) :
   QMainWindow(parent),
@@ -45,7 +46,13 @@ MainWindow::MainWindow(QWidget *parent) :
   SetupUIText();
 #ifndef USE_APD_EXPERIMENT_PAGE
   ui->tabWidget->removeTab(1);
+#else
+  apd_page_.reset(new APDPage);
 #endif
+  if (apd_page_) {
+    apd_page_->SetPlotLayout(ui->APDPagePlotVerticalLayout);
+    apd_page_->Initialize();
+  }
 }
 
 MainWindow::~MainWindow()
@@ -86,6 +93,10 @@ void MainWindow::timerEvent(QTimerEvent *event) {
 
   command_echo_handler_->Probe();
   command_echo_widgets_manager_->Update();
+
+  if (apd_page_) {
+    apd_page_->IncomingMeasure(measure);
+  }
 }
 
 void MainWindow::on_ChinesePushButton_clicked()

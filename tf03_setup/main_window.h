@@ -11,6 +11,7 @@
 class CommandEchoHandler;
 class Driver;
 class CommandEchoWidgetsManager;
+class APDPage;
 
 namespace Ui {
   class MainWindow;
@@ -61,6 +62,8 @@ private:
   std::shared_ptr<CommandEchoHandler> command_echo_handler_;
 
   QStringList port_combo_;
+
+  std::shared_ptr<APDPage> apd_page_;
 };
 
 #endif // MAIN_WINDOW_H
