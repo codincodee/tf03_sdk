@@ -5,6 +5,8 @@
 #include <QDebug>
 #include <QElapsedTimer>
 #include "static_unique_ptr_cast.h"
+#include "devel_mode_task.h"
+#include "apd_exp_task.h"
 
 std::unique_ptr<MeasureDevel> ToMeasureDevel(
     std::unique_ptr<MeasureBasic>& basic) {
@@ -30,6 +32,7 @@ std::unordered_map<char, Lingual> Driver::kEchoStatusIDMap{
 Driver::Driver()
   : baud_rate_(115200) {
   buffer_cleaner_from_bytes_.store(kDefaultBufferCleanerBytes);
+  LoadDevelModeTasks();
 }
 
 void Driver::SetBufferCleanerBytes(const int &bytes) {
@@ -133,9 +136,7 @@ void Driver::ProcessBufferInWorkThread(QByteArray &buffer) {
           latest_measure_ = std::move(parsed);
           latest_measure_mutex_.unlock();
         } else {
-          receive_messages_mutex_.lock();
-          receive_messages_.emplace_back(std::move(parsed));
-          receive_messages_mutex_.unlock();
+          EnqueueReceivedMessages(std::move(parsed));
         }
       }
     }
@@ -146,6 +147,12 @@ void Driver::ProcessBufferInWorkThread(QByteArray &buffer) {
       break;
     }
   }
+}
+
+void Driver::EnqueueReceivedMessages(Message message) {
+  receive_messages_mutex_.lock();
+  receive_messages_.emplace_back(std::move(message));
+  receive_messages_mutex_.unlock();
 }
 
 #include <iostream>
@@ -203,4 +210,27 @@ bool Driver::DetectAndAutoConnect() {
     return true;
   }
   return false;
+}
+
+void Driver::HandleDevelMeasureOtherTasks(const MeasureDevel &measure) {
+  for (auto& task : devel_mode_tasks_) {
+    if (task) {
+      task->IncomingMeasure(measure);
+    }
+  }
+}
+
+void Driver::LoadDevelModeTasks() {
+  std::shared_ptr<DevelModeTask> task;
+
+#ifdef USE_APD_EXPERIMENT_PAGE
+  apd_exp_task_.reset(new APDExpTask);
+  devel_mode_tasks_.push_back(apd_exp_task_);
+#endif
+
+  for (auto& task : devel_mode_tasks_) {
+    if (task) {
+      task->SetDriver(this);
+    }
+  }
 }

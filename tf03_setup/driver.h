@@ -15,6 +15,8 @@
 
 class QSerialPort;
 class QByteArray;
+class DevelModeTask;
+class APDExpTask;
 
 template<typename T>
 QByteArray to_bytes(const T& value) {
@@ -25,18 +27,6 @@ QByteArray to_bytes(const T& value) {
 
 std::unique_ptr<MeasureDevel> ToMeasureDevel(
     std::unique_ptr<MeasureBasic>& basic);
-
-enum class MessageType {
-  measure,
-  status,
-  frequency,
-  serial_number,
-  output_switch,
-  baud_rate,
-  output_format,
-  firmware_update,
-  version
-};
 
 struct Message {
   MessageType type;
@@ -85,6 +75,8 @@ class Driver
   void SetAutoGainAdjust(const bool& on);
   void SetAdaptiveAPD(const bool& on);
   void SetAPDClosedLoop(const bool& on);
+  void APDExperimentOn();
+  void APDExperimentOff();
 
   void SetBufferCleanerBytes(const int& bytes);
   void SetBufferCleanerBytesDefault();
@@ -96,13 +88,19 @@ class Driver
   static int DefaultBaudRate();
 
  private:
+  friend class DevelModeTask;
   using CommandFunc = std::function<bool()>;
 
   bool SendMessage(const QByteArray& msg);
   void EnqueueCommand(const CommandFunc& command);
+  void EnqueueReceivedMessages(Message message);
   QByteArray CommonCommand(const char& id, const QByteArray& data);
   QByteArray CalculateSum(const QByteArray& msg);
   void WorkThread();
+
+  void HandleDevelMeasureOtherTasks(const MeasureDevel& measure);
+  void LoadDevelModeTasks();
+  std::vector<std::shared_ptr<DevelModeTask>> devel_mode_tasks_;
 
   std::thread work_thead_;
   bool stop_signal_;
@@ -169,6 +167,8 @@ class Driver
 
   std::atomic<int> buffer_cleaner_from_bytes_;
   const int kDefaultBufferCleanerBytes = 30;
+
+  std::shared_ptr<APDExpTask> apd_exp_task_;
 };
 
 #endif // DRIVER_H

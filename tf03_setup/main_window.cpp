@@ -97,15 +97,15 @@ MainWindow::~MainWindow()
 
 
 void MainWindow::timerEvent(QTimerEvent *event) {
+  if (event->timerId() != timer_id_) {
+    return;
+  }
+
 #ifdef USE_APD_EXPERIMENT_PAGE
   if (apd_page_) {
     apd_page_->Update();
   }
 #endif
-
-  if (event->timerId() != timer_id_) {
-    return;
-  }
 //  if (driver_->DetectAndAutoConnect()) {
 //    connect_button_current_lingual_ = kDisconnectPushButtonText;
 //    ui->ConnectPushButton->setText(

@@ -129,7 +129,7 @@ void APDPage::Update() {
 
   if (apd_cmd_ > apd_to_) {
     ongoing_ = false;
-    start_button_->setText(kStartButtonStop);
+    start_button_->setText(kStartButtonStart);
     OnStop();
     return;
   }
@@ -140,9 +140,9 @@ void APDPage::Update() {
     success = echoes_->IsCommandSucceeded(kSetAPDCmdID);
   }
 
+
   if (timeout_) {
     if (timeout_->elapsed() > 1000) {
-      qDebug() << __LINE__;
       if (!echoed) {
         driver_->SetAPD(apd_cmd_);
         timeout_->restart();
@@ -157,13 +157,24 @@ void APDPage::Update() {
   }
 
   // echoed & succeeded
+
+  auto measures_echoed = echoes_->IsMeasureDevelStreamEchoed();
+  MeasureDevelStream measures;
+  if (measures_echoed) {
+    measures = echoes_->GetMeasureDevelStream();
+  }
+
+  if (measures_echoed) {
+    qDebug() << measures.stream.size() << (short)measures.stream.rbegin()->apd;
+  }
+
   timeout_.reset();
   if (!timer_) {
     timer_.reset(new QElapsedTimer);
     timer_->restart();
   } else {
     if (timer_->elapsed() > 4000) {
-      apd_cmd_ += 1;
+      apd_cmd_ += apd_step_;
       driver_->SetAPD(apd_cmd_);
       qDebug() << "Setting: " << apd_cmd_;
       timer_.reset();
@@ -203,9 +214,11 @@ void APDPage::OnStart() {
   driver_->SetAPDClosedLoop(true);
   driver_->SetAutoGainAdjust(false);
   driver_->SetAdaptiveAPD(false);
+  driver_->APDExperimentOn();
 }
 
 void APDPage::OnStop() {
   driver_->SetAutoGainAdjust(true);
   driver_->SetAdaptiveAPD(true);
+  driver_->APDExperimentOff();
 }

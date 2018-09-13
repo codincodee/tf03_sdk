@@ -24,6 +24,10 @@ void CommandEchoHandler::Probe() {
   output_formats_.clear();
   firmware_update_status_.clear();
   versions_.clear();
+#ifdef SUPPORT_DEVEL_MODE_PROTOCOL_
+  measure_devel_stream_.clear();
+#endif
+
   auto message = driver_->GetMessages();
   for (auto& msg : message) {
     if (msg.type == MessageType::status) {
@@ -70,6 +74,15 @@ void CommandEchoHandler::Probe() {
         versions_.push_back(*version);
       }
     }
+#ifdef SUPPORT_DEVEL_MODE_PROTOCOL_
+    else if (msg.type == MessageType::measure_devel_stream) {
+      auto stream =
+          static_unique_ptr_cast<MeasureDevelStream>(std::move(msg.data));
+      if (stream) {
+        measure_devel_stream_.emplace_back(std::move(*stream));
+      }
+    }
+#endif
   }
 }
 
@@ -153,4 +166,12 @@ bool CommandEchoHandler::IsVersionEchoed() {
 
 VersionEcho CommandEchoHandler::Version() {
   return *versions_.rbegin();
+}
+
+bool CommandEchoHandler::IsMeasureDevelStreamEchoed() {
+  return !measure_devel_stream_.empty();
+}
+
+MeasureDevelStream CommandEchoHandler::GetMeasureDevelStream() {
+  return std::move(*measure_devel_stream_.rbegin());
 }

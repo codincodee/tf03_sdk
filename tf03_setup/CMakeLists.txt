@@ -51,6 +51,10 @@ add_executable(
     apd_page.h
     utils.cpp
     utils.h
+    devel_mode_task.cpp
+    devel_mode_task.h
+    apd_exp_task.cpp
+    apd_exp_task.h
 )
 
 target_link_libraries(

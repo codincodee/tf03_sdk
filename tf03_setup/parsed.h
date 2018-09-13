@@ -3,6 +3,20 @@
 
 #include <QString>
 #include "lingual.h"
+#include <list>
+
+enum class MessageType {
+  measure,
+  status,
+  frequency,
+  serial_number,
+  output_switch,
+  baud_rate,
+  output_format,
+  firmware_update,
+  version,
+  measure_devel_stream
+};
 
 struct ParsedBase {
   unsigned long id = 0;
@@ -70,5 +84,9 @@ struct MeasureDevel : public MeasureBasic {
   unsigned char apd;
   unsigned short volt;
   unsigned short temp;
+};
+
+struct MeasureDevelStream : public ParsedBase {
+  std::list<MeasureDevel> stream;
 };
 #endif // PARSED_H

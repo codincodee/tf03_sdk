@@ -10,6 +10,7 @@ class QString;
 enum class OutputFormat;
 enum class FirmwareUpdateStatus;
 struct VersionEcho;
+struct MeasureDevelStream;
 
 class CommandEchoHandler
 {
@@ -33,6 +34,8 @@ public:
   FirmwareUpdateStatus GetFirmwareUpdateStatus();
   bool IsVersionEchoed();
   VersionEcho Version();
+  bool IsMeasureDevelStreamEchoed();
+  MeasureDevelStream GetMeasureDevelStream();
 private:
   std::shared_ptr<Driver> driver_;
   std::unordered_map<char, bool> echo_map_;
@@ -43,6 +46,7 @@ private:
   std::vector<OutputFormat> output_formats_;
   std::vector<FirmwareUpdateStatus> firmware_update_status_;
   std::vector<VersionEcho> versions_;
+  std::vector<MeasureDevelStream> measure_devel_stream_;
 };
 
 #endif // COMMAND_ECHO_HANDLER_H

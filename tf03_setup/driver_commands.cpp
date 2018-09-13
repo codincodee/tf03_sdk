@@ -2,6 +2,7 @@
 #include <QThread>
 #include <QSerialPort>
 #include <QDebug>
+#include "apd_exp_task.h"
 
 void Driver::EnqueueCommand(const CommandFunc &command) {
   command_queue_mutex_.lock();
@@ -204,6 +205,26 @@ void Driver::SetAdaptiveAPD(const bool &on) {
 void Driver::SetAPDClosedLoop(const bool &on) {
   EnqueueCommand([this, on](){
     return SendMessage(CommonCommand(char(0x4D), QByteArray(1, on ? 0 : 1)));
+  });
+}
+
+void Driver::APDExperimentOn() {
+  EnqueueCommand([this](){
+    if (apd_exp_task_) {
+      apd_exp_task_->Start();
+      return true;
+    }
+    return false;
+  });
+}
+
+void Driver::APDExperimentOff() {
+  EnqueueCommand([this](){
+    if (apd_exp_task_) {
+      apd_exp_task_->Stop();
+      return true;
+    }
+    return false;
   });
 }
 

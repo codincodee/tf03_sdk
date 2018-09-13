@@ -60,6 +60,7 @@ private:
   int apd_to_;
   int threshold_;
   int apd_cmd_;
+  int apd_step_ = 1;
   bool ongoing_ = false;
   std::shared_ptr<QElapsedTimer> timeout_;
   std::shared_ptr<QElapsedTimer> timer_;
