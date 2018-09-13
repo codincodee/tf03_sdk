@@ -17,6 +17,7 @@ if (SUPPORT_DEVEL_MODE_PROTOCOL)
 endif()
 
 if (USE_APD_EXPERIMENT_PAGE)
+  add_definitions(-DSUPPORT_DEVEL_MODE_PROTOCOL_)
   add_definitions(-DUSE_APD_EXPERIMENT_PAGE)
 endif()
 
