@@ -20,6 +20,10 @@ if (USE_APD_EXPERIMENT_PAGE)
   add_definitions(-DUSE_APD_EXPERIMENT_PAGE)
 endif()
 
+if (AUTOMATIC_SERIAL_CONNECTION)
+  add_definitions(-DAUTOMATIC_SERIAL_CONNECTION)
+endif()
+
 add_executable(
   tf03_setup
   WIN32

@@ -12,6 +12,8 @@
 #include <QElapsedTimer>
 #include "command_echo_handler.h"
 #include "driver.h"
+#include <set>
+#include <QMessageBox>
 
 APDPage::APDPage()
 {
@@ -70,6 +72,10 @@ void APDPage::SetCmdEchoHandler(std::shared_ptr<CommandEchoHandler> echoes) {
   echoes_ = echoes;
 }
 
+void APDPage::SetStatusLabel(QLabel *label) {
+  status_label_ = label;
+}
+
 bool APDPage::Initialize() {
   if (!start_button_) {
     return false;
@@ -89,6 +95,9 @@ bool APDPage::Initialize() {
   if (!driver_) {
     return false;
   }
+  if (!status_label_) {
+    return false;
+  }
   main_chart_ = new DistanceOverTimeChart();
   main_chart_->SetCeiling(150.0f);
   main_chart_->SetFloor(5.0f);
@@ -105,20 +114,21 @@ bool APDPage::Initialize() {
   SetLineEditIntValidity(threshold_edit_, 0, 1000);
   apd_from_edit_->setText("150");
   apd_to_edit_->setText("180");
-  threshold_edit_->setText("20");
+  threshold_edit_->setText("4");
   ongoing_ = false;
+  main_chart_->setTitle("Raw Distance (m)");
   return true;
 }
 
 void APDPage::IncomingMeasure(const MeasureDevel &measure) {
   if (main_chart_) {
-    main_chart_->AddPoint(measure.dist / 100.f, measure.id);
+    main_chart_->AddPoint(measure.raw_dist1 / 100.f, measure.id);
   }
   if (apd_label_) {
     apd_label_->setText(QString::number(measure.apd));
   }
   if (temp_label_) {
-    temp_label_->setText(QString::number(measure.temp));
+    temp_label_->setText(QString::number(measure.Celsius()));
   }
 }
 
@@ -131,6 +141,11 @@ void APDPage::Update() {
     ongoing_ = false;
     start_button_->setText(kStartButtonStart);
     OnStop();
+    QMessageBox::warning(
+        start_button_,
+        "APD Experiment Failed",
+        "APD Experiment ended. No crashed APD found.",
+        QMessageBox::Abort);
     return;
   }
 
@@ -157,6 +172,7 @@ void APDPage::Update() {
   }
 
   // echoed & succeeded
+  timeout_.reset();
 
   auto measures_echoed = echoes_->IsMeasureDevelStreamEchoed();
   MeasureDevelStream measures;
@@ -164,26 +180,54 @@ void APDPage::Update() {
     measures = echoes_->GetMeasureDevelStream();
   }
 
-  if (measures_echoed) {
-    qDebug() << measures.stream.size() << (short)measures.stream.rbegin()->apd;
+  if (phase_ == Phase::wait_for_echo) {
+    if (measures_echoed) {
+      phase_ = Phase::wait_for_stable;
+    }
+    return;
   }
 
-  timeout_.reset();
-  if (!timer_) {
-    timer_.reset(new QElapsedTimer);
-    timer_->restart();
-  } else {
-    if (timer_->elapsed() > 4000) {
-      apd_cmd_ += apd_step_;
-      driver_->SetAPD(apd_cmd_);
-      qDebug() << "Setting: " << apd_cmd_;
-      timer_.reset();
-      if (!timeout_) {
-        timeout_.reset(new QElapsedTimer);
+  if (phase_ == Phase::wait_for_stable) {
+    if (measures_echoed) {
+      if (IsSampleStable(measures)) {
+        phase_ = Phase::wait_for_sample;
       }
-      timeout_->restart();
+      return;
     }
   }
+
+  if (phase_ == Phase::wait_for_sample) {
+    if (measures_echoed) {
+      if (apd_cmd_ == apd_from_) {
+        std_dist_ = CalculateStandardDistance(measures);
+        ProceedExperiment();
+      } else {
+        if (IsCrashed(measures, std_dist_, threshold_)) {
+          Q_ASSERT(!measures.stream.empty());
+          HandleCrashed(*measures.stream.rbegin(), apd_cmd_);
+        } else {
+          ProceedExperiment();
+        }
+      }
+    }
+    return;
+  }
+
+//  if (!timer_) {
+//    timer_.reset(new QElapsedTimer);
+//    timer_->restart();
+//  } else {
+//    if (timer_->elapsed() > 4000) {
+//      apd_cmd_ += apd_step_;
+//      driver_->SetAPD(apd_cmd_);
+//      qDebug() << "Setting: " << apd_cmd_;
+//      timer_.reset();
+//      if (!timeout_) {
+//        timeout_.reset(new QElapsedTimer);
+//      }
+//      timeout_->restart();
+//    }
+//  }
 }
 
 void APDPage::OnStartButtonClicked() {
@@ -201,6 +245,7 @@ void APDPage::OnStartButtonClicked() {
     timeout_.reset(new QElapsedTimer);
     timeout_->restart();
     driver_->SetAPD(apd_cmd_);
+    phase_ = Phase::wait_for_echo;
     ongoing_ = true;
     start_button_->setText(kStartButtonStop);
   } else if (start_button_->text() == kStartButtonStop) {
@@ -218,7 +263,126 @@ void APDPage::OnStart() {
 }
 
 void APDPage::OnStop() {
-  driver_->SetAutoGainAdjust(true);
-  driver_->SetAdaptiveAPD(true);
+//  driver_->SetAutoGainAdjust(true);
+//  driver_->SetAdaptiveAPD(true);
   driver_->APDExperimentOff();
+}
+
+bool APDPage::IsSampleStable(MeasureDevelStream stream) {
+  std::set<int> values;
+  for (auto& measure : stream.stream) {
+    values.insert(measure.apd);
+  }
+  if (values.empty()) {
+    return false;
+  }
+  if (values.size() > 4) {
+    return false;
+  }
+  int value = *values.begin();
+  for (auto& i = std::next(values.begin(), 1); i != values.end(); ++i) {
+    if (value != (*i - 1)) {
+      return false;
+    } else {
+      value = *i;
+    }
+  }
+  return true;
+}
+
+int APDPage::CalculateStandardDistance(MeasureDevelStream stream) {
+  auto& dists = stream.stream;
+  if (dists.size() <= (kMaxToIgnore + kMinToIgnore)) {
+    return -1;
+  }
+  dists.sort(
+    [](const MeasureDevel& a,
+       const MeasureDevel& b){
+      return a.raw_dist1 > b.raw_dist1;
+    }
+  );
+  int total = 0;
+  // auto begin = dists->begin();
+  auto begin = std::next(dists.begin(), kMaxToIgnore);
+  auto end = std::prev(dists.end(), kMinToIgnore);
+  for (auto i = begin; i != end; ++i) {
+    total += i->raw_dist1;
+  }
+  return total * 1.0f / (dists.size() - kMaxToIgnore - kMinToIgnore);
+}
+
+bool APDPage::IsCrashed(
+    const MeasureDevelStream &stream, const int &std_dist, const int& threshold) {
+  // auto& dists = stream.stream;
+  std::list<MeasureDevel> dists;
+  int cnt = 0;
+  for (auto& dist : stream.stream) {
+    if (cnt > 50) {
+      break;
+    }
+    dists.push_back(dist);
+  }
+  if (dists.size() <= (kMaxToIgnore + kMinToIgnore)) {
+    return false;
+  }
+  std::vector<float> dist_vec;
+  dist_vec.reserve(dists.size());
+  for (auto& i : dists) {
+    dist_vec.push_back(i.raw_dist1 * 1.0f / std_dist);
+  }
+  std::sort(dist_vec.begin(), dist_vec.end());
+  auto begin = std::next(dist_vec.begin(), kMaxToIgnore);
+  auto end = std::prev(dist_vec.end(), kMinToIgnore);
+
+  int num = dist_vec.size() - kMaxToIgnore - kMinToIgnore;
+  float mean = 0;
+  for (auto i = begin; i != end; ++i) {
+    mean += *i;
+  }
+  mean = mean / num;
+
+  float stddev = 0;
+  float diff;
+  for (auto i = begin; i != end; ++i) {
+    diff = *i - mean;
+    stddev += diff * diff;
+  }
+  auto result = (std::sqrt(stddev / num) * 120);
+//  qDebug() << result;
+  return result > threshold;
+}
+
+void APDPage::HandleCrashed(
+    const MeasureDevel &measure, const int &apd_crash_) {
+  auto apd_result = CalculateResultAPD(apd_crash_, measure.Celsius());
+  ongoing_ = false;
+  OnStop();
+  auto button = QMessageBox::information(
+      start_button_, "Experiment Results",
+      "Experiment ended. \n"
+      "Found APD crashed voltage: " + QString::number(apd_crash_) + " (V);\n"
+      "temperature: " + QString::number(measure.Celsius(), 'f', 2) + " (C);\n"
+      "result APD: " + QString::number(apd_result) + " (V).\n"
+      "Write result to device?", QMessageBox::Yes, QMessageBox::No);
+  if (button == QMessageBox::Yes) {
+    driver_->SetAPD(apd_result);
+  }
+  start_button_->setText(kStartButtonStart);
+}
+
+void APDPage::ProceedExperiment() {
+  apd_cmd_ += apd_step_;
+  driver_->SetAPD(apd_cmd_);
+  status_label_->setText("Setting APD: " + QString::number(apd_cmd_));
+  if (!timeout_) {
+    timeout_.reset(new QElapsedTimer);
+  }
+  timeout_->restart();
+  progress_bar_->setValue(
+      100.0f * (apd_cmd_ - apd_from_) / (apd_to_ - apd_from_));
+  phase_ = Phase::wait_for_echo;
+}
+
+int APDPage::CalculateResultAPD(const int &apd_crash, const float &temp) {
+  return (apd_crash - (temp - 30) * 0.9) * 0.9;
 }

@@ -84,6 +84,7 @@ struct MeasureDevel : public MeasureBasic {
   unsigned char apd;
   unsigned short volt;
   unsigned short temp;
+  float Celsius() const;
 };
 
 struct MeasureDevelStream : public ParsedBase {

@@ -14,61 +14,37 @@ MainWindow::MainWindow(QWidget *parent) :
   QMainWindow(parent),
   ui(new Ui::MainWindow)
 {
-  qDebug() << __FUNCTION__ << __LINE__;
   ui->setupUi(this);
-  qDebug() << __FUNCTION__ << __LINE__;
 
   QRect desktop = QApplication::desktop()->availableGeometry();
-  qDebug() << __FUNCTION__ << __LINE__;
   auto window = this->rect();
-  qDebug() << __FUNCTION__ << __LINE__;
   this->move(desktop.topLeft() - window.topLeft());
-  qDebug() << __FUNCTION__ << __LINE__;
   this->move(QPoint(desktop.width() / 2 - window.width() / 2, 0));
-  qDebug() << __FUNCTION__ << __LINE__;
 
   driver_.reset(new Driver);
-  qDebug() << __FUNCTION__ << __LINE__;
   driver_->Open();
-  qDebug() << __FUNCTION__ << __LINE__;
-   timer_id_ = startTimer(100);
-   qDebug() << __FUNCTION__ << __LINE__;
+  timer_id_ = startTimer(100);
 //  timer_id_ = startTimer(0);
   frequency_timer_.start();
-  qDebug() << __FUNCTION__ << __LINE__;
 
   command_echo_handler_.reset(new CommandEchoHandler);
-  qDebug() << __FUNCTION__ << __LINE__;
   command_echo_handler_->SetDriver(driver_);
-  qDebug() << __FUNCTION__ << __LINE__;
 
   command_echo_widgets_manager_.reset(new CommandEchoWidgetsManager);
-  qDebug() << __FUNCTION__ << __LINE__;
   command_echo_widgets_manager_->SetUIGrid(ui->CommandEchoGridLayout);
-  qDebug() << __FUNCTION__ << __LINE__;
   command_echo_widgets_manager_->SetDriver(driver_);
-  qDebug() << __FUNCTION__ << __LINE__;
   command_echo_widgets_manager_->SetEchoHandler(command_echo_handler_);
-qDebug() << __FUNCTION__ << __LINE__;
   command_echo_widgets_manager_->SetupFirmwareLayout(ui->FirmwareGridLayout);
   command_echo_widgets_manager_->SetParentWidget(this);
-  qDebug() << __FUNCTION__ << __LINE__;
   command_echo_widgets_manager_->LoadWidgets();
-  qDebug() << __FUNCTION__ << __LINE__;
 
   connect_button_current_lingual_ = kConnectPushButtonText;
-  qDebug() << __FUNCTION__ << __LINE__;
   auto baud_rates = Driver::BaudRates();
-  qDebug() << __FUNCTION__ << __LINE__;
   for (auto& rate : baud_rates) {
-    qDebug() << __FUNCTION__ << __LINE__;
     ui->BaudRateComboBox->addItem(QString::number(rate));
-    qDebug() << __FUNCTION__ << __LINE__;
   }
-  qDebug() << __FUNCTION__ << __LINE__;
 
   SetupUIText();
-  qDebug() << __FUNCTION__ << __LINE__;
 
 #ifndef USE_APD_EXPERIMENT_PAGE
   ui->tabWidget->removeTab(1);
@@ -86,8 +62,13 @@ qDebug() << __FUNCTION__ << __LINE__;
     apd_page_->SetThresholdLineEdit(ui->APDPageThresholdLineEdit);
     apd_page_->SetDriver(driver_);
     apd_page_->SetCmdEchoHandler(command_echo_handler_);
-    apd_page_->Initialize();
+    apd_page_->SetStatusLabel(ui->APDPageStatusLabel);
+    if (!apd_page_->Initialize()) {
+      apd_page_.reset();
+    }
   }
+
+  ui->tabWidget->setCurrentIndex(0);
 }
 
 MainWindow::~MainWindow()
@@ -106,11 +87,13 @@ void MainWindow::timerEvent(QTimerEvent *event) {
     apd_page_->Update();
   }
 #endif
-//  if (driver_->DetectAndAutoConnect()) {
-//    connect_button_current_lingual_ = kDisconnectPushButtonText;
-//    ui->ConnectPushButton->setText(
-//        which_lingual(connect_button_current_lingual_));
-//  }
+#ifdef AUTOMATIC_SERIAL_CONNECTION
+  if (driver_->DetectAndAutoConnect()) {
+    connect_button_current_lingual_ = kDisconnectPushButtonText;
+    ui->ConnectPushButton->setText(
+        which_lingual(connect_button_current_lingual_));
+  }
+#endif
   UpdatePortNameComboBox();
 
   MeasureBasic measure;
