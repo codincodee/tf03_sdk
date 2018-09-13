@@ -117,6 +117,7 @@ bool APDPage::Initialize() {
   threshold_edit_->setText("4");
   ongoing_ = false;
   main_chart_->setTitle("Raw Distance (m)");
+  status_label_->clear();
   return true;
 }
 
@@ -138,8 +139,6 @@ void APDPage::Update() {
   }
 
   if (apd_cmd_ > apd_to_) {
-    ongoing_ = false;
-    start_button_->setText(kStartButtonStart);
     OnStop();
     QMessageBox::warning(
         start_button_,
@@ -212,60 +211,49 @@ void APDPage::Update() {
     }
     return;
   }
-
-//  if (!timer_) {
-//    timer_.reset(new QElapsedTimer);
-//    timer_->restart();
-//  } else {
-//    if (timer_->elapsed() > 4000) {
-//      apd_cmd_ += apd_step_;
-//      driver_->SetAPD(apd_cmd_);
-//      qDebug() << "Setting: " << apd_cmd_;
-//      timer_.reset();
-//      if (!timeout_) {
-//        timeout_.reset(new QElapsedTimer);
-//      }
-//      timeout_->restart();
-//    }
-//  }
 }
 
 void APDPage::OnStartButtonClicked() {
   if (start_button_->text() == kStartButtonStart) {
-    bool ok;
-    apd_from_ = apd_from_edit_->text().toInt(&ok);
-    if (!ok) return;
-    apd_to_ = apd_to_edit_->text().toInt(&ok);
-    if (!ok) return;
-    threshold_ = threshold_edit_->text().toInt(&ok);
-    if (!ok) return;
-
-    apd_cmd_ = apd_from_;
-    OnStart();
-    timeout_.reset(new QElapsedTimer);
-    timeout_->restart();
-    driver_->SetAPD(apd_cmd_);
-    phase_ = Phase::wait_for_echo;
-    ongoing_ = true;
-    start_button_->setText(kStartButtonStop);
+    if (!OnStart()) {
+      return;
+    }
   } else if (start_button_->text() == kStartButtonStop) {
-    ongoing_ = false;
     OnStop();
-    start_button_->setText(kStartButtonStart);
   }
 }
 
-void APDPage::OnStart() {
+bool APDPage::OnStart() {
+  bool ok;
+  apd_from_ = apd_from_edit_->text().toInt(&ok);
+  if (!ok) return false;
+  apd_to_ = apd_to_edit_->text().toInt(&ok);
+  if (!ok) return false;
+  threshold_ = threshold_edit_->text().toInt(&ok);
+  if (!ok) return false;
+
   driver_->SetAPDClosedLoop(true);
   driver_->SetAutoGainAdjust(false);
   driver_->SetAdaptiveAPD(false);
   driver_->APDExperimentOn();
+  apd_cmd_ = apd_from_;
+  timeout_.reset(new QElapsedTimer);
+  timeout_->restart();
+  driver_->SetAPD(apd_cmd_);
+  phase_ = Phase::wait_for_echo;
+  ongoing_ = true;
+  start_button_->setText(kStartButtonStop);
+  return true;
 }
 
 void APDPage::OnStop() {
 //  driver_->SetAutoGainAdjust(true);
 //  driver_->SetAdaptiveAPD(true);
+  ongoing_ = false;
   driver_->APDExperimentOff();
+  start_button_->setText(kStartButtonStart);
+  status_label_->clear();
+  progress_bar_->setValue(0);
 }
 
 bool APDPage::IsSampleStable(MeasureDevelStream stream) {
@@ -363,7 +351,7 @@ void APDPage::HandleCrashed(
       "Found APD crashed voltage: " + QString::number(apd_crash_) + " (V);\n"
       "temperature: " + QString::number(measure.Celsius(), 'f', 2) + " (C);\n"
       "result APD: " + QString::number(apd_result) + " (V).\n"
-      "Write result to device?", QMessageBox::Yes, QMessageBox::No);
+      "Write results to device?", QMessageBox::Yes, QMessageBox::No);
   if (button == QMessageBox::Yes) {
     driver_->SetAPD(apd_result);
   }

@@ -44,7 +44,7 @@ public:
 public slots:
   void OnStartButtonClicked();
 private:
-  void OnStart();
+  bool OnStart();
   void OnStop();
   bool IsSampleStable(MeasureDevelStream stream);
   int CalculateStandardDistance(MeasureDevelStream stream);
