@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QElapsedTimer>
 #include <memory>
+#include "plot_base.h"
 
 struct MeasureDevel;
 struct MeasureDevelStream;
@@ -21,13 +22,12 @@ class QElapsedTimer;
 class Driver;
 class CommandEchoHandler;
 
-class APDPage : public QObject
+class APDPage : public PlotBase
 {
   Q_OBJECT
 public:
   APDPage();
   ~APDPage();
-  void SetPlotLayout(QLayout* layout);
   void SetAPDDisplayLabel(QLabel* label);
   void SetTemperatureDisplayLabel(QLabel* label);
   void SetStartPushButton(QPushButton* button);
@@ -55,9 +55,6 @@ private:
   void ProceedExperiment();
   int CalculateResultAPD(const int& apd_crash, const float& temp);
 
-  QLayout* plot_layout_ = nullptr;
-  QtCharts::QChartView* main_chart_view_ = nullptr;
-  DistanceOverTimeChart* main_chart_ = nullptr;
   QLabel* apd_label_ = nullptr;
   QLabel* temp_label_ = nullptr;
   QPushButton* start_button_ = nullptr;

@@ -53,7 +53,7 @@ MainWindow::MainWindow(QWidget *parent) :
   apd_page_.reset(new APDPage);
 #endif
   if (apd_page_) {
-    apd_page_->SetPlotLayout(ui->APDPagePlotVerticalLayout);
+    apd_page_->SetLayout(ui->APDPagePlotVerticalLayout);
     apd_page_->SetAPDDisplayLabel(ui->APDPageAPDVoltageLabel);
     apd_page_->SetTemperatureDisplayLabel(ui->APDPageTemperatureLabel);
     apd_page_->SetStartPushButton(ui->APDPageStartPushButton);

@@ -58,3 +58,7 @@ void PlotBase::IncomingMeasure(const MeasureDevel& measure) {
   }
   main_chart_->AddPoint(measure.dist / 100.f, measure.id);
 }
+
+DistanceOverTimeChart& PlotBase::GetPlot() {
+  return *main_chart_;
+}

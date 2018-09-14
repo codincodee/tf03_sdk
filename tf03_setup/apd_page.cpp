@@ -21,19 +21,6 @@ APDPage::APDPage()
 }
 
 APDPage::~APDPage() {
-  if (main_chart_) {
-    delete main_chart_;
-    main_chart_ = nullptr;
-  }
-
-  if (main_chart_view_) {
-    delete main_chart_view_;
-    main_chart_view_ = nullptr;
-  }
-}
-
-void APDPage::SetPlotLayout(QLayout *layout) {
-  plot_layout_ = layout;
 }
 
 void APDPage::SetAPDDisplayLabel(QLabel *label) {
@@ -98,14 +85,9 @@ bool APDPage::Initialize() {
   if (!status_label_) {
     return false;
   }
-  main_chart_ = new DistanceOverTimeChart();
-  main_chart_->SetCeiling(150.0f);
-  main_chart_->SetFloor(5.0f);
-  main_chart_view_ = new QtCharts::QChartView(main_chart_);
-  if (plot_layout_) {
-    plot_layout_->addWidget(main_chart_view_);
+  if (!PlotBase::Initialize()) {
+    return false;
   }
-  main_chart_->SetTimeSpan(400);
   connect(start_button_, SIGNAL(clicked()), this, SLOT(OnStartButtonClicked()));
   start_button_->setText(kStartButtonStart);
   progress_bar_->setValue(0);
@@ -116,15 +98,13 @@ bool APDPage::Initialize() {
   apd_to_edit_->setText("180");
   threshold_edit_->setText("4");
   ongoing_ = false;
-  main_chart_->setTitle("Raw Distance (m)");
+  GetPlot().setTitle("Raw Distance (m)");
   status_label_->clear();
   return true;
 }
 
 void APDPage::IncomingMeasure(const MeasureDevel &measure) {
-  if (main_chart_) {
-    main_chart_->AddPoint(measure.raw_dist1 / 100.f, measure.id);
-  }
+  GetPlot().AddPoint(measure.raw_dist1 / 100.f, measure.id);
   if (apd_label_) {
     apd_label_->setText(QString::number(measure.apd));
   }
