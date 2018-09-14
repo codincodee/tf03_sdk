@@ -188,6 +188,11 @@ void CommandEchoWidgetsManager::LoadWidgets() {
       std::shared_ptr<APDClosedLoopWidgets>(new APDClosedLoopWidgets));
 #endif
 
+#ifdef CLIENT_BL_CUSTOMIZATION
+  AddWidgets(
+      std::shared_ptr<DistanceL1WriteWidgets>(new DistanceL1WriteWidgets));
+#endif
+
   if (ui_grid_) {
     SetupUIGrid(ui_grid_);
   }

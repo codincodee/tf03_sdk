@@ -8,6 +8,7 @@
 #include <QLineEdit>
 #include <QSizePolicy>
 #include <QMessageBox>
+#include "utils.h"
 
 ////////////////////// CommandEchoWidgets /////////////////////////////
 
@@ -92,12 +93,6 @@ void CommandEchoWidgets::SetStatusLabelUINull() {
   }
   status = UINullLabel();
   status_lingual = {kUINullString, kUINullString};
-}
-
-void CommandEchoWidgets::SetLineEditIntValidity(
-    QLineEdit *edit, const int& min, const int& max) {
-  edit->setValidator(new QIntValidator(min, max, this));
-  edit->setPlaceholderText(QString::number(min) + " - " + QString::number(max));
 }
 
 void CommandEchoWidgets::SetOptionWidgetUINull() {
@@ -666,4 +661,23 @@ void APDClosedLoopWidgets::ButtonClicked() {
   }
 }
 
+////////////////////// DistanceL1Widgets /////////////////////////////
 
+DistanceL1WriteWidgets::DistanceL1WriteWidgets() {
+  id = 0x58;
+  item_lingual = {"Write L1", "写入L1"};
+  edit = new QLineEdit;
+  SetLineEditUShortValidity(edit);
+  edit->setPlaceholderText(edit->placeholderText() + " (cm)");
+  option = edit;
+}
+
+void DistanceL1WriteWidgets::ButtonClicked() {
+  CommandEchoWidgets::ButtonClicked();
+  bool ok;
+  auto value = edit->text().toUShort(&ok);
+  if (!ok) {
+    return;
+  }
+  driver->SetDistanceL1(value);
+}

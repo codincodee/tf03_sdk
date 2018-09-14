@@ -77,6 +77,7 @@ class Driver
   void SetAPDClosedLoop(const bool& on);
   void APDExperimentOn();
   void APDExperimentOff();
+  void SetDistanceL1(const uint16_t& value);
 
   void SetBufferCleanerBytes(const int& bytes);
   void SetBufferCleanerBytesDefault();
@@ -141,6 +142,8 @@ class Driver
       const QByteArray& buffer, Message& parsed, int& from, int& to);
   static QByteArray ParsePixhawkMeasureMessageAtFront(
       const QByteArray& buffer, int& from, int& to);
+  static bool ParseDistanceL1Echo(
+      const QByteArray &buffer, Message &parsed, int &from, int &to);
   static bool CheckSum(const QByteArray& buffer, const int& from, const int& to);
   using ReceiveParser =
       std::function<bool(

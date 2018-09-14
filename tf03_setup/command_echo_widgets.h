@@ -65,8 +65,6 @@ struct CommandEchoWidgets : public QObject
   static void SetWidgetUINullLabel(QWidget*& widget);
   void SetOptionWidgetUINull();
   void SetStatusLabelUINull();
-  void SetLineEditIntValidity(
-      QLineEdit *edit, const int& min, const int& max);
   const static QString kUINullString;
 };
 
@@ -256,6 +254,14 @@ struct APDClosedLoopWidgets : public CommandEchoWidgets {
   void ButtonClicked() override;
   void SetOptionLingual() override;
   QComboBox* combo;
+};
+
+////////////////////// DistanceL1WriteWidgets /////////////////////////////
+
+struct DistanceL1WriteWidgets: public CommandEchoWidgets {
+  DistanceL1WriteWidgets();
+  void ButtonClicked() override;
+  QLineEdit* edit;
 };
 
 #endif // COMMAND_ECHO_WIDGETS_H

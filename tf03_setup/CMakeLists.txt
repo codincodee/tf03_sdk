@@ -25,6 +25,10 @@ if (AUTOMATIC_SERIAL_CONNECTION)
   add_definitions(-DAUTOMATIC_SERIAL_CONNECTION)
 endif()
 
+if (CLIENT_BL_CUSTOMIZATION)
+  add_definitions(-DCLIENT_BL_CUSTOMIZATION)
+endif()
+
 add_executable(
   tf03_setup
   WIN32

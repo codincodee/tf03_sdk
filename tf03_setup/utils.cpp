@@ -7,3 +7,7 @@ void SetLineEditIntValidity(
   edit->setValidator(new QIntValidator(min, max, edit));
   edit->setPlaceholderText(QString::number(min) + " - " + QString::number(max));
 }
+
+void SetLineEditUShortValidity(QLineEdit *edit) {
+  SetLineEditIntValidity(edit, 0, pow(2, (sizeof(unsigned short) * 8)) - 1);
+}

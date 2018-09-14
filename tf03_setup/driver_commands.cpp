@@ -228,6 +228,13 @@ void Driver::APDExperimentOff() {
   });
 }
 
+void Driver::SetDistanceL1(const uint16_t &value) {
+  EnqueueCommand([this, value](){
+    return SendMessage(
+        CommonCommand(char(0x58), QByteArray(1, 0x00) + to_bytes(value)));
+  });
+}
+
 void Driver::SetTransTypeSerial() {
   EnqueueCommand([this](){
     return SendMessage(CommonCommand(char(0x45), QByteArray(1, 0x01)));

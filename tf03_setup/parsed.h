@@ -15,7 +15,8 @@ enum class MessageType {
   output_format,
   firmware_update,
   version,
-  measure_devel_stream
+  measure_devel_stream,
+  distance_echo,
 };
 
 struct ParsedBase {
@@ -89,5 +90,16 @@ struct MeasureDevel : public MeasureBasic {
 
 struct MeasureDevelStream : public ParsedBase {
   std::list<MeasureDevel> stream;
+};
+
+enum class DistanceType {
+  BL_L1
+};
+
+struct DistanceEcho : public ParsedBase {
+  virtual ~DistanceEcho();
+  DistanceType type;
+  uint16_t distance;
+  bool success;
 };
 #endif // PARSED_H
