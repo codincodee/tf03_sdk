@@ -45,8 +45,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->BaudRateComboBox->addItem(QString::number(rate));
   }
 
-  SetupUIText();
-
 #ifndef USE_APD_EXPERIMENT_PAGE
   ui->tabWidget->removeTab(1);
 #else
@@ -80,6 +78,7 @@ MainWindow::MainWindow(QWidget *parent) :
 #endif
 
   ui->tabWidget->setCurrentIndex(0);
+  SetupUIText();
 }
 
 MainWindow::~MainWindow()
@@ -168,7 +167,10 @@ void MainWindow::SetupUIText() {
       which_lingual(connect_button_current_lingual_));
   ui->tabWidget->setTabText(0, which_lingual({"Setup", "配置"}));
   this->setWindowTitle(which_lingual(kWindowTitle) +  " v" + kVersion);
-
+  if (measure_manifest_) {
+    measure_manifest_->GetPlot().setTitle(
+        which_lingual({"Distance (m)", "距离 (m)"}));
+  }
   if (command_echo_widgets_manager_) {
     command_echo_widgets_manager_->UpdateUITexts();
   }

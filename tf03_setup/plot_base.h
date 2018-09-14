@@ -2,6 +2,7 @@
 #define PLOT_BASE_H
 
 #include <QObject>
+#include "distance_over_time_chart.h"
 
 class QLayout;
 class DistanceOverTimeChart;
