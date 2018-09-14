@@ -12,6 +12,7 @@ class CommandEchoHandler;
 class Driver;
 class CommandEchoWidgetsManager;
 class APDPage;
+class MeasureManifest;
 
 namespace Ui {
   class MainWindow;
@@ -64,6 +65,7 @@ private:
   QStringList port_combo_;
 
   std::shared_ptr<APDPage> apd_page_;
+  std::shared_ptr<MeasureManifest> measure_manifest_;
 };
 
 #endif // MAIN_WINDOW_H

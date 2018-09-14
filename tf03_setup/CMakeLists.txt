@@ -60,6 +60,10 @@ add_executable(
     devel_mode_task.h
     apd_exp_task.cpp
     apd_exp_task.h
+    measure_manifest.cpp
+    measure_manifest.h
+    plot_base.cpp
+    plot_base.h
 )
 
 target_link_libraries(

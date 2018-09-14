@@ -9,6 +9,7 @@
 #include <QSerialPortInfo>
 #include <QDesktopWidget>
 #include "apd_page.h"
+#include "measure_manifest.h"
 
 MainWindow::MainWindow(QWidget *parent) :
   QMainWindow(parent),
@@ -68,6 +69,12 @@ MainWindow::MainWindow(QWidget *parent) :
     }
   }
 
+  measure_manifest_.reset(new MeasureManifest);
+  measure_manifest_->SetLayout(ui->SetupPagePlotVerticalLayout);
+  measure_manifest_->AddWidget(ui->SetupPageTestLabel);
+  measure_manifest_->Initialize();
+  // measure_manifest_->SetVisible(false);
+
   ui->tabWidget->setCurrentIndex(0);
 }
 
@@ -122,12 +129,15 @@ void MainWindow::timerEvent(QTimerEvent *event) {
   command_echo_handler_->Probe();
   command_echo_widgets_manager_->Update();
 
-  if (apd_page_) {
-    auto measure_devel = ToMeasureDevel(measure_basic);
-    if (measure_devel) {
+  auto measure_devel = ToMeasureDevel(measure_basic);
+
+  if (measure_devel) {
+    if (apd_page_) {
       apd_page_->IncomingMeasure(*measure_devel);
     }
+    measure_manifest_->IncomingMeasure(*measure_devel);
   }
+
 }
 
 void MainWindow::on_ChinesePushButton_clicked()
