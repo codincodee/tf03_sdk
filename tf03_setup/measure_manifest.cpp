@@ -18,6 +18,14 @@ void ManifestBase::SetFormat() {
   }
 }
 
+void ManifestBase::Clear() {
+  for (auto& widget : labels) {
+    delete widget.first;
+    delete widget.second;
+  }
+  labels.clear();
+}
+
 void ManifestBase::SetVisible(const bool &visible) {
   for (auto& w : labels) {
     w.first->setVisible(visible);
@@ -30,14 +38,6 @@ ManifestDevel::~ManifestDevel() {
 }
 
 
-void ManifestDevel::Clear() {
-  for (auto& widget : labels) {
-    delete widget.first;
-    delete widget.second;
-  }
-  labels.clear();
-}
-
 void ManifestDevel::Setup(QGridLayout *layout) {
   if (!layout) {
     return;
@@ -47,7 +47,6 @@ void ManifestDevel::Setup(QGridLayout *layout) {
   labels.clear();
 
   QLabel* label;
-  QLabel* label_beta;
 
   label = new QLabel;
   label->setText("Dist 1 (m)");
@@ -114,6 +113,9 @@ void ManifestBasic::Setup(QGridLayout *layout) {
   if (!layout) {
     return;
   }
+
+  ClearLayout(layout);
+  labels.clear();
 }
 
 MeasureManifest::MeasureManifest()
@@ -149,6 +151,18 @@ void MeasureManifest::IncomingMeasure(const MeasureDevel &measure) {
     current_manifest_ = manifest_devel_;
   }
   manifest_devel_->IncomingMeasure(measure);
+}
+
+void MeasureManifest::IncomingMeasure(const MeasureBasic &measure) {
+  PlotBase::IncomingMeasure(measure);
+  if (!manifest_basic_) {
+    manifest_basic_.reset(new ManifestBasic);
+    manifest_basic_->Setup(manifest_grid_);
+  }
+  if (current_manifest_ != manifest_basic_) {
+    manifest_basic_->Setup(manifest_grid_);
+    current_manifest_ = manifest_basic_;
+  }
 }
 
 void MeasureManifest::SetManifestGrid(QGridLayout *layout) {

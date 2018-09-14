@@ -11,7 +11,8 @@ namespace QtCharts {
 class DistanceOverTimeChart;
 class QLayout;
 class QWidget;
-class MeasureDevel;
+struct MeasureDevel;
+struct MeasureBasic;
 class QLabel;
 class QGridLayout;
 
@@ -21,13 +22,13 @@ struct ManifestBase {
   virtual void Setup(QGridLayout* layout) = 0;
   void SetFormat();
   void SetVisible(const bool& visible);
+  void Clear();
 };
 
 struct ManifestDevel : public ManifestBase {
   ~ManifestDevel();
   void Setup(QGridLayout* layout) override;
   void IncomingMeasure(const MeasureDevel& measure);
-  void Clear();
 };
 
 struct ManifestBasic : public ManifestBase {
@@ -42,6 +43,7 @@ public:
   bool Initialize();
   void AddWidget(QWidget* widget);
   void IncomingMeasure(const MeasureDevel& measure);
+  void IncomingMeasure(const MeasureBasic& measure);
   void SetManifestGrid(QGridLayout* layout);
   void SetVisible(const bool& visible);
  private:

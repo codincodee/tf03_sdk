@@ -9,7 +9,7 @@ class DistanceOverTimeChart;
 namespace QtCharts {
   class QChartView;
 }
-struct MeasureDevel;
+struct MeasureBasic;
 
 class PlotBase : public QObject
 {
@@ -19,7 +19,7 @@ public:
   void SetLayout(QLayout* layout);
   bool Initialize();
   void SetVisible(const bool& visible);
-  void IncomingMeasure(const MeasureDevel& measure);
+  void IncomingMeasure(const MeasureBasic& measure);
   DistanceOverTimeChart& GetPlot();
 private:
   QLayout* plot_layout_ = nullptr;

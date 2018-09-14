@@ -52,7 +52,7 @@ void PlotBase::SetVisible(const bool &visible) {
   }
 }
 
-void PlotBase::IncomingMeasure(const MeasureDevel& measure) {
+void PlotBase::IncomingMeasure(const MeasureBasic& measure) {
   if (!visible_) {
     return;
   }

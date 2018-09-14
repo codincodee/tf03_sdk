@@ -141,6 +141,12 @@ void MainWindow::timerEvent(QTimerEvent *event) {
 #ifdef DISPLAY_PLOT_ON_SETUP_PAGE
     measure_manifest_->IncomingMeasure(*measure_devel);
 #endif
+  } else {
+#ifdef DISPLAY_PLOT_ON_SETUP_PAGE
+    if (new_measure) {
+      measure_manifest_->IncomingMeasure(measure);
+    }
+#endif
   }
 
 }

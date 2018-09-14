@@ -35,45 +35,45 @@ void CommandEchoHandler::Probe() {
   auto message = driver_->GetMessages();
   for (auto& msg : message) {
     if (msg.type == MessageType::status) {
-      auto status = static_unique_ptr_cast<StatusEcho>(std::move(msg.data));
+      auto status = dynamic_unique_ptr_cast<StatusEcho>(std::move(msg.data));
       if (status) {
         echo_map_[status->cmd_id] = status->success;
       }
     } else if (msg.type == MessageType::frequency) {
-      auto freq = static_unique_ptr_cast<FrequencyEcho>(std::move(msg.data));
+      auto freq = dynamic_unique_ptr_cast<FrequencyEcho>(std::move(msg.data));
       if (freq) {
         frequencies_.push_back(freq->frequency);
       }
     } else if (msg.type == MessageType::serial_number) {
-      auto sn = static_unique_ptr_cast<SerialNumberEcho>(std::move(msg.data));
+      auto sn = dynamic_unique_ptr_cast<SerialNumberEcho>(std::move(msg.data));
       if (sn) {
         serial_numbers_.push_back({sn->status, sn->sn});
       }
     } else if (msg.type == MessageType::output_switch) {
       auto status =
-          static_unique_ptr_cast<OutputSwitchEcho>(std::move(msg.data));
+          dynamic_unique_ptr_cast<OutputSwitchEcho>(std::move(msg.data));
       if (status) {
         output_status_.push_back(status->on);
       }
     } else if (msg.type == MessageType::baud_rate) {
-      auto baud_rate = static_unique_ptr_cast<BaudRateEcho>(std::move(msg.data));
+      auto baud_rate = dynamic_unique_ptr_cast<BaudRateEcho>(std::move(msg.data));
       if (baud_rate) {
         baud_rates_.push_back(baud_rate->value);
       }
     } else if (msg.type == MessageType::output_format) {
       auto format =
-          static_unique_ptr_cast<OutputFormatEcho>(std::move(msg.data));
+          dynamic_unique_ptr_cast<OutputFormatEcho>(std::move(msg.data));
       if (format) {
         output_formats_.push_back(format->format);
       }
     } else if (msg.type == MessageType::firmware_update) {
       auto status =
-          static_unique_ptr_cast<UpdateFirmwareEcho>(std::move(msg.data));
+          dynamic_unique_ptr_cast<UpdateFirmwareEcho>(std::move(msg.data));
       if (status) {
         firmware_update_status_.push_back(status->status);
       }
     } else if (msg.type == MessageType::version) {
-      auto version = static_unique_ptr_cast<VersionEcho>(std::move(msg.data));
+      auto version = dynamic_unique_ptr_cast<VersionEcho>(std::move(msg.data));
       if (version) {
         versions_.push_back(*version);
       }
@@ -81,7 +81,7 @@ void CommandEchoHandler::Probe() {
 #ifdef SUPPORT_DEVEL_MODE_PROTOCOL_
     else if (msg.type == MessageType::measure_devel_stream) {
       auto stream =
-          static_unique_ptr_cast<MeasureDevelStream>(std::move(msg.data));
+          dynamic_unique_ptr_cast<MeasureDevelStream>(std::move(msg.data));
       if (stream) {
         measure_devel_stream_.emplace_back(std::move(*stream));
       }
@@ -89,7 +89,7 @@ void CommandEchoHandler::Probe() {
 #endif
 #ifdef CLIENT_BL_CUSTOMIZATION
     else if (msg.type == MessageType::distance_echo) {
-      auto distance = static_unique_ptr_cast<DistanceEcho>(std::move(msg.data));
+      auto distance = dynamic_unique_ptr_cast<DistanceEcho>(std::move(msg.data));
       if (distance) {
         if (distance->type == DistanceType::distance_l1) {
           distance_l1_.push_back(*distance);

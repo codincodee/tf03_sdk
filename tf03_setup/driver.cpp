@@ -10,7 +10,7 @@
 
 std::unique_ptr<MeasureDevel> ToMeasureDevel(
     std::unique_ptr<MeasureBasic>& basic) {
-  return static_unique_ptr_cast<MeasureDevel>(std::move(basic));
+  return dynamic_unique_ptr_cast<MeasureDevel>(std::move(basic));
 }
 
 std::unordered_map<char, Lingual> Driver::kEchoStatusIDMap{
@@ -70,7 +70,7 @@ bool Driver::Close() {
 bool Driver::LastMeasure(MeasureBasic &measure) {
   latest_measure_mutex_.lock();
   auto ptr =
-      static_unique_ptr_cast<MeasureBasic>(std::move(latest_measure_.data));
+      dynamic_unique_ptr_cast<MeasureBasic>(std::move(latest_measure_.data));
   latest_measure_mutex_.unlock();
   if (ptr) {
     measure = *ptr;
@@ -83,7 +83,7 @@ bool Driver::LastMeasure(MeasureBasic &measure) {
 std::unique_ptr<MeasureBasic> Driver::LastMeasure() {
   latest_measure_mutex_.lock();
   auto measure =
-      static_unique_ptr_cast<MeasureBasic>(std::move(latest_measure_.data));
+      dynamic_unique_ptr_cast<MeasureBasic>(std::move(latest_measure_.data));
   latest_measure_mutex_.unlock();
   return measure;
 }
