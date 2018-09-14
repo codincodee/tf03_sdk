@@ -93,7 +93,7 @@ struct MeasureDevelStream : public ParsedBase {
 };
 
 enum class DistanceType {
-  BL_L1
+  distance_l1, distance_l
 };
 
 struct DistanceEcho : public ParsedBase {

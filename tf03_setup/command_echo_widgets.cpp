@@ -661,14 +661,13 @@ void APDClosedLoopWidgets::ButtonClicked() {
   }
 }
 
-////////////////////// DistanceL1Widgets /////////////////////////////
+////////////////////// DistanceL1WriteWidgets /////////////////////////////
 
 DistanceL1WriteWidgets::DistanceL1WriteWidgets() {
   id = 0x58;
-  item_lingual = {"Write L1", "写入L1"};
+  item_lingual = {"Write L1 (cm)", "写入L1 (cm)"};
   edit = new QLineEdit;
   SetLineEditUShortValidity(edit);
-  edit->setPlaceholderText(edit->placeholderText() + " (cm)");
   option = edit;
 }
 
@@ -680,4 +679,86 @@ void DistanceL1WriteWidgets::ButtonClicked() {
     return;
   }
   driver->SetDistanceL1(value);
+}
+
+////////////////////// DistanceL1ReadWidgets /////////////////////////////
+
+DistanceL1ReadWidgets::DistanceL1ReadWidgets() {
+  id = 0;
+  item_lingual = {"Read L1 (cm)", "读取L1 (cm)"};
+  SetOptionWidgetUINull();
+  button_lingual = kButtonRequestLingual;
+}
+
+void DistanceL1ReadWidgets::ButtonClicked() {
+  CommandEchoWidgets::ButtonClicked();
+  driver->RequestDistanceL1();
+}
+
+void DistanceL1ReadWidgets::Update() {
+  CommandEchoWidgets::Update();
+  if (echo_handler->IsDistanceL1Echoed()) {
+    auto distance = echo_handler->GetDistanceL1();
+    if (distance.type == DistanceType::distance_l1) {
+      if (distance.success) {
+        status_lingual = kSuccessLingual;
+        status_lingual = status_lingual + QString(": ") + QString::number(distance.distance);
+      } else {
+        status_lingual = kFailLingual;
+      }
+      status->setText(which_lingual(status_lingual));
+      button->setDisabled(false);
+    }
+  }
+}
+
+////////////////////// DistanceLWriteWidgets /////////////////////////////
+
+DistanceLWriteWidgets::DistanceLWriteWidgets() {
+  id = 0x59;
+  item_lingual = {"Write L (cm)", "写入L (cm)"};
+  edit = new QLineEdit;
+  SetLineEditUShortValidity(edit);
+  option = edit;
+}
+
+void DistanceLWriteWidgets::ButtonClicked() {
+  CommandEchoWidgets::ButtonClicked();
+  bool ok;
+  auto value = edit->text().toUShort(&ok);
+  if (!ok) {
+    return;
+  }
+  driver->SetDistanceL(value);
+}
+
+////////////////////// DistanceLReadWidgets /////////////////////////////
+
+DistanceLReadWidgets::DistanceLReadWidgets() {
+  id = 0;
+  item_lingual = {"Read L (cm)", "读取L (cm)"};
+  button_lingual = kButtonRequestLingual;
+  SetOptionWidgetUINull();
+}
+
+void DistanceLReadWidgets::ButtonClicked() {
+  CommandEchoWidgets::ButtonClicked();
+  driver->RequestDistanceL();
+}
+
+void DistanceLReadWidgets::Update() {
+  CommandEchoWidgets::Update();
+  if (echo_handler->IsDistanceLEchoed()) {
+    auto distance = echo_handler->GetDistanceL();
+    if (distance.type == DistanceType::distance_l) {
+      if (distance.success) {
+        status_lingual = kSuccessLingual;
+        status_lingual = status_lingual + QString(": ") + QString::number(distance.distance);
+      } else {
+        status_lingual = kFailLingual;
+      }
+      status->setText(which_lingual(status_lingual));
+      button->setDisabled(false);
+    }
+  }
 }

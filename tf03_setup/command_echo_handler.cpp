@@ -27,6 +27,10 @@ void CommandEchoHandler::Probe() {
 #ifdef SUPPORT_DEVEL_MODE_PROTOCOL_
   measure_devel_stream_.clear();
 #endif
+#ifdef CLIENT_BL_CUSTOMIZATION
+  distance_l1_.clear();
+  distance_l_.clear();
+#endif
 
   auto message = driver_->GetMessages();
   for (auto& msg : message) {
@@ -80,6 +84,18 @@ void CommandEchoHandler::Probe() {
           static_unique_ptr_cast<MeasureDevelStream>(std::move(msg.data));
       if (stream) {
         measure_devel_stream_.emplace_back(std::move(*stream));
+      }
+    }
+#endif
+#ifdef CLIENT_BL_CUSTOMIZATION
+    else if (msg.type == MessageType::distance_echo) {
+      auto distance = static_unique_ptr_cast<DistanceEcho>(std::move(msg.data));
+      if (distance) {
+        if (distance->type == DistanceType::distance_l1) {
+          distance_l1_.push_back(*distance);
+        } else if (distance->type == DistanceType::distance_l) {
+          distance_l_.push_back(*distance);
+        }
       }
     }
 #endif
@@ -174,4 +190,20 @@ bool CommandEchoHandler::IsMeasureDevelStreamEchoed() {
 
 MeasureDevelStream CommandEchoHandler::GetMeasureDevelStream() {
   return std::move(*measure_devel_stream_.rbegin());
+}
+
+bool CommandEchoHandler::IsDistanceL1Echoed() {
+  return !distance_l1_.empty();
+}
+
+DistanceEcho CommandEchoHandler::GetDistanceL1() {
+  return *distance_l1_.rbegin();
+}
+
+bool CommandEchoHandler::IsDistanceLEchoed() {
+  return !distance_l_.empty();
+}
+
+DistanceEcho CommandEchoHandler::GetDistanceL() {
+  return *distance_l_.rbegin();
 }

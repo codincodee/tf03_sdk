@@ -13,6 +13,13 @@ void Driver::LoadAllParsers(std::vector<ReceiveParser> &parsers) {
           std::placeholders::_2,
           std::placeholders::_3,
           std::placeholders::_4));
+  parsers.push_back(
+      std::bind(
+          Driver::ParseDistanceLEcho,
+          std::placeholders::_1,
+          std::placeholders::_2,
+          std::placeholders::_3,
+          std::placeholders::_4));
 #endif
   parsers.push_back(
       std::bind(
@@ -463,7 +470,41 @@ bool Driver::ParseDistanceL1Echo(
   }
   if (msg.size() == 7) {
     std::unique_ptr<DistanceEcho> distance(new DistanceEcho);
-    distance->type = DistanceType::BL_L1;
+    distance->type = DistanceType::distance_l1;
+    distance->success = (msg[3] == char(0));
+    memcpy(&distance->distance, msg.data() + 4, 2);
+    parsed.type = MessageType::distance_echo;
+    parsed.data = std::move(distance);
+    return true;
+  }
+  if (msg.size() == 5) {
+    std::unique_ptr<StatusEcho> status(new StatusEcho);
+    status->cmd_id = kID;
+    status->success = (msg[3] == char(0));
+    parsed.type = MessageType::status;
+    parsed.data = std::move(status);
+    return true;
+  }
+  return false;
+}
+
+bool Driver::ParseDistanceLEcho(
+    const QByteArray &buffer, Message &parsed, int &from, int &to) {
+  auto msg = Parse0x5AMessageAtFront(buffer, from, to);
+  if (msg.isEmpty()) {
+    return false;
+  }
+  if (msg.size() < 3) {
+    return false;
+  }
+  char id = msg[2];
+  constexpr char kID = 0x59;
+  if (id != kID) {
+    return false;
+  }
+  if (msg.size() == 7) {
+    std::unique_ptr<DistanceEcho> distance(new DistanceEcho);
+    distance->type = DistanceType::distance_l;
     distance->success = (msg[3] == char(0));
     memcpy(&distance->distance, msg.data() + 4, 2);
     parsed.type = MessageType::distance_echo;

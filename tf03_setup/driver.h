@@ -78,6 +78,9 @@ class Driver
   void APDExperimentOn();
   void APDExperimentOff();
   void SetDistanceL1(const uint16_t& value);
+  void RequestDistanceL1();
+  void SetDistanceL(const uint16_t& value);
+  void RequestDistanceL();
 
   void SetBufferCleanerBytes(const int& bytes);
   void SetBufferCleanerBytesDefault();
@@ -143,6 +146,8 @@ class Driver
   static QByteArray ParsePixhawkMeasureMessageAtFront(
       const QByteArray& buffer, int& from, int& to);
   static bool ParseDistanceL1Echo(
+      const QByteArray &buffer, Message &parsed, int &from, int &to);
+  static bool ParseDistanceLEcho(
       const QByteArray &buffer, Message &parsed, int &from, int &to);
   static bool CheckSum(const QByteArray& buffer, const int& from, const int& to);
   using ReceiveParser =

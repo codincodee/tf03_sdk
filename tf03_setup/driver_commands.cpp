@@ -231,7 +231,28 @@ void Driver::APDExperimentOff() {
 void Driver::SetDistanceL1(const uint16_t &value) {
   EnqueueCommand([this, value](){
     return SendMessage(
-        CommonCommand(char(0x58), QByteArray(1, 0x00) + to_bytes(value)));
+        CommonCommand(char(0x58), QByteArray(1, 0x01) + to_bytes(value)));
+  });
+}
+
+void Driver::SetDistanceL(const uint16_t &value) {
+  EnqueueCommand([this, value](){
+    return SendMessage(
+        CommonCommand(char(0x59), QByteArray(1, 0x01) + to_bytes(value)));
+  });
+}
+
+void Driver::RequestDistanceL1() {
+  EnqueueCommand([this](){
+    return SendMessage(
+        CommonCommand(char(0x58), QByteArray(1, 0x00)));
+  });
+}
+
+void Driver::RequestDistanceL() {
+  EnqueueCommand([this](){
+    return SendMessage(
+        CommonCommand(char(0x59), QByteArray(1, 0x00)));
   });
 }
 

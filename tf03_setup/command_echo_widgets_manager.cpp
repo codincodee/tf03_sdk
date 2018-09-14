@@ -191,6 +191,12 @@ void CommandEchoWidgetsManager::LoadWidgets() {
 #ifdef CLIENT_BL_CUSTOMIZATION
   AddWidgets(
       std::shared_ptr<DistanceL1WriteWidgets>(new DistanceL1WriteWidgets));
+  AddWidgets(
+      std::shared_ptr<DistanceL1ReadWidgets>(new DistanceL1ReadWidgets));
+  AddWidgets(
+      std::shared_ptr<DistanceLWriteWidgets>(new DistanceLWriteWidgets));
+  AddWidgets(
+      std::shared_ptr<DistanceLReadWidgets>(new DistanceLReadWidgets));
 #endif
 
   if (ui_grid_) {

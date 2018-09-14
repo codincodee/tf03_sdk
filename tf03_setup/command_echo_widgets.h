@@ -264,4 +264,28 @@ struct DistanceL1WriteWidgets: public CommandEchoWidgets {
   QLineEdit* edit;
 };
 
+////////////////////// DistanceL1ReadWidgets /////////////////////////////
+
+struct DistanceL1ReadWidgets : public CommandEchoWidgets {
+  DistanceL1ReadWidgets();
+  void ButtonClicked() override;
+  void Update() override;
+};
+
+////////////////////// DistanceLWriteWidgets /////////////////////////////
+
+struct DistanceLWriteWidgets : public CommandEchoWidgets {
+  DistanceLWriteWidgets();
+  void ButtonClicked() override;
+  QLineEdit* edit;
+};
+
+////////////////////// DistanceLReadWidgets /////////////////////////////
+
+struct DistanceLReadWidgets : public CommandEchoWidgets {
+  DistanceLReadWidgets();
+  void ButtonClicked() override;
+  void Update() override;
+};
+
 #endif // COMMAND_ECHO_WIDGETS_H
