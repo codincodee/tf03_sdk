@@ -233,11 +233,7 @@
           <item>
            <layout class="QGridLayout" name="gridLayout_10">
             <item row="0" column="0">
-             <widget class="QLabel" name="SetupPageTestLabel">
-              <property name="text">
-               <string>TextLabel</string>
-              </property>
-             </widget>
+             <layout class="QGridLayout" name="SetupPageManifestGridLayout"/>
             </item>
            </layout>
           </item>

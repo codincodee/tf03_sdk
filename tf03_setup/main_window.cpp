@@ -69,7 +69,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
   measure_manifest_.reset(new MeasureManifest);
   measure_manifest_->SetLayout(ui->SetupPagePlotVerticalLayout);
-  measure_manifest_->AddWidget(ui->SetupPageTestLabel);
+  measure_manifest_->SetManifestGrid(ui->SetupPageManifestGridLayout);
   measure_manifest_->Initialize();
 #ifdef DISPLAY_PLOT_ON_SETUP_PAGE
 //  this->showFullScreen();
