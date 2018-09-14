@@ -73,7 +73,11 @@ MainWindow::MainWindow(QWidget *parent) :
   measure_manifest_->SetLayout(ui->SetupPagePlotVerticalLayout);
   measure_manifest_->AddWidget(ui->SetupPageTestLabel);
   measure_manifest_->Initialize();
-  // measure_manifest_->SetVisible(false);
+#ifdef DISPLAY_PLOT_ON_SETUP_PAGE
+//  this->showFullScreen();
+#else
+  measure_manifest_->SetVisible(false);
+#endif
 
   ui->tabWidget->setCurrentIndex(0);
 }
@@ -135,7 +139,9 @@ void MainWindow::timerEvent(QTimerEvent *event) {
     if (apd_page_) {
       apd_page_->IncomingMeasure(*measure_devel);
     }
+#ifdef DISPLAY_PLOT_ON_SETUP_PAGE
     measure_manifest_->IncomingMeasure(*measure_devel);
+#endif
   }
 
 }

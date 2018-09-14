@@ -44,6 +44,7 @@ bool PlotBase::Initialize() {
 }
 
 void PlotBase::SetVisible(const bool &visible) {
+  visible_ = visible;
   for (auto& widget : widgets_) {
     if (widget) {
       widget->setVisible(visible);
@@ -52,5 +53,8 @@ void PlotBase::SetVisible(const bool &visible) {
 }
 
 void PlotBase::IncomingMeasure(const MeasureDevel& measure) {
+  if (!visible_) {
+    return;
+  }
   main_chart_->AddPoint(measure.dist / 100.f, measure.id);
 }

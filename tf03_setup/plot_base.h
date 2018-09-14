@@ -24,6 +24,7 @@ private:
   QtCharts::QChartView* main_chart_view_ = nullptr;
   DistanceOverTimeChart* main_chart_ = nullptr;
   std::vector<QWidget*> widgets_;
+  bool visible_ = true;
 };
 
 #endif // PLOT_BASE_H

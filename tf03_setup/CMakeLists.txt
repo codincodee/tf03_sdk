@@ -14,6 +14,7 @@ find_package(Qt5Charts REQUIRED)
 
 if (SUPPORT_DEVEL_MODE_PROTOCOL)
   add_definitions(-DSUPPORT_DEVEL_MODE_PROTOCOL_)
+  add_definitions(-DDISPLAY_PLOT_ON_SETUP_PAGE)
 endif()
 
 if (USE_APD_EXPERIMENT_PAGE)
@@ -27,6 +28,10 @@ endif()
 
 if (CLIENT_BL_CUSTOMIZATION)
   add_definitions(-DCLIENT_BL_CUSTOMIZATION)
+endif()
+
+if (DISPLAY_PLOT_ON_SETUP_PAGE)
+  add_definitions(-DDISPLAY_PLOT_ON_SETUP_PAGE)
 endif()
 
 add_executable(
