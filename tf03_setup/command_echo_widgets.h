@@ -288,4 +288,16 @@ struct DistanceLReadWidgets : public CommandEchoWidgets {
   void Update() override;
 };
 
+////////////////////// CustomizationWidgets /////////////////////////////
+
+struct CustomizationWidgets : public CommandEchoWidgets {
+  CustomizationWidgets();
+  void ButtonClicked() override;
+  void SetOptionLingual() override;
+  QComboBox* combo;
+  const Lingual kCommon = {"Common", "通用版本"};
+  const Lingual kBL = {"BL", "BL定制版"};
+  const Lingual kI13 = {"I13", "I13定制版"};
+};
+
 #endif // COMMAND_ECHO_WIDGETS_H

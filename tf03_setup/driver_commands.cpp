@@ -256,6 +256,20 @@ void Driver::RequestDistanceL() {
   });
 }
 
+void Driver::SetCustomization(const Customization &type) {
+  char id;
+  switch (type) {
+  case Customization::common: id = 0; break;
+  case Customization::bl: id = 1; break;
+  case Customization::i13: id = 2; break;
+  default: return;
+  }
+  EnqueueCommand([this, id](){
+    return SendMessage(
+        CommonCommand(char(0x5A), QByteArray(1, id)));
+  });
+}
+
 void Driver::SetTransTypeSerial() {
   EnqueueCommand([this](){
     return SendMessage(CommonCommand(char(0x45), QByteArray(1, 0x01)));

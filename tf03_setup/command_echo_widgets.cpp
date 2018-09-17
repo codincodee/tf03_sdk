@@ -753,7 +753,8 @@ void DistanceLReadWidgets::Update() {
     if (distance.type == DistanceType::distance_l) {
       if (distance.success) {
         status_lingual = kSuccessLingual;
-        status_lingual = status_lingual + QString(": ") + QString::number(distance.distance);
+        status_lingual =
+            status_lingual + QString(": ") + QString::number(distance.distance);
       } else {
         status_lingual = kFailLingual;
       }
@@ -761,4 +762,32 @@ void DistanceLReadWidgets::Update() {
       button->setDisabled(false);
     }
   }
+}
+
+////////////////////// CustomizationWidgets /////////////////////////////
+
+CustomizationWidgets::CustomizationWidgets() {
+  id = 0x5A;
+  item_lingual = {"Customization", "定制化"};
+  combo = new QComboBox;
+  option = combo;
+}
+
+void CustomizationWidgets::ButtonClicked() {
+  CommandEchoWidgets::ButtonClicked();
+  auto text = combo->currentText();
+  if (lingual_equal(text, kCommon)) {
+    driver->SetCustomization(Customization::common);
+  } else if (lingual_equal(text, kBL)) {
+    driver->SetCustomization(Customization::bl);
+  } else if (lingual_equal(text, kI13)) {
+    driver->SetCustomization(Customization::i13);
+  }
+}
+
+void CustomizationWidgets::SetOptionLingual() {
+  combo->clear();
+  combo->addItem(which_lingual(kCommon));
+  combo->addItem(which_lingual(kBL));
+  combo->addItem(which_lingual(kI13));
 }

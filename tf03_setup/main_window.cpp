@@ -17,6 +17,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
   ui->setupUi(this);
 
+  this->setWindowIcon(QIcon(":/image/logo.png"));
   QRect desktop = QApplication::desktop()->availableGeometry();
   auto window = this->rect();
   this->move(desktop.topLeft() - window.topLeft());

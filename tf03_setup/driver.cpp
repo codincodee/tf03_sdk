@@ -26,7 +26,8 @@ std::unordered_map<char, Lingual> Driver::kEchoStatusIDMap{
   {0x40, {"Set APD", "配置APD偏压"}},
   {0x4E, {"Auto Gain Adjust", "自动增益调节"}},
   {0x4C, {"Adaptive APD", "APD自动调节"}},
-  {0x4D, {"APD Closed-loop", "APD闭环调节"}}
+  {0x4D, {"APD Closed-loop", "APD闭环调节"}},
+  {0x5A, {"Customization", "定制化"}}
 };
 
 Driver::Driver()

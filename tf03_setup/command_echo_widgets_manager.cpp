@@ -186,6 +186,8 @@ void CommandEchoWidgetsManager::LoadWidgets() {
       std::shared_ptr<AdaptiveAPDWidgets>(new AdaptiveAPDWidgets));
   AddWidgets(
       std::shared_ptr<APDClosedLoopWidgets>(new APDClosedLoopWidgets));
+  AddWidgets(
+      std::shared_ptr<CustomizationWidgets>(new CustomizationWidgets));
 #endif
 
 #ifdef CLIENT_BL_CUSTOMIZATION

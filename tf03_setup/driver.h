@@ -33,6 +33,10 @@ struct Message {
   std::unique_ptr<ParsedBase> data;
 };
 
+enum class Customization {
+  common, bl, i13
+};
+
 class Driver
 {
  public:
@@ -81,6 +85,7 @@ class Driver
   void RequestDistanceL1();
   void SetDistanceL(const uint16_t& value);
   void RequestDistanceL();
+  void SetCustomization(const Customization& type);
 
   void SetBufferCleanerBytes(const int& bytes);
   void SetBufferCleanerBytesDefault();
