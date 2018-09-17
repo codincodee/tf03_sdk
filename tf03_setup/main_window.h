@@ -53,8 +53,12 @@ private:
   const Lingual kBaudRateLabelText = {"Baud Rate", "波特率"};
   const Lingual kConnectPushButtonText = {"Connect", "连接"};
   const Lingual kDisconnectPushButtonText = {"Disconnect", "断开"};
-  const Lingual kWindowTitle = {"TF03 Setup", "TF03 配置客户端"};
-
+  const Lingual kWindowTitle =
+#ifdef SWITCH_ON_ALL_FEATURES
+  {"TF03 All-in-one", "TF03全功能上位机"};
+#else
+  {"TF03 Setup", "TF03 配置客户端"};
+#endif
   const QString kVersion = tf03_sdk_VERSION_STRING;
 
   Lingual connect_button_current_lingual_;

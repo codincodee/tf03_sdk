@@ -35,6 +35,15 @@ if (DISPLAY_PLOT_ON_SETUP_PAGE)
   add_definitions(-DDISPLAY_PLOT_ON_SETUP_PAGE)
 endif()
 
+if (SWITCH_ON_ALL_FEATURES)
+  add_definitions(-DSWITCH_ON_ALL_FEATURES)
+  add_definitions(-DSUPPORT_DEVEL_MODE_PROTOCOL_)
+  add_definitions(-DUSE_APD_EXPERIMENT_PAGE)
+  add_definitions(-DAUTOMATIC_SERIAL_CONNECTION)
+  add_definitions(-DCLIENT_BL_CUSTOMIZATION)
+  add_definitions(-DDISPLAY_PLOT_ON_SETUP_PAGE)
+endif()
+
 add_executable(
   tf03_setup
   WIN32
