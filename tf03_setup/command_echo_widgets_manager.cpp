@@ -201,6 +201,11 @@ void CommandEchoWidgetsManager::LoadWidgets() {
       std::shared_ptr<DistanceLReadWidgets>(new DistanceLReadWidgets));
 #endif
 
+#ifdef SUPPORT_DEVEL_MODE_PROTOCOL_
+  AddWidgets(
+        std::shared_ptr<RangeDetectWidgets>(new RangeDetectWidgets));
+#endif
+
   if (ui_grid_) {
     SetupUIGrid(ui_grid_);
   }

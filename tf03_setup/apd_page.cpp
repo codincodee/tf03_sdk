@@ -94,9 +94,9 @@ bool APDPage::Initialize() {
   SetLineEditIntValidity(apd_from_edit_, 0, 1000);
   SetLineEditIntValidity(apd_to_edit_, 0, 1000);
   SetLineEditIntValidity(threshold_edit_, 0, 1000);
-  apd_from_edit_->setText("150");
+  apd_from_edit_->setText("140");
   apd_to_edit_->setText("180");
-  threshold_edit_->setText("4");
+  threshold_edit_->setText("20");
   ongoing_ = false;
   GetPlot().setTitle("Raw Distance (m)");
   status_label_->clear();

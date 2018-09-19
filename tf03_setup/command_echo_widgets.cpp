@@ -791,3 +791,44 @@ void CustomizationWidgets::SetOptionLingual() {
   combo->addItem(which_lingual(kBL));
   combo->addItem(which_lingual(kI13));
 }
+
+////////////////////// RangeDetectWidgets /////////////////////////////
+
+RangeDetectWidgets::RangeDetectWidgets() {
+  id = 0;
+  item_lingual = {"Range Detection", "检测量程"};
+  combo = new QComboBox;
+  option = combo;
+}
+
+void RangeDetectWidgets::SetOptionLingual() {
+  combo->clear();
+  combo->addItem(which_lingual(kOnLingual));
+  combo->addItem(which_lingual(kOffLingual));
+}
+
+void RangeDetectWidgets::ButtonClicked() {
+  static bool shown = false;
+  if (lingual_equal(combo->currentText(), kOnLingual)) {
+    if (!shown) {
+      shown = true;
+      QMessageBox box(button);
+      box.setWindowTitle(which_lingual(kMsgBoxInfoTitle));
+      box.setText(
+          which_lingual(
+              {"1. This feature only works in Devel mode;\n"
+               "2. Distance will flash red when out-range is detected.",
+               "1. 该功能只在开发模式下工作；\n"
+               "2. 超量程时，距离数字将显示红色。"}));
+      box.setStandardButtons(QMessageBox::Ok);
+      box.setButtonText(QMessageBox::Ok, which_lingual(kMsgBoxOk));
+      box.exec();
+    }
+    status_lingual = kOnLingual;
+    driver->RangeDetectionTask(true);
+  } else if (lingual_equal(combo->currentText(), kOffLingual)) {
+    status_lingual = kOffLingual;
+    driver->RangeDetectionTask(false);
+  }
+  status->setText(which_lingual(status_lingual));
+}

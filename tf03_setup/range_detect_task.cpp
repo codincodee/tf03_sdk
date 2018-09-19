@@ -3,7 +3,6 @@
 
 RangeDetectTask::RangeDetectTask()
 {
-  Start();
 }
 
 void RangeDetectTask::IncomingMeasure(const MeasureDevel &measure) {

@@ -300,4 +300,13 @@ struct CustomizationWidgets : public CommandEchoWidgets {
   const Lingual kI13 = {"I13", "I13定制版"};
 };
 
+////////////////////// RangeDetectWidgets /////////////////////////////
+
+struct RangeDetectWidgets : public CommandEchoWidgets {
+  RangeDetectWidgets();
+  void ButtonClicked() override;
+  void SetOptionLingual() override;
+  QComboBox* combo;
+};
+
 #endif // COMMAND_ECHO_WIDGETS_H

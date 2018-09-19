@@ -87,6 +87,7 @@ class Driver
   void SetDistanceL(const uint16_t& value);
   void RequestDistanceL();
   void SetCustomization(const Customization& type);
+  void RangeDetectionTask(const bool& on);
 
   void SetBufferCleanerBytes(const int& bytes);
   void SetBufferCleanerBytesDefault();

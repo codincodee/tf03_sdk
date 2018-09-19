@@ -3,6 +3,7 @@
 #include <QSerialPort>
 #include <QDebug>
 #include "apd_exp_task.h"
+#include "range_detect_task.h"
 
 void Driver::EnqueueCommand(const CommandFunc &command) {
   command_queue_mutex_.lock();
@@ -268,6 +269,17 @@ void Driver::SetCustomization(const Customization &type) {
     return SendMessage(
         CommonCommand(char(0x5A), QByteArray(1, id)));
   });
+}
+
+void Driver::RangeDetectionTask(const bool &on) {
+  if (!range_detect_task_) {
+    return;
+  }
+  if (on) {
+    range_detect_task_->Start();
+  } else {
+    range_detect_task_->Stop();
+  }
 }
 
 void Driver::SetTransTypeSerial() {
