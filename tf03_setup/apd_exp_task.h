@@ -10,10 +10,7 @@ class APDExpTask : public DevelModeTask
 public:
   APDExpTask();
   void IncomingMeasure(const MeasureDevel& measure) override;
-  void Start();
-  void Stop();
  private:
-  bool is_on_ = false;
   std::unique_ptr<std::list<MeasureDevel>> stream_;
 };
 

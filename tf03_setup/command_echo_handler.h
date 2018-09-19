@@ -41,6 +41,8 @@ public:
   DistanceEcho GetDistanceL1();
   bool IsDistanceLEchoed();
   DistanceEcho GetDistanceL();
+  bool IsRangeDetectEchoed();
+  bool IsOutOfRange();
 private:
   std::shared_ptr<Driver> driver_;
   std::unordered_map<char, bool> echo_map_;
@@ -54,6 +56,7 @@ private:
   std::vector<MeasureDevelStream> measure_devel_stream_;
   std::vector<DistanceEcho> distance_l1_;
   std::vector<DistanceEcho> distance_l_;
+  std::vector<bool> out_of_range_;
 };
 
 #endif // COMMAND_ECHO_HANDLER_H

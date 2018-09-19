@@ -26,6 +26,7 @@ void CommandEchoHandler::Probe() {
   versions_.clear();
 #ifdef SUPPORT_DEVEL_MODE_PROTOCOL_
   measure_devel_stream_.clear();
+  out_of_range_.clear();
 #endif
 #ifdef CLIENT_BL_CUSTOMIZATION
   distance_l1_.clear();
@@ -84,6 +85,14 @@ void CommandEchoHandler::Probe() {
           dynamic_unique_ptr_cast<MeasureDevelStream>(std::move(msg.data));
       if (stream) {
         measure_devel_stream_.emplace_back(std::move(*stream));
+      }
+    }
+    else if (msg.type == MessageType::out_of_range) {
+      auto echo = dynamic_unique_ptr_cast<OutOfRangeEcho>(std::move(msg.data));
+      if (echo) {
+        if (echo->out_of_range) {
+          out_of_range_.push_back(true);
+        }
       }
     }
 #endif
@@ -206,4 +215,15 @@ bool CommandEchoHandler::IsDistanceLEchoed() {
 
 DistanceEcho CommandEchoHandler::GetDistanceL() {
   return *distance_l_.rbegin();
+}
+
+bool CommandEchoHandler::IsRangeDetectEchoed() {
+  return !out_of_range_.empty();
+}
+
+bool CommandEchoHandler::IsOutOfRange() {
+  if (!IsRangeDetectEchoed()) {
+    return false;
+  }
+  return *out_of_range_.rbegin();
 }

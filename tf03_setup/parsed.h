@@ -17,6 +17,7 @@ enum class MessageType {
   version,
   measure_devel_stream,
   distance_echo,
+  out_of_range
 };
 
 struct ParsedBase {
@@ -67,6 +68,10 @@ enum class FirmwareUpdateStatus {
 
 struct UpdateFirmwareEcho : public ParsedBase {
   FirmwareUpdateStatus status;
+};
+
+struct OutOfRangeEcho : public ParsedBase {
+  bool out_of_range;
 };
 
 struct MeasureBasic : public ParsedBase {

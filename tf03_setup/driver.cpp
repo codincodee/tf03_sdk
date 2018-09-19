@@ -7,6 +7,7 @@
 #include "static_unique_ptr_cast.h"
 #include "devel_mode_task.h"
 #include "apd_exp_task.h"
+#include "range_detect_task.h"
 
 std::unique_ptr<MeasureDevel> ToMeasureDevel(
     std::unique_ptr<MeasureBasic>& basic) {
@@ -227,6 +228,11 @@ void Driver::LoadDevelModeTasks() {
 #ifdef USE_APD_EXPERIMENT_PAGE
   apd_exp_task_.reset(new APDExpTask);
   devel_mode_tasks_.push_back(apd_exp_task_);
+#endif
+
+#ifdef SUPPORT_DEVEL_MODE_PROTOCOL_
+  range_detect_task_.reset(new RangeDetectTask);
+  devel_mode_tasks_.push_back(range_detect_task_);
 #endif
 
   for (auto& task : devel_mode_tasks_) {

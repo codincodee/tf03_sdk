@@ -83,6 +83,8 @@ add_executable(
     measure_manifest.h
     plot_base.cpp
     plot_base.h
+    range_detect_task.cpp
+    range_detect_task.h
     resource.qrc
 )
 

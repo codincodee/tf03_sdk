@@ -9,7 +9,7 @@ APDExpTask::APDExpTask()
 }
 
 void APDExpTask::IncomingMeasure(const MeasureDevel &measure) {
-  if (!is_on_) {
+  if (!IsStarted()) {
     return;
   }
   if (!stream_) {
@@ -25,12 +25,4 @@ void APDExpTask::IncomingMeasure(const MeasureDevel &measure) {
     stream_.reset(new std::list<MeasureDevel>);
   }
   stream_->push_back(measure);
-}
-
-void APDExpTask::Start() {
-  is_on_ = true;
-}
-
-void APDExpTask::Stop() {
-  is_on_ = false;
 }

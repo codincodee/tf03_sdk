@@ -15,3 +15,15 @@ void DevelModeTask::EnqueueReceivedMessages(Message message) {
   }
   driver_->EnqueueReceivedMessages(std::move(message));
 }
+
+void DevelModeTask::Start() {
+  is_on_ = true;
+}
+
+void DevelModeTask::Stop() {
+  is_on_ = false;
+}
+
+bool DevelModeTask::IsStarted() const {
+  return is_on_;
+}

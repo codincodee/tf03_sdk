@@ -17,6 +17,7 @@ class QSerialPort;
 class QByteArray;
 class DevelModeTask;
 class APDExpTask;
+class RangeDetectTask;
 
 template<typename T>
 QByteArray to_bytes(const T& value) {
@@ -182,6 +183,7 @@ class Driver
   const int kDefaultBufferCleanerBytes = 30;
 
   std::shared_ptr<APDExpTask> apd_exp_task_;
+  std::shared_ptr<RangeDetectTask> range_detect_task_;
 };
 
 #endif // DRIVER_H
