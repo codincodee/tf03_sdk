@@ -90,9 +90,7 @@ void CommandEchoHandler::Probe() {
     else if (msg.type == MessageType::out_of_range) {
       auto echo = dynamic_unique_ptr_cast<OutOfRangeEcho>(std::move(msg.data));
       if (echo) {
-        if (echo->out_of_range) {
-          out_of_range_.push_back(true);
-        }
+        out_of_range_.push_back(echo->out_of_range);
       }
     }
 #endif

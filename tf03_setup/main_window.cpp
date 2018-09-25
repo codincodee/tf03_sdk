@@ -133,14 +133,16 @@ void MainWindow::timerEvent(QTimerEvent *event) {
   command_echo_handler_->Probe();
   command_echo_widgets_manager_->Update();
 
+#ifdef SUPPORT_DEVEL_MODE_PROTOCOL_
   static auto style_sheet = ui->DistanceDisplayLabel->styleSheet();
   if (command_echo_handler_->IsRangeDetectEchoed()) {
     if (command_echo_handler_->IsOutOfRange()) {
       ui->DistanceDisplayLabel->setStyleSheet("QLabel{background-color: red}");
+    } else {
+      ui->DistanceDisplayLabel->setStyleSheet(style_sheet);
     }
-  } else {
-    ui->DistanceDisplayLabel->setStyleSheet(style_sheet);
   }
+#endif
 
   auto measure_devel = ToMeasureDevel(measure_basic);
 

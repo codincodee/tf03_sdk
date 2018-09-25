@@ -19,15 +19,13 @@ void RangeDetectTask::IncomingMeasure(const MeasureDevel &measure) {
     std::unique_ptr<OutOfRangeEcho> echo(new OutOfRangeEcho);
     int cnt = 0;
     for (auto& measure : *stream_) {
-      if (measure.dist >= 18000) {
+      if (measure.dist >= 18000 || measure.dist == 0) {
         ++cnt;
       }
     }
     auto out_of_range = echo->out_of_range = ((cnt * 1.0f / kSampleNum) > 0.5f);
     message.data = std::move(echo);
-    if (out_of_range) {
-      EnqueueReceivedMessages(std::move(message));
-    }
+    EnqueueReceivedMessages(std::move(message));
     stream_.reset(new std::list<MeasureDevel>);
   }
   stream_->push_back(measure);
