@@ -2,7 +2,7 @@
 #define COMMAND_ECHO_WIDGETS_H
 
 #include <QObject>
-#include "lingual.h"
+#include <tf03_common/lingual.h>
 #include <QElapsedTimer>
 
 class QLabel;

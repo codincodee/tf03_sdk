@@ -5,6 +5,7 @@
 #include <QElapsedTimer>
 #include <memory>
 #include "plot_base.h"
+#include "export.h"
 
 struct MeasureDevel;
 struct MeasureDevelStream;
@@ -22,7 +23,7 @@ class QElapsedTimer;
 class Driver;
 class CommandEchoHandler;
 
-class APDPage : public PlotBase
+class API APDPage : public PlotBase
 {
   Q_OBJECT
 public:

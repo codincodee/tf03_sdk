@@ -3,8 +3,9 @@
 
 #include <memory>
 #include <unordered_map>
-#include "lingual.h"
+#include <tf03_common/lingual.h>
 #include <QObject>
+#include "export.h"
 
 class Driver;
 class QGridLayout;
@@ -12,7 +13,7 @@ struct CommandEchoWidgets;
 class CommandEchoHandler;
 struct UpgradeFirmwareWidgets;
 
-class CommandEchoWidgetsManager : QObject {
+class API CommandEchoWidgetsManager : QObject {
  public:
   CommandEchoWidgetsManager();
   void SetUIGrid(QGridLayout *layout);

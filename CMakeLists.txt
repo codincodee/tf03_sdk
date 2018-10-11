@@ -36,6 +36,7 @@ include_directories(
   "${PROJECT_BINARY_DIR}")  # to find tf0x_drivers/config.h
 
 # Add sub-directories
+add_subdirectory(tf03_common)
 add_subdirectory(tf03_setup)
 
 # The interesting stuff goes here
@@ -44,6 +45,7 @@ add_subdirectory(tf03_setup)
 # Add all targets to the build-tree export set
 export(
   TARGETS
+    tf03_common
     tf03_setup
   FILE
     "${PROJECT_BINARY_DIR}/tf03_sdkTargets.cmake"

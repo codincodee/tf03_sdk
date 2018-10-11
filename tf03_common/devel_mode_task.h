@@ -2,10 +2,11 @@
 #define DEVEL_MODE_TASK_H
 
 #include "driver.h"
+#include "export.h"
 
 struct MeasureDevel;
 
-class DevelModeTask
+class API DevelModeTask
 {
  public:
   virtual ~DevelModeTask();

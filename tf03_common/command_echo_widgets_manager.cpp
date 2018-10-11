@@ -4,7 +4,7 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QDebug>
-#include "firmware_module.h"
+#include <tf03_common/firmware_module.h>
 #include <QProgressBar>
 
 CommandEchoWidgetsManager::CommandEchoWidgetsManager() {

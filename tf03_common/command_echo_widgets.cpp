@@ -2,13 +2,13 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QComboBox>
-#include "driver.h"
+#include <tf03_common/driver.h>
 #include <QDebug>
-#include "command_echo_handler.h"
+#include <tf03_common/command_echo_handler.h>
 #include <QLineEdit>
 #include <QSizePolicy>
 #include <QMessageBox>
-#include "utils.h"
+#include <tf03_common/utils.h>
 
 ////////////////////// CommandEchoWidgets /////////////////////////////
 

@@ -12,6 +12,7 @@
 #include "lingual.h"
 #include <QSerialPortInfo>
 #include <atomic>
+#include "export.h"
 
 class QSerialPort;
 class QByteArray;
@@ -26,19 +27,19 @@ QByteArray to_bytes(const T& value) {
   return buffer;
 }
 
-std::unique_ptr<MeasureDevel> ToMeasureDevel(
+std::unique_ptr<MeasureDevel> API ToMeasureDevel(
     std::unique_ptr<MeasureBasic>& basic);
 
-struct Message {
+struct API Message {
   MessageType type;
   std::unique_ptr<ParsedBase> data;
 };
 
-enum class Customization {
+enum class API Customization {
   common, bl, i13
 };
 
-class Driver
+class API Driver
 {
  public:
   Driver();

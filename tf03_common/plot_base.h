@@ -3,15 +3,16 @@
 
 #include <QObject>
 #include "distance_over_time_chart.h"
+#include "export.h"
 
 class QLayout;
 class DistanceOverTimeChart;
 namespace QtCharts {
   class QChartView;
 }
-struct MeasureBasic;
+struct API MeasureBasic;
 
-class PlotBase : public QObject
+class API PlotBase : public QObject
 {
 public:
   PlotBase();

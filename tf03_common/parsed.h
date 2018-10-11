@@ -4,8 +4,9 @@
 #include <QString>
 #include "lingual.h"
 #include <list>
+#include "export.h"
 
-enum class MessageType {
+enum class API MessageType {
   measure,
   status,
   frequency,
@@ -20,67 +21,67 @@ enum class MessageType {
   out_of_range
 };
 
-struct ParsedBase {
+struct API ParsedBase {
   unsigned long id = 0;
   virtual ~ParsedBase();
 };
 
-struct StatusEcho : public ParsedBase {
+struct API StatusEcho : public ParsedBase {
   char cmd_id;
   Lingual command;
   bool success;
 };
 
-struct FrequencyEcho : public ParsedBase {
+struct API FrequencyEcho : public ParsedBase {
   unsigned short frequency;
 };
 
-struct SerialNumberEcho : public ParsedBase {
+struct API SerialNumberEcho : public ParsedBase {
   QString sn;
   bool status;
 };
 
-struct VersionEcho : public ParsedBase {
+struct API VersionEcho : public ParsedBase {
   int major;
   int minor;
   int patch;
 };
 
-struct OutputSwitchEcho : public ParsedBase {
+struct API OutputSwitchEcho : public ParsedBase {
   bool on;
 };
 
-struct BaudRateEcho : public ParsedBase {
+struct API BaudRateEcho : public ParsedBase {
   uint32_t value;
 };
 
-enum class OutputFormat {
+enum class API OutputFormat {
   nine_bytes, pix
 };
 
-struct OutputFormatEcho : public ParsedBase {
+struct API OutputFormatEcho : public ParsedBase {
   OutputFormat format;
 };
 
-enum class FirmwareUpdateStatus {
+enum class API FirmwareUpdateStatus {
   ok, sum_check_error, index_error, upgrade_fail
 };
 
-struct UpdateFirmwareEcho : public ParsedBase {
+struct API UpdateFirmwareEcho : public ParsedBase {
   FirmwareUpdateStatus status;
 };
 
-struct OutOfRangeEcho : public ParsedBase {
+struct API OutOfRangeEcho : public ParsedBase {
   bool out_of_range;
 };
 
-struct MeasureBasic : public ParsedBase {
+struct API MeasureBasic : public ParsedBase {
   ~MeasureBasic();
   unsigned short dist;
   unsigned short amp;
 };
 
-struct MeasureDevel : public MeasureBasic {
+struct API MeasureDevel : public MeasureBasic {
   unsigned short raw_dist1;
   unsigned short raw_dist2;
   unsigned short raw_dist3;
@@ -93,15 +94,15 @@ struct MeasureDevel : public MeasureBasic {
   float Celsius() const;
 };
 
-struct MeasureDevelStream : public ParsedBase {
+struct API MeasureDevelStream : public ParsedBase {
   std::list<MeasureDevel> stream;
 };
 
-enum class DistanceType {
+enum class API DistanceType {
   distance_l1, distance_l
 };
 
-struct DistanceEcho : public ParsedBase {
+struct API DistanceEcho : public ParsedBase {
   virtual ~DistanceEcho();
   DistanceType type;
   uint16_t distance;

@@ -4,6 +4,7 @@
 #include <memory>
 #include <unordered_map>
 #include <vector>
+#include "export.h"
 
 class Driver;
 class QString;
@@ -13,7 +14,7 @@ struct VersionEcho;
 struct MeasureDevelStream;
 struct DistanceEcho;
 
-class CommandEchoHandler
+class API CommandEchoHandler
 {
 public:
   CommandEchoHandler();

@@ -4,9 +4,9 @@
 #include <QMainWindow>
 #include <memory>
 #include <QElapsedTimer>
-#include "lingual.h"
+#include <tf03_common/lingual.h>
 #include <unordered_map>
-#include <config.h>
+#include <tf03_common/config.h>
 
 class CommandEchoHandler;
 class Driver;

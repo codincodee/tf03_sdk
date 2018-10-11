@@ -1,15 +1,15 @@
 #include "main_window.h"
 #include "ui_main_window.h"
-#include "driver.h"
+#include <tf03_common/driver.h>
 #include <QElapsedTimer>
 #include <QComboBox>
 #include <QDebug>
-#include "command_echo_handler.h"
-#include "command_echo_widgets_manager.h"
+#include <tf03_common/command_echo_handler.h>
+#include <tf03_common/command_echo_widgets_manager.h>
 #include <QSerialPortInfo>
 #include <QDesktopWidget>
-#include "apd_page.h"
-#include "measure_manifest.h"
+#include <tf03_common/apd_page.h>
+#include <tf03_common/measure_manifest.h>
 
 MainWindow::MainWindow(QWidget *parent) :
   QMainWindow(parent),

@@ -2,12 +2,13 @@
 #define DISTANCE_OVER_TIME_CHART_H
 
 #include <QtCharts/qchart.h>
+#include "export.h"
 
 namespace QtCharts {
   class QLineSeries;
 }
 
-class DistanceOverTimeChart : public QtCharts::QChart {
+class API DistanceOverTimeChart : public QtCharts::QChart {
   Q_OBJECT
 public:
   DistanceOverTimeChart();

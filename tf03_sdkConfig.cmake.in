@@ -12,5 +12,5 @@ set(tf03_sdk_INCLUDE_DIRS "@CONF_INCLUDE_DIRS@")
 include("${tf03_sdk_CMAKE_DIR}/tf03_sdkTargets.cmake")
 
 # These are IMPORTED targets created by tf03_sdkTargets.cmake
-set(tf03_sdk_LIBRARIES tf0x_drivers tf0x_common)
-set(tf03_sdk_EXECUTABLE tf02_traffic tf03_test  )
+set(tf03_sdk_LIBRARIES tf03_common)
+set(tf03_sdk_EXECUTABLE tf03_setup)

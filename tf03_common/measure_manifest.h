@@ -4,6 +4,7 @@
 #include <vector>
 #include "plot_base.h"
 #include <memory>
+#include "export.h"
 
 namespace QtCharts {
   class QChartView;
@@ -16,7 +17,7 @@ struct MeasureBasic;
 class QLabel;
 class QGridLayout;
 
-struct ManifestBase {
+struct API ManifestBase {
   virtual ~ManifestBase();
   std::vector<std::pair<QLabel*, QLabel*>> labels;
   virtual void Setup(QGridLayout* layout) = 0;
@@ -25,17 +26,17 @@ struct ManifestBase {
   void Clear();
 };
 
-struct ManifestDevel : public ManifestBase {
+struct API ManifestDevel : public ManifestBase {
   ~ManifestDevel();
   void Setup(QGridLayout* layout) override;
   void IncomingMeasure(const MeasureDevel& measure);
 };
 
-struct ManifestBasic : public ManifestBase {
+struct API ManifestBasic : public ManifestBase {
   void Setup(QGridLayout* layout) override;
 };
 
-class MeasureManifest : public PlotBase
+class API MeasureManifest : public PlotBase
 {
 public:
   MeasureManifest();

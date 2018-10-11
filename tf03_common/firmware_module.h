@@ -4,11 +4,12 @@
 #include <QString>
 #include <queue>
 #include <memory>
+#include "export.h"
 
-enum class FirmwareUpdateStatus;
+enum class API FirmwareUpdateStatus;
 class Driver;
 
-class FirmwareModule
+class API FirmwareModule
 {
  public:
   FirmwareModule();
@@ -37,7 +38,7 @@ class FirmwareModule
 
 class QProgressBar;
 
-struct UpgradeFirmwareWidgets : public CommandEchoWidgets {
+struct API UpgradeFirmwareWidgets : public CommandEchoWidgets {
   UpgradeFirmwareWidgets();
   void ButtonClicked() override;
   void Update() override;
