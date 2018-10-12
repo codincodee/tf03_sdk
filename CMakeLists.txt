@@ -38,6 +38,7 @@ include_directories(
 # Add sub-directories
 add_subdirectory(tf03_common)
 add_subdirectory(tf03_setup)
+add_subdirectory(tf03_production)
 
 # The interesting stuff goes here
 # ===============================
