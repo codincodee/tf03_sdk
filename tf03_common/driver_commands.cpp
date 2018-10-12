@@ -257,12 +257,20 @@ void Driver::RequestDistanceL() {
   });
 }
 
+void Driver::SetHorizontalAngle(const uint8_t &value) {
+  EnqueueCommand([this, value](){
+    return SendMessage(
+        CommonCommand(char(0x5B), QByteArray(1, 0x01) + to_bytes(value)));
+  });
+}
+
 void Driver::SetCustomization(const Customization &type) {
   char id;
   switch (type) {
   case Customization::common: id = 0; break;
   case Customization::bl: id = 1; break;
   case Customization::i13: id = 2; break;
+  case Customization::ql: id = 3; break;
   default: return;
   }
   EnqueueCommand([this, id](){

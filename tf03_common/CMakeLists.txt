@@ -80,6 +80,12 @@ add_library(
       apd_exp_task.h
       range_detect_task.cpp
       range_detect_task.h
+      page_base.cpp
+      page_base.h
+      apd_page_wrapper.cpp
+      apd_page_wrapper.h
+      connection_page.cpp
+      connection_page.h
 )
 
 target_link_libraries(

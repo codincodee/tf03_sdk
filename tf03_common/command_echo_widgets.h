@@ -298,6 +298,7 @@ struct CustomizationWidgets : public CommandEchoWidgets {
   const Lingual kCommon = {"Common", "通用版本"};
   const Lingual kBL = {"BL", "BL定制版"};
   const Lingual kI13 = {"I13", "I13定制版"};
+  const Lingual kQL = {"QL", "QL定制版"};
 };
 
 ////////////////////// RangeDetectWidgets /////////////////////////////
@@ -309,4 +310,11 @@ struct RangeDetectWidgets : public CommandEchoWidgets {
   QComboBox* combo;
 };
 
+////////////////////// HorizontalAngleWidgets /////////////////////////////
+
+struct HorizontalAngleWidgets : public CommandEchoWidgets {
+  HorizontalAngleWidgets();
+  void ButtonClicked() override;
+  QLineEdit* edit;
+};
 #endif // COMMAND_ECHO_WIDGETS_H

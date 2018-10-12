@@ -782,6 +782,8 @@ void CustomizationWidgets::ButtonClicked() {
     driver->SetCustomization(Customization::bl);
   } else if (lingual_equal(text, kI13)) {
     driver->SetCustomization(Customization::i13);
+  } else if (lingual_equal(text, kQL)) {
+    driver->SetCustomization(Customization::ql);
   }
 }
 
@@ -790,6 +792,7 @@ void CustomizationWidgets::SetOptionLingual() {
   combo->addItem(which_lingual(kCommon));
   combo->addItem(which_lingual(kBL));
   combo->addItem(which_lingual(kI13));
+  combo->addItem(which_lingual(kQL));
 }
 
 ////////////////////// RangeDetectWidgets /////////////////////////////
@@ -831,4 +834,23 @@ void RangeDetectWidgets::ButtonClicked() {
     driver->RangeDetectionTask(false);
   }
   status->setText(which_lingual(status_lingual));
+}
+
+////////////////////// HorizontalAngleWidgets /////////////////////////////
+
+HorizontalAngleWidgets::HorizontalAngleWidgets() {
+  id = 0x5B;
+  item_lingual = {"Horizontal Angle", "水平安装角度"};
+  edit = new QLineEdit;
+  option = edit;
+  SetLineEditIntValidity(edit, 0, 90);
+}
+
+void HorizontalAngleWidgets::ButtonClicked() {
+  CommandEchoWidgets::ButtonClicked();
+  bool ok;
+  auto value = edit->text().toInt(&ok);
+  if (ok) {
+    driver->SetHorizontalAngle(value);
+  }
 }

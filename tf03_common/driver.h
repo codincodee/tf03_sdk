@@ -36,7 +36,7 @@ struct API Message {
 };
 
 enum class API Customization {
-  common, bl, i13
+  common, bl, i13, ql
 };
 
 class API Driver
@@ -89,6 +89,7 @@ class API Driver
   void RequestDistanceL();
   void SetCustomization(const Customization& type);
   void RangeDetectionTask(const bool& on);
+  void SetHorizontalAngle(const uint8_t& value);
 
   void SetBufferCleanerBytes(const int& bytes);
   void SetBufferCleanerBytesDefault();

@@ -204,6 +204,8 @@ void CommandEchoWidgetsManager::LoadWidgets() {
 #ifdef SUPPORT_DEVEL_MODE_PROTOCOL_
   AddWidgets(
         std::shared_ptr<RangeDetectWidgets>(new RangeDetectWidgets));
+  AddWidgets(
+        std::shared_ptr<HorizontalAngleWidgets>(new HorizontalAngleWidgets));
 #endif
 
   if (ui_grid_) {
