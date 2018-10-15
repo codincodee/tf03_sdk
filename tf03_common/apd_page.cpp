@@ -132,12 +132,14 @@ bool APDPage::Initialize() {
 }
 
 void APDPage::IncomingMeasure(const MeasureDevel &measure) {
+  last_measure_ = measure;
+  last_measure_.stamp.restart();
   GetPlot().AddPoint(measure.raw_dist1 / 100.f, measure.id);
   if (apd_label_) {
     apd_label_->setText(QString::number(measure.apd));
   }
   if (temp_label_) {
-    temp_label_->setText(QString::number(measure.Celsius()));
+    temp_label_->setText(QString::number(measure.Celsius(), 'f', 1));
   }
 }
 
@@ -235,6 +237,25 @@ void APDPage::OnStartButtonClicked() {
 }
 
 bool APDPage::OnStart() {
+  if (least_mcu_temperature_ > 0) {
+    if (last_measure_.stamp.elapsed() > 1000) {
+      return false;
+    }
+    if (last_measure_.Celsius() < least_mcu_temperature_) {
+      QMessageBox box(start_button_);
+      if (use_page_base_specs_) {
+        box.setFont(PageBase::GetCommonFont());
+      }
+      box.setWindowTitle("错误");
+      box.setText(
+          "MCU温度过低 (低于" + QString::number(least_mcu_temperature_) + "°C)，"
+          "无法启动实验");
+      box.addButton(QMessageBox::Abort);
+      box.setButtonText(QMessageBox::Abort, "放弃");
+      box.exec();
+      return false;
+    }
+  }
   bool ok;
   apd_from_ = apd_from_edit_->text().toInt(&ok);
   if (!ok) return false;
@@ -397,4 +418,8 @@ int APDPage::CalculateResultAPD(const int &apd_crash, const float &temp) {
 
 void APDPage::UsePageBaseSpecs(const bool &use) {
   use_page_base_specs_ = use;
+}
+
+void APDPage::SetLeastStartTemperature(const int &temp) {
+  least_mcu_temperature_ = temp;
 }

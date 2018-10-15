@@ -6,6 +6,7 @@
 #include <memory>
 #include "plot_base.h"
 #include "export.h"
+#include "parsed.h"
 
 struct MeasureDevel;
 struct MeasureDevelStream;
@@ -43,6 +44,7 @@ public:
   void IncomingMeasure(const MeasureDevel& measure);
   void Update();
   void UsePageBaseSpecs(const bool& use = true);
+  void SetLeastStartTemperature(const int& temp);
 public slots:
   void OnStartButtonClicked();
 private:
@@ -92,6 +94,10 @@ private:
   const int kMinToIgnore = 2;
 
   bool use_page_base_specs_ = false;
+
+  MeasureDevelStamped last_measure_;
+
+  int least_mcu_temperature_ = 0;
 };
 
 #endif // APD_PAGE_H

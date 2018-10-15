@@ -6,6 +6,8 @@
 #include <list>
 #include "export.h"
 
+#include <QElapsedTimer>
+
 enum class API MessageType {
   measure,
   status,
@@ -82,6 +84,7 @@ struct API MeasureBasic : public ParsedBase {
 };
 
 struct API MeasureDevel : public MeasureBasic {
+  virtual ~MeasureDevel();
   unsigned short raw_dist1;
   unsigned short raw_dist2;
   unsigned short raw_dist3;
@@ -92,6 +95,12 @@ struct API MeasureDevel : public MeasureBasic {
   unsigned short volt;
   unsigned short temp;
   float Celsius() const;
+};
+
+struct API MeasureDevelStamped : public MeasureDevel {
+  MeasureDevelStamped();
+  MeasureDevelStamped(const MeasureDevel& devel);
+  QElapsedTimer stamp;
 };
 
 struct API MeasureDevelStream : public ParsedBase {
