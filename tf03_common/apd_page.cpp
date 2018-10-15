@@ -280,7 +280,7 @@ bool APDPage::OnStart() {
 
 void APDPage::OnStop() {
 //  driver_->SetAutoGainAdjust(true);
-//  driver_->SetAdaptiveAPD(true);
+  driver_->SetAdaptiveAPD(true);
   ongoing_ = false;
   driver_->APDExperimentOff();
   start_button_->setText(kStartButtonStart);

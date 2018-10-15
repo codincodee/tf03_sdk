@@ -18,9 +18,11 @@ bool ConnectionPage::Initialize() {
   if (!distance_display_label_) {
     return false;
   }
+  distance_display_label_->setFont(GetLargeBoldFont());
   if (!frequency_display_label_) {
     return false;
   }
+  frequency_display_label_->setFont(GetLargeBoldFont());
   if (!port_combo_) {
     return false;
   }
