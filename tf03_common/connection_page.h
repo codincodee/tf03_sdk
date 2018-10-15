@@ -11,6 +11,9 @@ class QComboBox;
 class QPushButton;
 class QString;
 class Driver;
+class QGridLayout;
+class RequestVersionWidgets;
+class CommandEchoHandler;
 
 class API ConnectionPage : public PageBase
 {
@@ -23,6 +26,7 @@ public:
   void SetPortComboBox(QComboBox* combo);
   void SetBaudRateComboxBox(QComboBox* combo);
   void SetConnectPushButton(QPushButton* button);
+  void SetVersionLayout(QGridLayout* layout);
   void SetDriver(std::shared_ptr<Driver> driver);
   void Update() override;
   void OnMeasured(const MeasureDevel& measure) override;
@@ -36,11 +40,13 @@ private:
   QComboBox* port_combo_ = nullptr;
   QComboBox* baud_rate_ = nullptr;
   QPushButton* connect_button_ = nullptr;
+  QGridLayout* version_layout_ = nullptr;
 
   QString kDisconnectPushButtonText;
   QString kConnectPushButtonText;
 
   std::shared_ptr<Driver> driver_;
+  std::shared_ptr<RequestVersionWidgets> version_widgets_;
 
   QElapsedTimer frequency_timer_;
   unsigned long last_freq_measure_id_ = 0;

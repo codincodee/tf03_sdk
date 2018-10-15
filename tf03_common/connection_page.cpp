@@ -4,6 +4,8 @@
 #include <QComboBox>
 #include <QLabel>
 #include <QDebug>
+#include "command_echo_widgets.h"
+#include <QLayout>
 
 ConnectionPage::ConnectionPage()
   : kDisconnectPushButtonText("断开"),
@@ -28,7 +30,13 @@ bool ConnectionPage::Initialize() {
   if (!connect_button_) {
     return false;
   }
+  if (!version_layout_) {
+    return false;
+  }
   if (!driver_) {
+    return false;
+  }
+  if (!EchoHandler()) {
     return false;
   }
   connect(
@@ -41,6 +49,14 @@ bool ConnectionPage::Initialize() {
   for (auto& rate : baud_rates) {
     baud_rate_->addItem(QString::number(rate));
   }
+
+  version_widgets_.reset(new RequestVersionWidgets);
+  version_widgets_->driver = driver_;
+  version_widgets_->echo_handler = EchoHandler();
+  version_widgets_->button->setText("获取版本号");
+  version_layout_->addWidget(version_widgets_->button, 0, 0);
+  version_layout_->addWidget(version_widgets_->status, 0, 1);
+  version_layout_->addWidget(version_widgets_->label, 0, 2);
   return true;
 }
 
@@ -64,6 +80,10 @@ void ConnectionPage::SetConnectPushButton(QPushButton *button) {
   connect_button_ = button;
 }
 
+void ConnectionPage::SetVersionLayout(QGridLayout *layout) {
+  version_layout_ = layout;
+}
+
 void ConnectionPage::SetDriver(std::shared_ptr<Driver> driver) {
   driver_ = driver;
 }
@@ -78,6 +98,17 @@ void ConnectionPage::Update() {
   if (frequency_timer_.elapsed() > 2000) {
     frequency_display_label_->clear();
     distance_display_label_->clear();
+    version_widgets_->status->clear();
+    version_widgets_->label->clear();
+  }
+
+  if (version_widgets_) {
+    version_widgets_->Update();
+    if (lingual_equal(version_widgets_->status->text(), version_widgets_->kSuccessLingual)) {
+      version_widgets_->status->setVisible(false);
+    } else {
+      version_widgets_->status->setVisible(true);
+    }
   }
 }
 
