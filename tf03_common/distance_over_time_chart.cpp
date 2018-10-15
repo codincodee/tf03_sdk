@@ -68,6 +68,7 @@ bool DistanceOverTimeChart::AddPoint(
     min_ = min;
     max_ = max;
     this->setAxisY(axis_y, line_series);
+    axis_y->setLabelsFont(label_font_);
   }
   return true;
 }
@@ -77,6 +78,10 @@ void DistanceOverTimeChart::Clear() {
     return;
   }
   line_series_->clear();
+}
+
+void DistanceOverTimeChart::SetLabelFont(const QFont &font) {
+  label_font_ = font;
 }
 
 bool DistanceOverTimeChart::AddPoint(
@@ -94,6 +99,7 @@ DistanceOverTimeChart::DistanceOverTimeChart()
   axis_y->setGridLineVisible(true);
   axis_y->setTickCount(20);
   this->addAxis(axis_y, Qt::AlignLeft);
+  label_font_ = axis_y->labelsFont();
 }
 
 float DistanceOverTimeChart::GetMax() const {

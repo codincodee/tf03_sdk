@@ -11,6 +11,8 @@ class API APDPageWrapper : public PageBase
 public:
   APDPageWrapper();
   void SetAPDPageCore(std::shared_ptr<APDPage> core);
+  std::shared_ptr<APDPage> GetCore();
+  void Update() override;
  private:
   std::shared_ptr<APDPage> core_;
 };

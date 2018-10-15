@@ -24,6 +24,7 @@ public:
   float CurrentStandardDeviation();
   void CurrentAverageAndStandardDeviation(float& average, float& stddev);
   void Clear();
+  void SetLabelFont(const QFont& font);
 protected:
   bool AddPoint(
       const float &meter,
@@ -36,6 +37,7 @@ private:
   float ceiling_;
   float floor_;
   int time_span_;
+  QFont label_font_;
 };
 
 #endif // DISTANCE_OVER_TIME_CHART_H

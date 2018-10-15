@@ -22,6 +22,7 @@ public:
   void SetVisible(const bool& visible);
   void IncomingMeasure(const MeasureBasic& measure);
   DistanceOverTimeChart& GetPlot();
+  DistanceOverTimeChart* GetPlotPtr();
 private:
   QLayout* plot_layout_ = nullptr;
   QtCharts::QChartView* main_chart_view_ = nullptr;

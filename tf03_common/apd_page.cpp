@@ -14,6 +14,7 @@
 #include "driver.h"
 #include <set>
 #include <QMessageBox>
+#include "page_base.h"
 
 APDPage::APDPage()
 {
@@ -24,30 +25,51 @@ APDPage::~APDPage() {
 }
 
 void APDPage::SetAPDDisplayLabel(QLabel *label) {
+  if (use_page_base_specs_) {
+    PageBase::SetWidgetFontLargeBold(label);
+  }
   apd_label_ = label;
 }
 
 void APDPage::SetTemperatureDisplayLabel(QLabel *label) {
+  if (use_page_base_specs_) {
+    PageBase::SetWidgetFontLargeBold(label);
+  }
   temp_label_ = label;
 }
 
 void APDPage::SetProgressBar(QProgressBar *progress) {
+  if (use_page_base_specs_) {
+    PageBase::SetWidgetFontCommon(progress);
+  }
   progress_bar_ = progress;
 }
 
 void APDPage::SetAPDFromLineEdit(QLineEdit* edit) {
+  if (use_page_base_specs_) {
+    PageBase::SetWidgetFontCommon(edit);
+  }
   apd_from_edit_ = edit;
 }
 
 void APDPage::SetAPDToLineEdit(QLineEdit* edit) {
+  if (use_page_base_specs_) {
+    PageBase::SetWidgetFontCommon(edit);
+  }
   apd_to_edit_ = edit;
 }
 
 void APDPage::SetThresholdLineEdit(QLineEdit* edit) {
+  if (use_page_base_specs_) {
+    PageBase::SetWidgetFontCommon(edit);
+  }
   threshold_edit_ = edit;
 }
 
 void APDPage::SetStartPushButton(QPushButton *button) {
+  if (use_page_base_specs_) {
+    PageBase::SetWidgetFontCommon(button);
+  }
   start_button_ = button;
 }
 
@@ -99,6 +121,12 @@ bool APDPage::Initialize() {
   threshold_edit_->setText("20");
   ongoing_ = false;
   GetPlot().setTitle("Raw Distance (m)");
+  if (use_page_base_specs_) {
+    GetPlot().setFont(PageBase::GetCommonFont());
+    GetPlot().setTitleFont(PageBase::GetCommonFont());
+    GetPlot().setTitle("原始距离 (m)");
+    GetPlot().SetLabelFont(PageBase::GetCommonFont());
+  }
   status_label_->clear();
   return true;
 }
@@ -122,8 +150,8 @@ void APDPage::Update() {
     OnStop();
     QMessageBox::warning(
         start_button_,
-        "APD Experiment Failed",
-        "APD Experiment ended. No crashed APD found.",
+        "APD实验失败",
+        "APD实验失败. 找不到APD雪崩值.",
         QMessageBox::Abort);
     return;
   }
@@ -326,12 +354,12 @@ void APDPage::HandleCrashed(
   ongoing_ = false;
   OnStop();
   auto button = QMessageBox::information(
-      start_button_, "Experiment Results",
-      "Experiment ended. \n"
-      "Found APD crashed voltage: " + QString::number(apd_crash_) + " (V);\n"
-      "temperature: " + QString::number(measure.Celsius(), 'f', 2) + " (C);\n"
-      "result APD: " + QString::number(apd_result) + " (V).\n"
-      "Write results to device?", QMessageBox::Yes, QMessageBox::No);
+      start_button_, "实验结果",
+      "实验结束. \n"
+      "找到APD雪崩值: " + QString::number(apd_crash_) + " (V);\n"
+      "温度: " + QString::number(measure.Celsius(), 'f', 2) + " (C);\n"
+      "APD目标值: " + QString::number(apd_result) + " (V).\n"
+      "将APD目标值写入结果?", QMessageBox::Yes, QMessageBox::No);
   if (button == QMessageBox::Yes) {
     driver_->SetAPD(apd_result);
   }
@@ -341,7 +369,7 @@ void APDPage::HandleCrashed(
 void APDPage::ProceedExperiment() {
   apd_cmd_ += apd_step_;
   driver_->SetAPD(apd_cmd_);
-  status_label_->setText("Setting APD: " + QString::number(apd_cmd_));
+  status_label_->setText("正在设置APD: " + QString::number(apd_cmd_));
   if (!timeout_) {
     timeout_.reset(new QElapsedTimer);
   }
@@ -353,4 +381,8 @@ void APDPage::ProceedExperiment() {
 
 int APDPage::CalculateResultAPD(const int &apd_crash, const float &temp) {
   return (apd_crash - (temp - 30) * 0.9) * 0.9;
+}
+
+void APDPage::UsePageBaseSpecs(const bool &use) {
+  use_page_base_specs_ = use;
 }

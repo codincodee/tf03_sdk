@@ -62,3 +62,7 @@ void PlotBase::IncomingMeasure(const MeasureBasic& measure) {
 DistanceOverTimeChart& PlotBase::GetPlot() {
   return *main_chart_;
 }
+
+DistanceOverTimeChart* PlotBase::GetPlotPtr() {
+  return main_chart_;
+}

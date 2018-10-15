@@ -5,6 +5,9 @@
 #include <memory>
 
 class CommandEchoHandler;
+class QLabel;
+class QWidget;
+class QFont;
 
 class API PageBase
 {
@@ -12,6 +15,12 @@ class API PageBase
   PageBase();
   virtual ~PageBase();
   void SetCommandEchoHandler(std::shared_ptr<CommandEchoHandler> echo_handler);
+  virtual void Update();
+  void SetLabelFontCommon(QLabel* label);
+  static void SetWidgetFontCommon(QWidget* widget);
+  static QFont GetCommonFont();
+  static QFont GetLargeBoldFont();
+  static void SetWidgetFontLargeBold(QWidget* widget);
  protected:
    std::shared_ptr<CommandEchoHandler> EchoHandler();
  private:

@@ -1,6 +1,14 @@
 #ifndef MAIN_WINDOW_H
 #define MAIN_WINDOW_H
 
+#ifndef SUPPORT_DEVEL_MODE_PROTOCOL_
+#error "MACRO 'SUPPORT_DEVEL_MODE_PROTOCOL_' not found."
+#endif
+
+#ifndef USE_APD_EXPERIMENT_PAGE
+#error "MACRO 'USE_APD_EXPERIMENT_PAGE' not found."
+#endif
+
 #include <QMainWindow>
 #include <memory>
 #include <QElapsedTimer>
@@ -11,7 +19,7 @@
 class CommandEchoHandler;
 class Driver;
 class CommandEchoWidgetsManager;
-class APDPage;
+class APDPageWrapper;
 class MeasureManifest;
 
 namespace Ui {
@@ -67,7 +75,7 @@ private:
 
   QStringList port_combo_;
 
-  std::shared_ptr<APDPage> apd_page_;
+  std::shared_ptr<APDPageWrapper> apd_page_;
 };
 
 #endif // MAIN_WINDOW_H

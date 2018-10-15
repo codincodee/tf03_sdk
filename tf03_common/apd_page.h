@@ -42,6 +42,7 @@ public:
   bool Initialize();
   void IncomingMeasure(const MeasureDevel& measure);
   void Update();
+  void UsePageBaseSpecs(const bool& use = true);
 public slots:
   void OnStartButtonClicked();
 private:
@@ -64,8 +65,8 @@ private:
   QLineEdit* apd_to_edit_ = nullptr;
   QLineEdit* threshold_edit_ = nullptr;
   QLabel* status_label_ = nullptr;
-  const QString kStartButtonStart = "Start";
-  const QString kStartButtonStop = "Stop";
+  const QString kStartButtonStart = "开始";
+  const QString kStartButtonStop = "停止";
   int apd_from_;
   int apd_to_;
   int threshold_;
@@ -89,6 +90,8 @@ private:
 
   const int kMaxToIgnore = 2;
   const int kMinToIgnore = 2;
+
+  bool use_page_base_specs_ = false;
 };
 
 #endif // APD_PAGE_H

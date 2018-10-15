@@ -10,11 +10,21 @@
 #include <QDesktopWidget>
 #include <tf03_common/apd_page.h>
 #include <tf03_common/measure_manifest.h>
+#include <tf03_common/apd_page_wrapper.h>
+#include <tf03_common/utils.h>
 
 MainWindow::MainWindow(QWidget *parent) :
   QMainWindow(parent),
   ui(new Ui::MainWindow)
 {
+  if (!IsAPDExperimentPagUsed()) {
+    return;
+  }
+
+  if (!IsDevelModeSupported()) {
+    return;
+  }
+
   ui->setupUi(this);
 
   this->setWindowIcon(QIcon(":/image/logo.png"));
@@ -38,27 +48,39 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->BaudRateComboBox->addItem(QString::number(rate));
   }
 
-#ifndef USE_APD_EXPERIMENT_PAGE
-  ui->tabWidget->removeTab(1);
-#else
-  apd_page_.reset(new APDPage);
-#endif
-  if (apd_page_) {
-    apd_page_->SetLayout(ui->APDPagePlotVerticalLayout);
-    apd_page_->SetAPDDisplayLabel(ui->APDPageAPDVoltageLabel);
-    apd_page_->SetTemperatureDisplayLabel(ui->APDPageTemperatureLabel);
-    apd_page_->SetStartPushButton(ui->APDPageStartPushButton);
-    apd_page_->SetProgressBar(ui->APDPageProgressBar);
-    apd_page_->SetAPDFromLineEdit(ui->APDPageAPDFromLineEdit);
-    apd_page_->SetAPDToLineEdit(ui->APDPageAPDToLineEdit);
-    apd_page_->SetThresholdLineEdit(ui->APDPageThresholdLineEdit);
-    apd_page_->SetDriver(driver_);
-    apd_page_->SetCmdEchoHandler(command_echo_handler_);
-    apd_page_->SetStatusLabel(ui->APDPageStatusLabel);
-    if (!apd_page_->Initialize()) {
-      apd_page_.reset();
+  std::shared_ptr<APDPage> apd_core(new APDPage);
+  apd_page_.reset(new APDPageWrapper);
+  apd_page_->SetAPDPageCore(apd_core);
+
+  ui->tabWidget->setFont(PageBase::GetCommonFont());
+
+  if (apd_core) {
+    apd_core->UsePageBaseSpecs(true);
+    apd_core->SetLayout(ui->APDPagePlotVerticalLayout);
+    apd_core->SetAPDDisplayLabel(ui->APDPageAPDVoltageLabel);
+    apd_core->SetTemperatureDisplayLabel(ui->APDPageTemperatureLabel);
+    apd_core->SetStartPushButton(ui->APDPageStartPushButton);
+    apd_core->SetProgressBar(ui->APDPageProgressBar);
+    apd_core->SetAPDFromLineEdit(ui->APDPageAPDFromLineEdit);
+    apd_core->SetAPDToLineEdit(ui->APDPageAPDToLineEdit);
+    apd_core->SetThresholdLineEdit(ui->APDPageThresholdLineEdit);
+    apd_core->SetDriver(driver_);
+    apd_core->SetCmdEchoHandler(command_echo_handler_);
+    apd_core->SetStatusLabel(ui->APDPageStatusLabel);
+    if (!apd_core->Initialize()) {
+      apd_core.reset();
     }
   }
+
+  apd_page_->SetWidgetFontCommon(ui->APDPageAPDFromTipLabel);
+  apd_page_->SetWidgetFontCommon(ui->APDPageAPDToTipLabel);
+  apd_page_->SetWidgetFontCommon(ui->APDPageThresholdTipLabel);
+  apd_page_->SetWidgetFontCommon(ui->APDPageAPDVoltageTipLabel);
+  apd_page_->SetWidgetFontCommon(ui->APDPageTemperatureTipLabel);
+
+  ui->APDPageAPDFromLineEdit->setDisabled(true);
+  ui->APDPageAPDToLineEdit->setDisabled(true);
+  ui->APDPageThresholdLineEdit->setDisabled(true);
 
   ui->tabWidget->setCurrentIndex(0);
   SetupUIText();
@@ -75,18 +97,16 @@ void MainWindow::timerEvent(QTimerEvent *event) {
     return;
   }
 
-#ifdef USE_APD_EXPERIMENT_PAGE
   if (apd_page_) {
     apd_page_->Update();
   }
-#endif
-#ifdef AUTOMATIC_SERIAL_CONNECTION
+
   if (driver_->DetectAndAutoConnect()) {
     connect_button_current_lingual_ = kDisconnectPushButtonText;
     ui->ConnectPushButton->setText(
         which_lingual(connect_button_current_lingual_));
   }
-#endif
+
   UpdatePortNameComboBox();
 
   MeasureBasic measure;
@@ -114,29 +134,14 @@ void MainWindow::timerEvent(QTimerEvent *event) {
 
   command_echo_handler_->Probe();
 
-#ifdef SUPPORT_DEVEL_MODE_PROTOCOL_
-  static auto style_sheet = ui->DistanceDisplayLabel->styleSheet();
-  if (command_echo_handler_->IsRangeDetectEchoed()) {
-    if (command_echo_handler_->IsOutOfRange()) {
-      ui->DistanceDisplayLabel->setStyleSheet("QLabel{background-color: red}");
-    } else {
-      ui->DistanceDisplayLabel->setStyleSheet(style_sheet);
-    }
-  }
-#endif
-
   auto measure_devel = ToMeasureDevel(measure_basic);
 
   if (measure_devel) {
-    if (apd_page_) {
-      apd_page_->IncomingMeasure(*measure_devel);
+    auto apd_core = apd_page_->GetCore();
+    if (apd_core) {
+      apd_core->IncomingMeasure(*measure_devel);
     }
-#ifdef DISPLAY_PLOT_ON_SETUP_PAGE
-
-#endif
-  } else {
   }
-
 }
 
 void MainWindow::on_ChinesePushButton_clicked()

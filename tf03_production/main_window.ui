@@ -25,7 +25,7 @@
     <item row="1" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -167,16 +167,16 @@
         <item row="1" column="0">
          <layout class="QGridLayout" name="gridLayout_7">
           <item row="0" column="0">
-           <widget class="QLabel" name="label">
+           <widget class="QLabel" name="APDPageAPDVoltageTipLabel">
             <property name="text">
-             <string>APD Voltage</string>
+             <string>APD电压（V）</string>
             </property>
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="QLabel" name="label_2">
+           <widget class="QLabel" name="APDPageTemperatureTipLabel">
             <property name="text">
-             <string>Temperature</string>
+             <string>温度（C）</string>
             </property>
            </widget>
           </item>
@@ -253,16 +253,16 @@
            <widget class="QLineEdit" name="APDPageAPDToLineEdit"/>
           </item>
           <item row="0" column="2">
-           <widget class="QLabel" name="label_4">
+           <widget class="QLabel" name="APDPageAPDToTipLabel">
             <property name="text">
-             <string>APD To</string>
+             <string>APD终止值</string>
             </property>
            </widget>
           </item>
           <item row="0" column="0">
-           <widget class="QLabel" name="label_3">
+           <widget class="QLabel" name="APDPageAPDFromTipLabel">
             <property name="text">
-             <string>APD From</string>
+             <string>APD起始值</string>
             </property>
            </widget>
           </item>
@@ -270,9 +270,9 @@
            <widget class="QLineEdit" name="APDPageAPDFromLineEdit"/>
           </item>
           <item row="0" column="4">
-           <widget class="QLabel" name="label_5">
+           <widget class="QLabel" name="APDPageThresholdTipLabel">
             <property name="text">
-             <string>Threshold</string>
+             <string>阈值</string>
             </property>
            </widget>
           </item>
