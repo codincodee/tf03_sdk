@@ -19,3 +19,9 @@ void APDPageWrapper::Update() {
     core_->Update();
   }
 }
+
+void APDPageWrapper::OnMeasured(const MeasureDevel &measure) {
+  if (core_) {
+    core_->IncomingMeasure(measure);
+  }
+}

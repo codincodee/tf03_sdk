@@ -12,17 +12,18 @@
 #include <tf03_common/measure_manifest.h>
 #include <tf03_common/apd_page_wrapper.h>
 #include <tf03_common/utils.h>
+#include <tf03_common/connection_page.h>
 
 MainWindow::MainWindow(QWidget *parent) :
   QMainWindow(parent),
   ui(new Ui::MainWindow)
 {
   if (!IsAPDExperimentPagUsed()) {
-    return;
+    exit(1);
   }
 
   if (!IsDevelModeSupported()) {
-    return;
+    exit(1);
   }
 
   ui->setupUi(this);
@@ -33,26 +34,20 @@ MainWindow::MainWindow(QWidget *parent) :
   this->move(desktop.topLeft() - window.topLeft());
   this->move(QPoint(desktop.width() / 2 - window.width() / 2, 0));
 
+  this->resize(1000, 800);
+
   driver_.reset(new Driver);
   driver_->Open();
   timer_id_ = startTimer(100);
-//  timer_id_ = startTimer(0);
-  frequency_timer_.start();
 
   command_echo_handler_.reset(new CommandEchoHandler);
   command_echo_handler_->SetDriver(driver_);
 
-  connect_button_current_lingual_ = kConnectPushButtonText;
-  auto baud_rates = Driver::BaudRates();
-  for (auto& rate : baud_rates) {
-    ui->BaudRateComboBox->addItem(QString::number(rate));
-  }
+  ui->tabWidget->setFont(PageBase::GetCommonFont());
 
   std::shared_ptr<APDPage> apd_core(new APDPage);
   apd_page_.reset(new APDPageWrapper);
   apd_page_->SetAPDPageCore(apd_core);
-
-  ui->tabWidget->setFont(PageBase::GetCommonFont());
 
   if (apd_core) {
     apd_core->UsePageBaseSpecs(true);
@@ -82,8 +77,22 @@ MainWindow::MainWindow(QWidget *parent) :
   ui->APDPageAPDToLineEdit->setDisabled(true);
   ui->APDPageThresholdLineEdit->setDisabled(true);
 
+  pages_.push_back(apd_page_);
+
+  connection_page_.reset(new ConnectionPage);
+  connection_page_->SetBaudRateComboxBox(ui->BaudRateComboBox);
+  connection_page_->SetPortComboBox(ui->SerialPortComboBox);
+  connection_page_->SetDistanceDisplayLabel(ui->DistanceDisplayLabel);
+  connection_page_->SetFrequencyDisplayLabel(ui->FrequencyDisplayLabel);
+  connection_page_->SetConnectPushButton(ui->ConnectPushButton);
+  connection_page_->SetDriver(driver_);
+  if (!connection_page_->Initialize()) {
+    exit(1);
+  }
+  pages_.push_back(connection_page_);
+
   ui->tabWidget->setCurrentIndex(0);
-  SetupUIText();
+  this->setWindowTitle("TF03生产上位机 v" + kVersion);
 }
 
 MainWindow::~MainWindow()
@@ -97,120 +106,23 @@ void MainWindow::timerEvent(QTimerEvent *event) {
     return;
   }
 
-  if (apd_page_) {
-    apd_page_->Update();
-  }
-
-  if (driver_->DetectAndAutoConnect()) {
-    connect_button_current_lingual_ = kDisconnectPushButtonText;
-    ui->ConnectPushButton->setText(
-        which_lingual(connect_button_current_lingual_));
-  }
-
-  UpdatePortNameComboBox();
-
   MeasureBasic measure;
   auto measure_basic = driver_->LastMeasure();
   if (measure_basic) {
     measure = *measure_basic;
   }
-  auto new_measure = (measure_basic != nullptr);
-  auto elapse = frequency_timer_.elapsed();
-  if (new_measure) {
-    ui->DistanceDisplayLabel->setText(QString::number(measure.dist));
-    if (elapse > 1000) {
-      auto id_diff = measure.id - last_freq_measure_id_;
-      float frequency = id_diff / (elapse / 1000.0f);
-      ui->FrequencyDisplayLabel->setText(QString::number(std::ceil(frequency)));
-      last_freq_measure_id_ = measure.id;
-      frequency_timer_.restart();
-    }
-  }
-
-  if (elapse > 2000) {
-    ui->FrequencyDisplayLabel->clear();
-    ui->DistanceDisplayLabel->clear();
-  }
-
-  command_echo_handler_->Probe();
 
   auto measure_devel = ToMeasureDevel(measure_basic);
 
+  command_echo_handler_->Probe();
+
   if (measure_devel) {
-    auto apd_core = apd_page_->GetCore();
-    if (apd_core) {
-      apd_core->IncomingMeasure(*measure_devel);
+    for(auto& page : pages_) {
+      page->OnMeasured(*measure_devel);
     }
   }
-}
 
-void MainWindow::on_ChinesePushButton_clicked()
-{
-  set_current_language(Language::chinese);
-  SetupUIText();
-}
-
-void MainWindow::on_EnglishPushButton_clicked()
-{
-  set_current_language(Language::english);
-  SetupUIText();
-}
-
-void MainWindow::SetupUIText() {
-  ui->DistanceHintLabel->setText(which_lingual(kDistanceLabelText));
-  ui->FrequencyHintLabel->setText(which_lingual(kFrequencyLabelText));
-  ui->PortNameLabel->setText(which_lingual(kPortNameLabelText));
-  ui->BaudRateLabel->setText(which_lingual(kBaudRateLabelText));
-  ui->ConnectPushButton->setText(
-      which_lingual(connect_button_current_lingual_));
-  ui->tabWidget->setTabText(0, which_lingual({"Setup", "配置"}));
-  this->setWindowTitle(which_lingual(kWindowTitle) +  " v" + kVersion);
-}
-
-void MainWindow::on_ConnectPushButton_clicked()
-{
-  if (lingual_equal(ui->ConnectPushButton->text(), kDisconnectPushButtonText)) {
-    driver_->Close();
-    connect_button_current_lingual_ = kConnectPushButtonText;
-    ui->ConnectPushButton->setText(
-        which_lingual(connect_button_current_lingual_));
-    return;
-  }
-  driver_->SetPortName(ui->SerialPortComboBox->currentText());
-  bool ok;
-  driver_->SetBaudRate(ui->BaudRateComboBox->currentText().toInt(&ok));
-  if (!ok) {
-    return;
-  }
-  driver_->Open();
-  connect_button_current_lingual_ = kDisconnectPushButtonText;
-  ui->ConnectPushButton->setText(
-      which_lingual(connect_button_current_lingual_));
-}
-
-void MainWindow::UpdatePortNameComboBox() {
-  auto ports = QSerialPortInfo::availablePorts();
-  auto update = [this, ports](){
-    ui->SerialPortComboBox->clear();
-    for (auto& port : ports) {
-      ui->SerialPortComboBox->addItem(port.portName());
-    }
-    port_combo_.clear();
-    for (auto& port : ports) {
-      port_combo_.push_back(port.portName());
-    }
-  };
-  if (ports.size() != port_combo_.size()) {
-    update();
-    return;
-  }
-  bool should_update = false;
-  for (auto& port : ports) {
-    if (!port_combo_.contains(port.portName())) {
-      should_update = true;
-    }
-  }
-  if (should_update) {
-    update();
+  for(auto& page : pages_) {
+    page->Update();
   }
 }

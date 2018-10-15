@@ -20,6 +20,14 @@ std::shared_ptr<CommandEchoHandler> PageBase::EchoHandler() {
 void PageBase::Update() {
 }
 
+void PageBase::OnMeasured(const MeasureBasic &measure) {
+
+}
+
+void PageBase::OnMeasured(const MeasureDevel &measure) {
+
+}
+
 void PageBase::SetLabelFontCommon(QLabel* label) {
   SetWidgetFontCommon(label);
 }
@@ -39,6 +47,10 @@ QFont PageBase::GetLargeBoldFont() {
   font.setPointSize(15);
   font.setBold(true);
   return font;
+}
+
+bool PageBase::Initialize() {
+  return true;
 }
 
 void PageBase::SetWidgetFontLargeBold(QWidget *widget) {

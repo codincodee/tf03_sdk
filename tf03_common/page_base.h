@@ -3,19 +3,25 @@
 
 #include "export.h"
 #include <memory>
+#include <QObject>
 
 class CommandEchoHandler;
 class QLabel;
 class QWidget;
 class QFont;
+struct MeasureBasic;
+struct MeasureDevel;
 
-class API PageBase
+class API PageBase : public QObject
 {
  public:
   PageBase();
   virtual ~PageBase();
+  virtual bool Initialize();
   void SetCommandEchoHandler(std::shared_ptr<CommandEchoHandler> echo_handler);
   virtual void Update();
+  virtual void OnMeasured(const MeasureBasic& measure);
+  virtual void OnMeasured(const MeasureDevel& measure);
   void SetLabelFontCommon(QLabel* label);
   static void SetWidgetFontCommon(QWidget* widget);
   static QFont GetCommonFont();

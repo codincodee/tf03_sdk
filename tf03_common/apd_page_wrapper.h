@@ -13,6 +13,7 @@ public:
   void SetAPDPageCore(std::shared_ptr<APDPage> core);
   std::shared_ptr<APDPage> GetCore();
   void Update() override;
+  void OnMeasured(const MeasureDevel& measure);
  private:
   std::shared_ptr<APDPage> core_;
 };
