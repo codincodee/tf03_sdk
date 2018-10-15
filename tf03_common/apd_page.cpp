@@ -125,7 +125,7 @@ bool APDPage::Initialize() {
     GetPlot().setFont(PageBase::GetCommonFont());
     GetPlot().setTitleFont(PageBase::GetCommonFont());
     GetPlot().setTitle("原始距离 (m)");
-    GetPlot().SetLabelFont(PageBase::GetCommonFont());
+    GetPlot().SetLabelFont(PageBase::GetSmallFont());
   }
   status_label_->clear();
   return true;
@@ -148,11 +148,14 @@ void APDPage::Update() {
 
   if (apd_cmd_ > apd_to_) {
     OnStop();
-    QMessageBox::warning(
-        start_button_,
-        "APD实验失败",
-        "APD实验失败. 找不到APD雪崩值.",
-        QMessageBox::Abort);
+    QMessageBox box(start_button_);
+    if (use_page_base_specs_) {
+      box.setFont(PageBase::GetCommonFont());
+    }
+    box.setWindowTitle("APD实验失败");
+    box.setText("APD实验失败. 找不到APD雪崩值.");
+    box.addButton(QMessageBox::Abort);
+    box.setButtonText(QMessageBox::Abort, "放弃");
     return;
   }
 
@@ -353,13 +356,22 @@ void APDPage::HandleCrashed(
   auto apd_result = CalculateResultAPD(apd_crash_, measure.Celsius());
   ongoing_ = false;
   OnStop();
-  auto button = QMessageBox::information(
-      start_button_, "实验结果",
+  QMessageBox box(start_button_);
+  if (use_page_base_specs_) {
+    box.setFont(PageBase::GetCommonFont());
+  }
+  box.setWindowTitle("实验结果");
+  box.setText(
       "实验结束. \n"
       "找到APD雪崩值: " + QString::number(apd_crash_) + " (V);\n"
       "温度: " + QString::number(measure.Celsius(), 'f', 2) + " (C);\n"
       "APD目标值: " + QString::number(apd_result) + " (V).\n"
-      "将APD目标值写入结果?", QMessageBox::Yes, QMessageBox::No);
+      "将APD目标值写入结果?");
+  box.addButton(QMessageBox::Yes);
+  box.addButton(QMessageBox::No);
+  box.setButtonText(QMessageBox::Yes, "是");
+  box.setButtonText(QMessageBox::No, "否");
+  auto button = box.exec();
   if (button == QMessageBox::Yes) {
     driver_->SetAPD(apd_result);
   }

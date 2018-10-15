@@ -28,31 +28,37 @@ void PageBase::OnMeasured(const MeasureDevel &measure) {
 
 }
 
-void PageBase::SetLabelFontCommon(QLabel* label) {
-  SetWidgetFontCommon(label);
+void PageBase::SetWidgetFontSmall(QWidget *widget) {
+  widget->setFont(GetSmallFont());
 }
 
 void PageBase::SetWidgetFontCommon(QWidget *widget) {
   widget->setFont(GetCommonFont());
 }
 
+void PageBase::SetWidgetFontLargeBold(QWidget *widget) {
+  widget->setFont(GetLargeBoldFont());
+}
+
+QFont PageBase::GetSmallFont() {
+  QFont font;
+  font.setPointSize(9);
+  return font;
+}
+
 QFont PageBase::GetCommonFont() {
   QFont font;
-  font.setPointSize(10);
+  font.setPointSize(12);
   return font;
 }
 
 QFont PageBase::GetLargeBoldFont() {
   QFont font;
-  font.setPointSize(15);
+  font.setPointSize(16);
   font.setBold(true);
   return font;
 }
 
 bool PageBase::Initialize() {
   return true;
-}
-
-void PageBase::SetWidgetFontLargeBold(QWidget *widget) {
-  widget->setFont(GetLargeBoldFont());
 }

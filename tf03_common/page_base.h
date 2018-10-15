@@ -22,10 +22,11 @@ class API PageBase : public QObject
   virtual void Update();
   virtual void OnMeasured(const MeasureBasic& measure);
   virtual void OnMeasured(const MeasureDevel& measure);
-  void SetLabelFontCommon(QLabel* label);
-  static void SetWidgetFontCommon(QWidget* widget);
+  static QFont GetSmallFont();
   static QFont GetCommonFont();
   static QFont GetLargeBoldFont();
+  static void SetWidgetFontSmall(QWidget *widget);
+  static void SetWidgetFontCommon(QWidget* widget);
   static void SetWidgetFontLargeBold(QWidget* widget);
  protected:
    std::shared_ptr<CommandEchoHandler> EchoHandler();
