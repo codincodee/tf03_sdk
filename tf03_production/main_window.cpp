@@ -95,6 +95,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
   ui->tabWidget->setCurrentIndex(0);
   this->setWindowTitle("TF03生产上位机 v" + kVersion);
+
+  ui->NextStepPushButton->setFont(PageBase::GetCommonFont());
+  ui->PreviousStepPushButton->setFont(PageBase::GetCommonFont());
 }
 
 MainWindow::~MainWindow()
@@ -127,4 +130,26 @@ void MainWindow::timerEvent(QTimerEvent *event) {
   for(auto& page : pages_) {
     page->Update();
   }
+}
+
+void MainWindow::on_NextStepPushButton_clicked()
+{
+  auto total = ui->tabWidget->count();
+  auto current = ui->tabWidget->currentIndex();
+  ++current;
+  if (current >= total) {
+    current = 0;
+  }
+  ui->tabWidget->setCurrentIndex(current);
+}
+
+void MainWindow::on_PreviousStepPushButton_clicked()
+{
+  auto total = ui->tabWidget->count();
+  auto current = ui->tabWidget->currentIndex();
+  --current;
+  if (current < 0) {
+    current = total - 1;
+  }
+  ui->tabWidget->setCurrentIndex(current);
 }

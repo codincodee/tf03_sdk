@@ -39,6 +39,11 @@ public:
 protected:
   void timerEvent(QTimerEvent *event);
 
+private slots:
+  void on_NextStepPushButton_clicked();
+
+  void on_PreviousStepPushButton_clicked();
+
 private:
   Ui::MainWindow *ui;
   std::shared_ptr<Driver> driver_;
