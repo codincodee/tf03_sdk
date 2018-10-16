@@ -45,6 +45,7 @@ public:
   void Update();
   void UsePageBaseSpecs(const bool& use = true);
   void SetLeastStartTemperature(const int& temp);
+  void SetSaveSettingsWhenWriteResult(const bool& save);
 public slots:
   void OnStartButtonClicked();
 private:
@@ -98,6 +99,8 @@ private:
   MeasureDevelStamped last_measure_;
 
   int least_mcu_temperature_ = 0;
+
+  bool save_settings_after_setting_result_apd_ = false;
 };
 
 #endif // APD_PAGE_H

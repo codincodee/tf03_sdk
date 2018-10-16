@@ -395,6 +395,9 @@ void APDPage::HandleCrashed(
   auto button = box.exec();
   if (button == QMessageBox::Yes) {
     driver_->SetAPD(apd_result);
+    if (save_settings_after_setting_result_apd_) {
+      driver_->SaveSettingsToFlash();
+    }
   }
   start_button_->setText(kStartButtonStart);
 }
@@ -422,4 +425,8 @@ void APDPage::UsePageBaseSpecs(const bool &use) {
 
 void APDPage::SetLeastStartTemperature(const int &temp) {
   least_mcu_temperature_ = temp;
+}
+
+void APDPage::SetSaveSettingsWhenWriteResult(const bool &save) {
+  save_settings_after_setting_result_apd_ = save;
 }
