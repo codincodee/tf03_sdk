@@ -869,7 +869,7 @@ RangeValidityWidgets::RangeValidityWidgets() {
   item_lingual = {"Range Validity", "量程筛选"};
   label = new QLabel;
   option = label;
-  timeout = 2000;
+  timeout = 3000;
   button_lingual = {"Detect", "检测"};
 }
 
@@ -878,6 +878,9 @@ void RangeValidityWidgets::ButtonClicked() {
   option_lingual = Lingual();
   label->clear();
   driver->RangeDetectionTask(true);
+  driver->SetAutoGainAdjust(true);
+  driver->SaveSettingsToFlash();
+  echo_cnt = 0;
 }
 
 void RangeValidityWidgets::Update() {
@@ -891,6 +894,12 @@ void RangeValidityWidgets::Update() {
     driver->RangeDetectionTask(false);
   }
 
+  if (echo_handler->IsRangeDetectEchoed()) {
+    ++echo_cnt;
+  }
+  if (echo_cnt < 1) {
+    return;
+  }
   if (echo_handler->IsRangeDetectEchoed()) {
     if (echo_handler->IsRangeDetectTooNear()) {
       QMessageBox box(button);
