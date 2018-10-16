@@ -88,6 +88,8 @@ add_library(
       connection_page.h
       firmware_update_page.cpp
       firmware_update_page.h
+      range_detection_page.cpp
+      range_detection_page.h
 )
 
 target_link_libraries(

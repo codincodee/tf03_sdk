@@ -75,6 +75,7 @@ struct API UpdateFirmwareEcho : public ParsedBase {
 
 struct API OutOfRangeEcho : public ParsedBase {
   bool out_of_range;
+  bool too_near;
 };
 
 struct API MeasureBasic : public ParsedBase {

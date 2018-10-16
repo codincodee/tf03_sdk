@@ -27,6 +27,7 @@ void CommandEchoHandler::Probe() {
 #ifdef SUPPORT_DEVEL_MODE_PROTOCOL_
   measure_devel_stream_.clear();
   out_of_range_.clear();
+  range_detect_too_near_.clear();
 #endif
 #ifdef CLIENT_BL_CUSTOMIZATION
   distance_l1_.clear();
@@ -91,6 +92,7 @@ void CommandEchoHandler::Probe() {
       auto echo = dynamic_unique_ptr_cast<OutOfRangeEcho>(std::move(msg.data));
       if (echo) {
         out_of_range_.push_back(echo->out_of_range);
+        range_detect_too_near_.push_back(echo->too_near);
       }
     }
 #endif
@@ -224,4 +226,11 @@ bool CommandEchoHandler::IsOutOfRange() {
     return false;
   }
   return *out_of_range_.rbegin();
+}
+
+bool CommandEchoHandler::IsRangeDetectTooNear() {
+  if (range_detect_too_near_.empty()) {
+    return false;
+  }
+  return *range_detect_too_near_.rbegin();
 }

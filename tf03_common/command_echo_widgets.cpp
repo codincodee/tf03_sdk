@@ -861,3 +861,64 @@ void HorizontalAngleWidgets::ButtonClicked() {
     driver->SetHorizontalAngle(value);
   }
 }
+
+////////////////////// RangeValidityWidgets /////////////////////////////
+
+RangeValidityWidgets::RangeValidityWidgets() {
+  id = 0x00;
+  item_lingual = {"Range Validity", "量程筛选"};
+  label = new QLabel;
+  option = label;
+  timeout = 2000;
+  button_lingual = {"Detect", "检测"};
+}
+
+void RangeValidityWidgets::ButtonClicked() {
+  CommandEchoWidgets::ButtonClicked();
+  option_lingual = Lingual();
+  label->clear();
+  driver->RangeDetectionTask(true);
+}
+
+void RangeValidityWidgets::Update() {
+  if (button->isEnabled()) {
+    return;
+  }
+  if (timer.elapsed() > timeout) {
+    button->setDisabled(false);
+    status->setText(which_lingual(kNoResponseLingual));
+    status_lingual = kNoResponseLingual;
+    driver->RangeDetectionTask(false);
+  }
+
+  if (echo_handler->IsRangeDetectEchoed()) {
+    if (echo_handler->IsRangeDetectTooNear()) {
+      QMessageBox box(button);
+      box.setWindowTitle(which_lingual(kMsgBoxErrorTitle));
+      box.setText(which_lingual(
+          {
+            "A short distance detected.",
+            "检测到过短距离。"
+          }));
+      box.addButton(QMessageBox::Ok);
+      box.setButtonText(QMessageBox::Ok, which_lingual(kMsgBoxOk));
+      box.exec();
+      option_lingual = Lingual();
+      label->clear();
+      driver->RangeDetectionTask(false);
+    } else {
+      if (echo_handler->IsOutOfRange()) {
+        option_lingual = kInvalid;
+      } else {
+        option_lingual = kValid;
+      }
+      label->setText(which_lingual(option_lingual));
+    }
+    button->setDisabled(false);
+    driver->RangeDetectionTask(false);
+  }
+}
+
+void RangeValidityWidgets::SetOptionLingual() {
+  label->setText(which_lingual(option_lingual));
+}

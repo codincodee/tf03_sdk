@@ -14,6 +14,7 @@
 #include <tf03_common/utils.h>
 #include <tf03_common/connection_page.h>
 #include <tf03_common/firmware_update_page.h>
+#include <tf03_common/range_detection_page.h>
 
 MainWindow::MainWindow(QWidget *parent) :
   QMainWindow(parent),
@@ -102,6 +103,17 @@ MainWindow::MainWindow(QWidget *parent) :
     exit(1);
   }
   pages_.push_back(firmware_page);
+
+  std::shared_ptr<RangeDetectionPage> range_detection_page(
+      new RangeDetectionPage);
+  range_detection_page->SetWidgetsLayout(
+      ui->RangeDetectionPagePanelWidgetsGridLayout);
+  range_detection_page->SetDriver(driver_);
+  range_detection_page->SetCommandEchoHandler(command_echo_handler_);
+  if (!range_detection_page->Initialize()) {
+    exit(1);
+  }
+  pages_.push_back(range_detection_page);
 
   ui->tabWidget->setCurrentIndex(0);
   this->setWindowTitle("TF03生产上位机 v" + kVersion);

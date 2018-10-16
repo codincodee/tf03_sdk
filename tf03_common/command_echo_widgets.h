@@ -319,4 +319,17 @@ struct HorizontalAngleWidgets : public CommandEchoWidgets {
   void ButtonClicked() override;
   QLineEdit* edit;
 };
+
+////////////////////// RangeValidityWidgets /////////////////////////////
+
+struct RangeValidityWidgets : public CommandEchoWidgets {
+  RangeValidityWidgets();
+  void ButtonClicked() override;
+  void Update() override;
+  void SetOptionLingual() override;
+  const Lingual kValid = {"Valid", "合格"};
+  const Lingual kInvalid = {"Invalid", "不合格"};
+  Lingual option_lingual;
+  QLabel* label;
+};
 #endif // COMMAND_ECHO_WIDGETS_H
