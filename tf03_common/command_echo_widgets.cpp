@@ -871,6 +871,8 @@ RangeValidityWidgets::RangeValidityWidgets() {
   option = label;
   timeout = 3000;
   button_lingual = {"Detect", "检测"};
+  indicator = new QLabel;
+  indicator->setText(" ");
 }
 
 void RangeValidityWidgets::ButtonClicked() {
@@ -881,6 +883,8 @@ void RangeValidityWidgets::ButtonClicked() {
   driver->SetAutoGainAdjust(true);
   driver->SaveSettingsToFlash();
   echo_cnt = 0;
+  indicator->setStyleSheet("QLabel{background-color: white}");
+  indicator->setFixedSize(20, 20);
 }
 
 void RangeValidityWidgets::Update() {
@@ -918,8 +922,10 @@ void RangeValidityWidgets::Update() {
     } else {
       if (echo_handler->IsOutOfRange()) {
         option_lingual = kInvalid;
+        indicator->setStyleSheet("QLabel{background-color: red}");
       } else {
         option_lingual = kValid;
+        indicator->setStyleSheet("QLabel{background-color: green}");
       }
       label->setText(which_lingual(option_lingual));
     }

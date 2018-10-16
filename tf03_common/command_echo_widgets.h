@@ -331,6 +331,7 @@ struct RangeValidityWidgets : public CommandEchoWidgets {
   const Lingual kInvalid = {"Invalid", "不合格"};
   Lingual option_lingual;
   QLabel* label;
+  QLabel* indicator;
   int echo_cnt = 0;
 };
 #endif // COMMAND_ECHO_WIDGETS_H

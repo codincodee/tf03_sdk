@@ -27,7 +27,7 @@ void RangeDetectTask::IncomingMeasure(const MeasureDevel &measure) {
         echo->too_near = true;
       }
     }
-    auto out_of_range = echo->out_of_range = ((cnt * 1.0f / kSampleNum) > 0.5f);
+    echo->out_of_range = ((cnt * 1.0f / kSampleNum) > 0.5f);
     message.data = std::move(echo);
     EnqueueReceivedMessages(std::move(message));
     stream_.reset(new std::list<MeasureDevel>);

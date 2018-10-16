@@ -22,8 +22,9 @@ bool RangeDetectionPage::Initialize() {
   core_->echo_handler = EchoHandler();
   core_->SetupUI();
   layout_->addWidget(core_->button, 0, 0);
-  layout_->addWidget(core_->label, 0, 1);
-  layout_->addWidget(core_->status, 0, 2);
+  layout_->addWidget(core_->indicator, 0, 1);
+  layout_->addWidget(core_->label, 0, 2);
+  layout_->addWidget(core_->status, 0, 3);
   return true;
 }
 
