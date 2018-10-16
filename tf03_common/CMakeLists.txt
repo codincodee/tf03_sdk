@@ -86,6 +86,8 @@ add_library(
       apd_page_wrapper.h
       connection_page.cpp
       connection_page.h
+      firmware_update_page.cpp
+      firmware_update_page.h
 )
 
 target_link_libraries(

@@ -13,6 +13,14 @@ void PageBase::SetCommandEchoHandler(
   echo_handler_ = echo_handler;
 }
 
+void PageBase::SetDriver(std::shared_ptr<Driver> driver) {
+  driver_ = driver;
+}
+
+std::shared_ptr<Driver> PageBase::GetDriver() {
+  return driver_;
+}
+
 std::shared_ptr<CommandEchoHandler> PageBase::EchoHandler() {
   return echo_handler_;
 }

@@ -13,6 +13,7 @@
 #include <tf03_common/apd_page_wrapper.h>
 #include <tf03_common/utils.h>
 #include <tf03_common/connection_page.h>
+#include <tf03_common/firmware_update_page.h>
 
 MainWindow::MainWindow(QWidget *parent) :
   QMainWindow(parent),
@@ -92,6 +93,15 @@ MainWindow::MainWindow(QWidget *parent) :
     exit(1);
   }
   pages_.push_back(connection_page_);
+
+  std::shared_ptr<FirmwareUpdatePage> firmware_page(new FirmwareUpdatePage);
+  firmware_page->SetWidgetsLayout(ui->FirmwareUpgradePagePanelWidgetsGridLayout);
+  firmware_page->SetDriver(driver_);
+  firmware_page->SetCommandEchoHandler(command_echo_handler_);
+  if (!firmware_page->Initialize()) {
+    exit(1);
+  }
+  pages_.push_back(firmware_page);
 
   ui->tabWidget->setCurrentIndex(0);
   this->setWindowTitle("TF03生产上位机 v" + kVersion);

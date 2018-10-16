@@ -16,6 +16,8 @@ FirmwareModule::FirmwareModule()
   SetModeSerial();
 }
 
+FirmwareModule::~FirmwareModule() {}
+
 void FirmwareModule::SetDriver(std::shared_ptr<Driver> driver) {
   driver_ = driver;
 }
@@ -153,7 +155,7 @@ void UpgradeFirmwareWidgets::ButtonClicked() {
       HandleFailure();
       return;
     }
-    if (!before_upgrade_instructions_shown_) {
+    if (!before_upgrade_instructions_shown) {
       QMessageBox box(button);
       box.setWindowTitle(which_lingual(kMsgBoxInfoTitle));
       box.setText(
@@ -171,7 +173,7 @@ void UpgradeFirmwareWidgets::ButtonClicked() {
       box.setStandardButtons(QMessageBox::Ok);
       box.setButtonText(QMessageBox::Ok, which_lingual(kMsgBoxOk));
       box.exec();
-      before_upgrade_instructions_shown_ = true;
+      before_upgrade_instructions_shown = true;
       return;
     }
 

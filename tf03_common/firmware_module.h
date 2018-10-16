@@ -13,6 +13,7 @@ class API FirmwareModule
 {
  public:
   FirmwareModule();
+  virtual ~FirmwareModule();
   void SetDriver(std::shared_ptr<Driver> driver);
   void SetModeSerial();
   void SetModeCAN();
@@ -64,7 +65,7 @@ struct API UpgradeFirmwareWidgets : public CommandEchoWidgets {
 
   std::function<void(bool)> set_respond_all_button;
 
-  bool before_upgrade_instructions_shown_ = false;
+  bool before_upgrade_instructions_shown = false;
 
   Q_OBJECT
  public slots:

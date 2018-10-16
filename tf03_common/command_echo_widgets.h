@@ -31,6 +31,8 @@ struct CommandEchoWidgets : public QObject
 
   virtual void Update();
 
+  void SetupUI();
+
   const Lingual kButtonSetLingual = {"Set", "设置"};
   const Lingual kButtonRequestLingual = {"Request", "请求"};
   const Lingual kNoResponseLingual = {"No Response", "未响应"};

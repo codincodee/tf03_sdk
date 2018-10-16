@@ -49,6 +49,13 @@ void CommandEchoWidgets::Update() {
   }
 }
 
+void CommandEchoWidgets::SetupUI() {
+  item->setText(which_lingual(item_lingual));
+  button->setText(which_lingual(button_lingual));
+  SetOptionLingual();
+  status->setText(which_lingual(status_lingual));
+}
+
 void CommandEchoWidgets::OnButtonClicked() {
   if (!respond_button_click) {
     return;
