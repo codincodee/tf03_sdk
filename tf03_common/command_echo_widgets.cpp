@@ -40,10 +40,8 @@ void CommandEchoWidgets::Update() {
     button->setDisabled(false);
     if (echo_handler->IsCommandSucceeded(id)) {
       status_lingual = kSuccessLingual;
-    } else if (echo_handler->IsCommandSucceeded(id)) {
-      status_lingual = kFailLingual;
     } else {
-      status_lingual = kUnknownLingual;
+      status_lingual = kFailLingual;
     }
     status->setText(which_lingual(status_lingual));
   }
@@ -281,10 +279,14 @@ void MeasureTriggerWidgets::Update() {
 ////////////////////// FlashSettingsWidgets /////////////////////////////
 
 FlashSettingsWidgets::FlashSettingsWidgets() {
-  id = 0x11;
+  id = ID();
   timeout = 3000;
   item_lingual = {"Save Settings", "保存配置"};
   SetOptionWidgetUINull();
+}
+
+int FlashSettingsWidgets::ID() {
+  return 0x11;
 }
 
 void FlashSettingsWidgets::ButtonClicked() {
@@ -548,19 +550,31 @@ WriteSerialNumberWidgets::WriteSerialNumberWidgets() {
   id = 0x56;
   edit = new QLineEdit;
   option = edit;
-  edit->setInputMask(QString(kSNLength, 'n'));
+  // default_input_mask = edit->inputMask();
+  // edit->setInputMask(QString(kSNLength, 'n'));
   edit->setMaxLength(kSNLength);
   edit->setCursorPosition(0);
   item_lingual = {"Write Serial Number", "写入序列号"};
+
+  QRegExp expr("^[a-zA-Z0-9]{" + QString::number(kSNLength) + "}$");
+  QRegExpValidator* validator = new QRegExpValidator(expr, button);
+  edit->setValidator(validator);
 }
 
+WriteSerialNumberWidgets::~WriteSerialNumberWidgets() {}
+
 void WriteSerialNumberWidgets::ButtonClicked() {
+  ButtonClickedImpl();
+}
+
+bool WriteSerialNumberWidgets::ButtonClickedImpl() {
   CommandEchoWidgets::ButtonClicked();
   auto sn = edit->text();
   if (sn.size() != kSNLength) {
-    return;
+    return false;
   }
   driver->WriteSerialNumber(sn);
+  return true;
 }
 
 void WriteSerialNumberWidgets::SetOptionLingual() {
@@ -571,6 +585,49 @@ void WriteSerialNumberWidgets::SetOptionLingual() {
             "alphabets, numbers, or their combinations.",
             "接受" + QString::number(kSNLength) + "个字母或数字的组合。"
           }));
+}
+
+void WriteSerialNumberWidgets::DisableInputMask() {
+  // edit->setInputMask(default_input_mask);
+}
+
+//////////////////// WriteSerialNumberPlusWidgets ///////////////////////////
+
+WriteSerialNumberPlusWidgets::WriteSerialNumberPlusWidgets()
+  : WriteSerialNumberWidgets() {
+  timeout = 3000;
+}
+
+void WriteSerialNumberPlusWidgets::Update() {
+  if (button->isEnabled()) {
+    return;
+  }
+  if (timer.elapsed() > timeout) {
+    button->setDisabled(false);
+    status->setText(which_lingual(kNoResponseLingual));
+    status_lingual = kNoResponseLingual;
+  }
+  if (echo_handler->IsCommandEchoed(id)) {
+    if (echo_handler->IsCommandSucceeded(id)) {
+      driver->SaveSettingsToFlash();
+    } else {
+      button->setDisabled(false);
+      status_lingual = kFailLingual;
+      status->setText(which_lingual(status_lingual));
+      return;
+    }
+  }
+
+  const int kSaveSettingsID = FlashSettingsWidgets::ID();
+  if (echo_handler->IsCommandEchoed(kSaveSettingsID)) {
+    button->setDisabled(false);
+    if (echo_handler->IsCommandSucceeded(kSaveSettingsID)) {
+      status_lingual = kSuccessLingual;
+    } else {
+      status_lingual = kFailLingual;
+    }
+    status->setText(which_lingual(status_lingual));
+  }
 }
 
 ////////////////////// SetAPDWidgets /////////////////////////////

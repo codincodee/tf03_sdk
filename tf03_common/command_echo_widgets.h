@@ -4,6 +4,7 @@
 #include <QObject>
 #include <tf03_common/lingual.h>
 #include <QElapsedTimer>
+#include <set>
 
 class QLabel;
 class QPushButton;
@@ -126,6 +127,7 @@ struct MeasureTriggerWidgets : public CommandEchoWidgets {
 struct FlashSettingsWidgets : public CommandEchoWidgets {
   FlashSettingsWidgets();
   void ButtonClicked() override;
+  static int ID();
 };
 
 ////////////////////// RestoreFactoryWidgets /////////////////////////////
@@ -217,10 +219,21 @@ struct RequestVersionWidgets : public CommandEchoWidgets {
 
 struct WriteSerialNumberWidgets : public CommandEchoWidgets {
   WriteSerialNumberWidgets();
-  void ButtonClicked() override;
+  virtual ~WriteSerialNumberWidgets();
+  virtual void ButtonClicked() override;
+  bool ButtonClickedImpl();
   void SetOptionLingual() override;
+  void DisableInputMask();
+  QString default_input_mask;
   QLineEdit* edit;
   const int kSNLength = 14;
+};
+
+//////////////////// WriteSerialNumberPlusWidgets ///////////////////////////
+
+struct WriteSerialNumberPlusWidgets : public WriteSerialNumberWidgets {
+  WriteSerialNumberPlusWidgets();
+  void Update() override;
 };
 
 ////////////////////// SetAPDWidgets /////////////////////////////

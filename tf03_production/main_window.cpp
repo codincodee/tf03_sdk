@@ -15,6 +15,7 @@
 #include <tf03_common/connection_page.h>
 #include <tf03_common/firmware_update_page.h>
 #include <tf03_common/range_detection_page.h>
+#include <tf03_common/serial_number_page.h>
 
 MainWindow::MainWindow(QWidget *parent) :
   QMainWindow(parent),
@@ -114,6 +115,16 @@ MainWindow::MainWindow(QWidget *parent) :
     exit(1);
   }
   pages_.push_back(range_detection_page);
+
+  std::shared_ptr<SerialNumberPage> serial_number_page(new SerialNumberPage);
+  serial_number_page->SetWidgetsLayout(
+      ui->SerialNumberPagePanelWidgetsGridLayout);
+  serial_number_page->SetDriver(driver_);
+  serial_number_page->SetCommandEchoHandler(command_echo_handler_);
+  if (!serial_number_page->Initialize()) {
+    exit(1);
+  }
+  pages_.push_back(serial_number_page);
 
   ui->tabWidget->setCurrentIndex(0);
   this->setWindowTitle("TF03生产上位机 v" + kVersion);

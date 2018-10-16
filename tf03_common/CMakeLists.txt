@@ -90,6 +90,8 @@ add_library(
       firmware_update_page.h
       range_detection_page.cpp
       range_detection_page.h
+      serial_number_page.cpp
+      serial_number_page.h
 )
 
 target_link_libraries(
