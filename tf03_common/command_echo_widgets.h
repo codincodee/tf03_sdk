@@ -248,6 +248,7 @@ struct SetAPDWidgets : public CommandEchoWidgets {
 
 struct AutoGainAdjustWidgets : public CommandEchoWidgets {
   AutoGainAdjustWidgets();
+  static int ID();
   void ButtonClicked() override;
   void SetOptionLingual() override;
   QComboBox* combo;

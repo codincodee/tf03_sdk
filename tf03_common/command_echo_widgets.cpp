@@ -653,10 +653,14 @@ void SetAPDWidgets::ButtonClicked() {
 ////////////////////// AutoGainAdjustWidgets /////////////////////////////
 
 AutoGainAdjustWidgets::AutoGainAdjustWidgets() {
-  id = 0x4E;
+  id = ID();
   item_lingual = {"Auto Gain", "自动增益调节"};
   combo = new QComboBox;
   option = combo;
+}
+
+int AutoGainAdjustWidgets::ID() {
+  return 0x4E;
 }
 
 void AutoGainAdjustWidgets::SetOptionLingual() {
@@ -936,12 +940,9 @@ void RangeValidityWidgets::ButtonClicked() {
   CommandEchoWidgets::ButtonClicked();
   option_lingual = Lingual();
   label->clear();
-  driver->RangeDetectionTask(true);
   driver->SetAutoGainAdjust(true);
-  driver->SaveSettingsToFlash();
-  echo_cnt = 0;
-  indicator->setStyleSheet("QLabel{background-color: white}");
   indicator->setFixedSize(20, 20);
+  indicator->setStyleSheet("QLabel{background-color: white}");
 }
 
 void RangeValidityWidgets::Update() {
@@ -953,6 +954,29 @@ void RangeValidityWidgets::Update() {
     status->setText(which_lingual(kNoResponseLingual));
     status_lingual = kNoResponseLingual;
     driver->RangeDetectionTask(false);
+  }
+
+  if (echo_handler->IsCommandEchoed(AutoGainAdjustWidgets::ID())) {
+    if (echo_handler->IsCommandSucceeded(AutoGainAdjustWidgets::ID())) {
+      driver->SaveSettingsToFlash();
+    } else {
+      button->setDisabled(false);
+      status->setText(which_lingual(kNoResponseLingual));
+      status_lingual = kNoResponseLingual;
+      return;
+    }
+  }
+
+  if (echo_handler->IsCommandEchoed(FlashSettingsWidgets::ID())) {
+    if (echo_handler->IsCommandSucceeded(FlashSettingsWidgets::ID())) {
+      driver->RangeDetectionTask(true);
+      echo_cnt = 0;
+    } else {
+      button->setDisabled(false);
+      status->setText(which_lingual(kNoResponseLingual));
+      status_lingual = kNoResponseLingual;
+      return;
+    }
   }
 
   if (echo_handler->IsRangeDetectEchoed()) {
