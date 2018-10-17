@@ -27,23 +27,43 @@ void CommandEchoWidgets::SetOptionLingual() {
 
 }
 
-void CommandEchoWidgets::Update() {
+bool CommandEchoWidgets::ProceedUpdate() {
   if (button->isEnabled()) {
-    return;
+    return false;
   }
   if (timer.elapsed() > timeout) {
     button->setDisabled(false);
     status->setText(which_lingual(kNoResponseLingual));
     status_lingual = kNoResponseLingual;
+    return false;
   }
+  return true;
+}
+
+CommandEchoWidgets::CheckStatus CommandEchoWidgets::CheckCommandEcho() {
   if (echo_handler->IsCommandEchoed(id)) {
-    button->setDisabled(false);
     if (echo_handler->IsCommandSucceeded(id)) {
-      status_lingual = kSuccessLingual;
+      return CheckStatus::succeeded;
     } else {
-      status_lingual = kFailLingual;
+      return CheckStatus::failed;
     }
+  }
+  return CheckStatus::no_response;
+}
+
+void CommandEchoWidgets::Update() {
+  if (!ProceedUpdate()) {
+    return;
+  }
+  switch (CheckCommandEcho()) {
+  case CheckStatus::succeeded:
+    status_lingual = kSuccessLingual;
     status->setText(which_lingual(status_lingual));
+    break;
+  case CheckStatus::failed:
+    status_lingual = kFailLingual;
+    status->setText(which_lingual(status_lingual));
+    break;
   }
 }
 
@@ -126,28 +146,28 @@ void SequentialCommandsWidgets::LoadCommands() {
 
 void SequentialCommandsWidgets::LoadCommand(
     std::function<void ()> cmd, const int &id) {
-  task_queue.push(
-      {cmd,
-       [this, id](){
-         if (echo_handler->IsCommandEchoed(id)) {
-           if (echo_handler->IsCommandSucceeded(id)) {
-             return CheckStatus::succeeded;
-           } else {
-             return CheckStatus::failed;
-           }
-         }
-         return CheckStatus::no_response;
-       }});
+  LoadCommand(
+      cmd,
+      [this, id](){
+        if (echo_handler->IsCommandEchoed(id)) {
+          if (echo_handler->IsCommandSucceeded(id)) {
+            return CheckStatus::succeeded;
+          } else {
+            return CheckStatus::failed;
+          }
+        }
+        return CheckStatus::no_response;
+       });
+}
+
+void SequentialCommandsWidgets::LoadCommand(
+    std::function<void ()> cmd, std::function<CheckStatus ()> check) {
+  task_queue.push({cmd, check});
 }
 
 void SequentialCommandsWidgets::Update() {
-  if (button->isEnabled()) {
+  if (!ProceedUpdate()) {
     return;
-  }
-  if (timer.elapsed() > timeout) {
-    button->setDisabled(false);
-    status->setText(which_lingual(kNoResponseLingual));
-    status_lingual = kNoResponseLingual;
   }
   if (!task_queue.empty()) {
     auto task = task_queue.front();
@@ -239,7 +259,9 @@ void SetFrequencyWidgets::ButtonClicked() {
 }
 
 void SetFrequencyWidgets::Update() {
-  CommandEchoWidgets::Update();
+  if (!ProceedUpdate()) {
+    return;
+  }
   if (echo_handler->IsFrequencyEchoed()) {
     auto str = QString::number(echo_handler->Frequency());
     status_lingual = kSuccessLingual;
@@ -268,7 +290,9 @@ void SerialNumberWidgets::ButtonClicked() {
 }
 
 void SerialNumberWidgets::Update() {
-  CommandEchoWidgets::Update();
+  if (!ProceedUpdate()) {
+    return;
+  }
   if (echo_handler->IsSerialNumberEchoed()) {
     auto sn = echo_handler->SerialNumber();
     if (sn.isEmpty()) {
@@ -301,7 +325,9 @@ void OutputSwitchWidgets::ButtonClicked() {
 }
 
 void OutputSwitchWidgets::Update() {
-  CommandEchoWidgets::Update();
+  if (!ProceedUpdate()) {
+    return;
+  }
   if (echo_handler->IsOutputSwitchEchoed()) {
     if (echo_handler->IsOutputOn()) {
       status_lingual = kOutputOnLingual;
@@ -416,7 +442,9 @@ void SetSerialBaudRateWidgets::ButtonClicked() {
 }
 
 void SetSerialBaudRateWidgets::Update() {
-  CommandEchoWidgets::Update();
+  if (!ProceedUpdate()) {
+    return;
+  }
   if (echo_handler->IsBaudRateEchoed()) {
     auto rate = echo_handler->BaudRate();
     auto str = QString::number(rate);
@@ -483,7 +511,9 @@ void SetOutputFormatWidgets::ButtonClicked() {
 }
 
 void SetOutputFormatWidgets::Update() {
-  CommandEchoWidgets::Update();
+  if (!ProceedUpdate()) {
+    return;
+  }
   if (echo_handler->IsOutputFormatEchoed()) {
     auto format = echo_handler->GetOutputFormat();
     status_lingual = kSuccessLingual;
@@ -603,7 +633,9 @@ void RequestVersionWidgets::ButtonClicked() {
 }
 
 void RequestVersionWidgets::Update() {
-  CommandEchoWidgets::Update();
+  if (!ProceedUpdate()) {
+    return;
+  }
   if (echo_handler->IsVersionEchoed()) {
     auto version = echo_handler->Version();
     label->setText(
@@ -671,13 +703,8 @@ WriteSerialNumberPlusWidgets::WriteSerialNumberPlusWidgets()
 }
 
 void WriteSerialNumberPlusWidgets::Update() {
-  if (button->isEnabled()) {
+  if (!ProceedUpdate()) {
     return;
-  }
-  if (timer.elapsed() > timeout) {
-    button->setDisabled(false);
-    status->setText(which_lingual(kNoResponseLingual));
-    status_lingual = kNoResponseLingual;
   }
   if (echo_handler->IsCommandEchoed(id)) {
     if (echo_handler->IsCommandSucceeded(id)) {
@@ -836,7 +863,9 @@ void DistanceL1ReadWidgets::ButtonClicked() {
 }
 
 void DistanceL1ReadWidgets::Update() {
-  CommandEchoWidgets::Update();
+  if (!ProceedUpdate()) {
+    return;
+  }
   if (echo_handler->IsDistanceL1Echoed()) {
     auto distance = echo_handler->GetDistanceL1();
     if (distance.type == DistanceType::distance_l1) {
@@ -887,7 +916,9 @@ void DistanceLReadWidgets::ButtonClicked() {
 }
 
 void DistanceLReadWidgets::Update() {
-  CommandEchoWidgets::Update();
+  if (!ProceedUpdate()) {
+    return;
+  }
   if (echo_handler->IsDistanceLEchoed()) {
     auto distance = echo_handler->GetDistanceL();
     if (distance.type == DistanceType::distance_l) {
@@ -1022,14 +1053,8 @@ void RangeValidityWidgets::ButtonClicked() {
 }
 
 void RangeValidityWidgets::Update() {
-  if (button->isEnabled()) {
+  if (!ProceedUpdate()) {
     return;
-  }
-  if (timer.elapsed() > timeout) {
-    button->setDisabled(false);
-    status->setText(which_lingual(kNoResponseLingual));
-    status_lingual = kNoResponseLingual;
-    driver->RangeDetectionTask(false);
   }
 
   if (echo_handler->IsCommandEchoed(AutoGainAdjustWidgets::ID())) {
@@ -1111,6 +1136,14 @@ void SetReleaseModeWidgets::LoadCommands() {
     LoadCommand(
         [this](){driver->SetCustomization(Customization::common);},
         CustomizationWidgets::ID());
+    LoadCommand(
+        [this](){driver->SetOutputFormatNineBytes();},
+        [this](){
+          if (echo_handler->IsOutputFormatEchoed()) {
+            return CheckStatus::succeeded;
+          }
+          return CheckStatus::no_response;
+        });
     LoadCommand(
         [this](){driver->SaveSettingsToFlash();},
         FlashSettingsWidgets::ID());

@@ -64,18 +64,20 @@ struct CommandEchoWidgets : public QObject
   void OnButtonClicked();
 
  protected:
+  enum class CheckStatus {succeeded, failed, no_response};
   virtual void ButtonClicked();
   static QLabel* UINullLabel();
   static void SetWidgetUINullLabel(QWidget*& widget);
   void SetOptionWidgetUINull();
   void SetStatusLabelUINull();
+  bool ProceedUpdate();
+  virtual CheckStatus CheckCommandEcho();
   const static QString kUINullString;
 };
 
 ////////////////////// SequentialCommandsWidgets /////////////////////////////
 
 struct SequentialCommandsWidgets : public CommandEchoWidgets {
-  enum class CheckStatus {succeeded, failed, no_response};
   SequentialCommandsWidgets();
   virtual ~SequentialCommandsWidgets();
   virtual void Update() override;
@@ -83,6 +85,9 @@ struct SequentialCommandsWidgets : public CommandEchoWidgets {
   void Start();
   virtual void LoadCommands();
   void LoadCommand(std::function<void()> cmd, const int& id);
+  void LoadCommand(
+      std::function<void ()> cmd,
+      std::function<CheckStatus()> check);
   std::queue<
       std::pair<
           std::function<void()>,
