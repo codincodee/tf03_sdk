@@ -104,6 +104,78 @@ void CommandEchoWidgets::SetOptionWidgetUINull() {
   SetWidgetUINullLabel(option);
 }
 
+////////////////////// SequentialCommandsWidgets /////////////////////////////
+
+SequentialCommandsWidgets::SequentialCommandsWidgets() {
+  timeout = 3000;
+}
+
+SequentialCommandsWidgets::~SequentialCommandsWidgets() {
+
+}
+
+void SequentialCommandsWidgets::ButtonClicked() {
+  CommandEchoWidgets::ButtonClicked();
+  LoadCommands();
+  Start();
+}
+
+void SequentialCommandsWidgets::LoadCommands() {
+
+}
+
+void SequentialCommandsWidgets::LoadCommand(
+    std::function<void ()> cmd, const int &id) {
+  task_queue.push(
+      {cmd,
+       [this, id](){
+         if (echo_handler->IsCommandEchoed(id)) {
+           if (echo_handler->IsCommandSucceeded(id)) {
+             return CheckStatus::succeeded;
+           } else {
+             return CheckStatus::failed;
+           }
+         }
+         return CheckStatus::no_response;
+       }});
+}
+
+void SequentialCommandsWidgets::Update() {
+  if (button->isEnabled()) {
+    return;
+  }
+  if (timer.elapsed() > timeout) {
+    button->setDisabled(false);
+    status->setText(which_lingual(kNoResponseLingual));
+    status_lingual = kNoResponseLingual;
+  }
+  if (!task_queue.empty()) {
+    auto task = task_queue.front();
+    auto check = task.second();
+    if (check == CheckStatus::succeeded) {
+      task_queue.pop();
+      if (task_queue.empty()) {
+        status_lingual = kSuccessLingual;
+        status->setText(which_lingual(status_lingual));
+        button->setDisabled(false);
+      } else {
+        auto task = task_queue.front();
+        task.first();
+      }
+    } else if (check == CheckStatus::failed) {
+      status_lingual = kFailLingual;
+      status->setText(which_lingual(status_lingual));
+      button->setDisabled(false);
+    }
+  }
+}
+
+void SequentialCommandsWidgets::Start() {
+  if (!task_queue.empty()) {
+    task_queue.front().first();
+  }
+}
+
 ////////////////////// SetProtocolWidgets /////////////////////////////
 
 SetProtocolWidgets::SetProtocolWidgets() : CommandEchoWidgets() {
@@ -835,10 +907,14 @@ void DistanceLReadWidgets::Update() {
 ////////////////////// CustomizationWidgets /////////////////////////////
 
 CustomizationWidgets::CustomizationWidgets() {
-  id = 0x5A;
+  id = ID();
   item_lingual = {"Customization", "定制化"};
   combo = new QComboBox;
   option = combo;
+}
+
+int CustomizationWidgets::ID() {
+  return 0x5A;
 }
 
 void CustomizationWidgets::ButtonClicked() {
@@ -1017,4 +1093,34 @@ void RangeValidityWidgets::Update() {
 
 void RangeValidityWidgets::SetOptionLingual() {
   label->setText(which_lingual(option_lingual));
+}
+
+////////////////////// SetReleaseModeWidgets /////////////////////////////
+
+SetReleaseModeWidgets::SetReleaseModeWidgets() {
+  id = 0x00;
+  item_lingual = {"Release Mode", "发货模式"};
+  combo = new QComboBox;
+  option = combo;
+  timeout = 3000;
+}
+
+void SetReleaseModeWidgets::LoadCommands() {
+  auto opt = combo->currentText();
+  if (lingual_equal(opt, kDevelTest)) {
+    LoadCommand(
+        [this](){driver->SetCustomization(Customization::common);},
+        CustomizationWidgets::ID());
+    LoadCommand(
+        [this](){driver->SaveSettingsToFlash();},
+        FlashSettingsWidgets::ID());
+  }
+}
+
+void SetReleaseModeWidgets::SetOptionLingual() {
+  combo->addItem(which_lingual(kDevelTest));
+  combo->addItem(which_lingual(kUARTStandard));
+  combo->addItem(which_lingual(kCANStandard));
+  combo->addItem(which_lingual(kClientBL));
+  combo->addItem(which_lingual(kClientI13));
 }

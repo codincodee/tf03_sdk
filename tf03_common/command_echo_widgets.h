@@ -5,6 +5,7 @@
 #include <tf03_common/lingual.h>
 #include <QElapsedTimer>
 #include <set>
+#include <queue>
 
 class QLabel;
 class QPushButton;
@@ -69,6 +70,23 @@ struct CommandEchoWidgets : public QObject
   void SetOptionWidgetUINull();
   void SetStatusLabelUINull();
   const static QString kUINullString;
+};
+
+////////////////////// SequentialCommandsWidgets /////////////////////////////
+
+struct SequentialCommandsWidgets : public CommandEchoWidgets {
+  enum class CheckStatus {succeeded, failed, no_response};
+  SequentialCommandsWidgets();
+  virtual ~SequentialCommandsWidgets();
+  virtual void Update() override;
+  virtual void ButtonClicked() override;
+  void Start();
+  virtual void LoadCommands();
+  void LoadCommand(std::function<void()> cmd, const int& id);
+  std::queue<
+      std::pair<
+          std::function<void()>,
+          std::function<CheckStatus()>>> task_queue;
 };
 
 ////////////////////// SetProtocolWidgets /////////////////////////////
@@ -310,6 +328,7 @@ struct CustomizationWidgets : public CommandEchoWidgets {
   CustomizationWidgets();
   void ButtonClicked() override;
   void SetOptionLingual() override;
+  static int ID();
   QComboBox* combo;
   const Lingual kCommon = {"Common", "通用版本"};
   const Lingual kBL = {"BL", "BL定制版"};
@@ -347,5 +366,19 @@ struct RangeValidityWidgets : public CommandEchoWidgets {
   QLabel* label;
   QLabel* indicator;
   int echo_cnt = 0;
+};
+
+////////////////////// SetReleaseModeWidgets /////////////////////////////
+
+struct SetReleaseModeWidgets : public SequentialCommandsWidgets {
+  SetReleaseModeWidgets();
+  void LoadCommands() override;
+  void SetOptionLingual() override;
+  const Lingual kDevelTest = {"Devel Test", "内部测试"};
+  const Lingual kUARTStandard = {"UART Standard", "串口标品"};
+  const Lingual kCANStandard = {"CAN Standard", "CAN标品"};
+  const Lingual kClientBL = {"Client BL", "BL客户"};
+  const Lingual kClientI13 = {"Client I13", "I13客户"};
+  QComboBox* combo;
 };
 #endif // COMMAND_ECHO_WIDGETS_H

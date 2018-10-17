@@ -16,6 +16,7 @@
 #include <tf03_common/firmware_update_page.h>
 #include <tf03_common/range_detection_page.h>
 #include <tf03_common/serial_number_page.h>
+#include <tf03_common/release_mode_page.h>
 
 MainWindow::MainWindow(QWidget *parent) :
   QMainWindow(parent),
@@ -125,6 +126,16 @@ MainWindow::MainWindow(QWidget *parent) :
     exit(1);
   }
   pages_.push_back(serial_number_page);
+
+  std::shared_ptr<ReleaseModePage> release_mode_page(new ReleaseModePage);
+  release_mode_page->SetWidgetsGridLayout(
+      ui->ReleaseModePagePanelWidgetsGridLayout);
+  release_mode_page->SetDriver(driver_);
+  release_mode_page->SetCommandEchoHandler(command_echo_handler_);
+  if (!release_mode_page->Initialize()) {
+    exit(1);
+  }
+  pages_.push_back(release_mode_page);
 
   ui->tabWidget->setCurrentIndex(0);
   this->setWindowTitle("TF03生产上位机 v" + kVersion);

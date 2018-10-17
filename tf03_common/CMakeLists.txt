@@ -92,6 +92,8 @@ add_library(
       range_detection_page.h
       serial_number_page.cpp
       serial_number_page.h
+      release_mode_page.cpp
+      release_mode_page.h
 )
 
 target_link_libraries(
