@@ -34,7 +34,7 @@ void ManifestBase::SetVisible(const bool &visible) {
 }
 
 ManifestDevel::~ManifestDevel() {
-  Clear();
+  // Clear(); // Causing crash!
 }
 
 
