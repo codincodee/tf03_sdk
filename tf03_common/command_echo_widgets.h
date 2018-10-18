@@ -88,6 +88,7 @@ struct SequentialCommandsWidgets : public CommandEchoWidgets {
   void LoadCommand(
       std::function<void ()> cmd,
       std::function<CheckStatus()> check);
+  void LoadCommand(std::function<void()> cmd);
   std::queue<
       std::pair<
           std::function<void()>,

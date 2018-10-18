@@ -165,6 +165,10 @@ void SequentialCommandsWidgets::LoadCommand(
        });
 }
 
+void SequentialCommandsWidgets::LoadCommand(std::function<void ()> cmd) {
+  LoadCommand(cmd, [](){return CheckStatus::succeeded;});
+}
+
 void SequentialCommandsWidgets::LoadCommand(
     std::function<void ()> cmd, std::function<CheckStatus ()> check) {
   task_queue.push({cmd, check});
@@ -1158,47 +1162,46 @@ void SetReleaseModeWidgets::LoadCommands() {
         [this](){driver->SetCustomization(Customization::common);},
         CustomizationWidgets::ID());
     LoadCommand(
-        [this](){driver->SetTransTypeSerial();}, SetPortTypeWidgets::ID());
-    LoadCommand(
         [this](){driver->SetDevelMode();}, SetProtocolWidgets::ID());
+    LoadCommand(
+        [this](){driver->SaveSettingsToFlash();},
+        FlashSettingsWidgets::ID());
   } else if (lingual_equal(opt, kUARTStandard)) {
     LoadCommand(
         [this](){driver->SetCustomization(Customization::common);},
         CustomizationWidgets::ID());
     LoadCommand(
-        [this](){driver->SetTransTypeSerial();}, SetPortTypeWidgets::ID());
-    LoadCommand(
         [this](){driver->SetReleaseMode();}, SetProtocolWidgets::ID());
+    LoadCommand(
+        [this](){driver->SaveSettingsToFlash();},
+        FlashSettingsWidgets::ID());
   } else if (lingual_equal(opt, kCANStandard)) {
     LoadCommand(
         [this](){driver->SetCustomization(Customization::common);},
         CustomizationWidgets::ID());
     LoadCommand(
-        [this](){driver->SetTransTypeCAN();}, SetPortTypeWidgets::ID());
-    LoadCommand(
         [this](){driver->SetReleaseMode();}, SetProtocolWidgets::ID());
+    LoadCommand(
+        [this](){driver->SaveSettingsToFlash();},
+        FlashSettingsWidgets::ID());
   } else if (lingual_equal(opt, kClientBL)) {
     LoadCommand(
         [this](){driver->SetCustomization(Customization::bl);},
         CustomizationWidgets::ID());
     LoadCommand(
-        [this](){driver->SetTransTypeSerial();}, SetPortTypeWidgets::ID());
+        [this](){driver->SetReleaseMode();});
     LoadCommand(
-        [this](){driver->SetReleaseMode();}, SetProtocolWidgets::ID());
+        [this](){driver->SaveSettingsToFlash();});
   } else if (lingual_equal(opt, kClientI13)) {
     LoadCommand(
         [this](){driver->SetCustomization(Customization::i13);},
         CustomizationWidgets::ID());
     LoadCommand(
-        [this](){driver->SetTransTypeSerial();}, SetPortTypeWidgets::ID());
-    LoadCommand(
         [this](){driver->SetReleaseMode();}, SetProtocolWidgets::ID());
-  } else {
-    return;
+    LoadCommand(
+        [this](){driver->SaveSettingsToFlash();},
+        FlashSettingsWidgets::ID());
   }
-  LoadCommand(
-      [this](){driver->SaveSettingsToFlash();},
-      FlashSettingsWidgets::ID());
 }
 
 void SetReleaseModeWidgets::SetOptionLingual() {

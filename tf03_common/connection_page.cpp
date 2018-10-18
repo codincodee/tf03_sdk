@@ -56,9 +56,21 @@ bool ConnectionPage::Initialize() {
   version_widgets_->driver = driver_;
   version_widgets_->echo_handler = EchoHandler();
   version_widgets_->button->setText("获取版本号");
+  // version_widgets_->SetupUI();
   version_layout_->addWidget(version_widgets_->button, 0, 0);
   version_layout_->addWidget(version_widgets_->status, 0, 1);
   version_layout_->addWidget(version_widgets_->label, 0, 2);
+
+#ifdef SHOW_PROTOCOL_WIDGETS_ON_CONNECTION_PAGE
+  protocol_widgets_.reset(new SetProtocolWidgets);
+  protocol_widgets_->driver = driver_;
+  protocol_widgets_->echo_handler = EchoHandler();
+  protocol_widgets_->button->setText("开启开发模式");
+  protocol_widgets_->SetOptionLingual();
+  // protocol_widgets_->SetupUI();
+  version_layout_->addWidget(protocol_widgets_->button, 1, 0);
+  version_layout_->addWidget(protocol_widgets_->status, 1, 1);
+#endif
   return true;
 }
 
@@ -102,6 +114,11 @@ void ConnectionPage::Update() {
     distance_display_label_->clear();
     version_widgets_->status->clear();
     version_widgets_->label->clear();
+#ifdef SHOW_PROTOCOL_WIDGETS_ON_CONNECTION_PAGE
+    if (protocol_widgets_) {
+      protocol_widgets_->status->clear();
+    }
+#endif
   }
 
   if (version_widgets_) {
@@ -112,6 +129,12 @@ void ConnectionPage::Update() {
       version_widgets_->status->setVisible(true);
     }
   }
+
+#ifdef SHOW_PROTOCOL_WIDGETS_ON_CONNECTION_PAGE
+  if (protocol_widgets_) {
+    protocol_widgets_->Update();
+  }
+#endif
 }
 
 void ConnectionPage::OnMeasured(const MeasureBasic &measure) {

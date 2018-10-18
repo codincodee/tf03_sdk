@@ -51,7 +51,7 @@ void PageBase::SetWidgetFontLargeBold(QWidget *widget) {
 
 QFont PageBase::GetSmallFont() {
   QFont font;
-  font.setPointSize(9);
+  font.setPointSize(7);
   return font;
 }
 

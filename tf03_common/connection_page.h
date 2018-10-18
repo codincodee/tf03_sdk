@@ -6,6 +6,8 @@
 #include <QElapsedTimer>
 #include <QStringList>
 
+#define SHOW_PROTOCOL_WIDGETS_ON_CONNECTION_PAGE
+
 class Qlabel;
 class QComboBox;
 class QPushButton;
@@ -14,6 +16,9 @@ class Driver;
 class QGridLayout;
 class RequestVersionWidgets;
 class CommandEchoHandler;
+#ifdef SHOW_PROTOCOL_WIDGETS_ON_CONNECTION_PAGE
+class SetProtocolWidgets;
+#endif
 
 class API ConnectionPage : public PageBase
 {
@@ -48,6 +53,9 @@ private:
   std::shared_ptr<Driver> driver_;
   std::shared_ptr<RequestVersionWidgets> version_widgets_;
 
+#ifdef SHOW_PROTOCOL_WIDGETS_ON_CONNECTION_PAGE
+  std::shared_ptr<SetProtocolWidgets> protocol_widgets_;
+#endif
   QElapsedTimer frequency_timer_;
   unsigned long last_freq_measure_id_ = 0;
 
