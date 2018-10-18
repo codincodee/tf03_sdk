@@ -98,6 +98,8 @@ struct API MeasureDevel : public MeasureBasic {
   float Celsius() const;
 };
 
+MeasureBasic ToMeasureBasic(const MeasureDevel& devel);
+
 struct API MeasureDevelStamped : public MeasureDevel {
   MeasureDevelStamped();
   MeasureDevelStamped(const MeasureDevel& devel);

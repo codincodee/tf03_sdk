@@ -1,5 +1,6 @@
 #include "page_base.h"
 #include <QLabel>
+#include "parsed.h"
 
 PageBase::PageBase()
 {
@@ -33,7 +34,7 @@ void PageBase::OnMeasured(const MeasureBasic &measure) {
 }
 
 void PageBase::OnMeasured(const MeasureDevel &measure) {
-
+  OnMeasured(ToMeasureBasic(measure));
 }
 
 void PageBase::SetWidgetFontSmall(QWidget *widget) {

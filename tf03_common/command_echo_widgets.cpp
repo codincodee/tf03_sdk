@@ -59,10 +59,12 @@ void CommandEchoWidgets::Update() {
   case CheckStatus::succeeded:
     status_lingual = kSuccessLingual;
     status->setText(which_lingual(status_lingual));
+    button->setDisabled(false);
     break;
   case CheckStatus::failed:
     status_lingual = kFailLingual;
     status->setText(which_lingual(status_lingual));
+    button->setDisabled(false);
     break;
   }
 }
@@ -136,6 +138,9 @@ SequentialCommandsWidgets::~SequentialCommandsWidgets() {
 
 void SequentialCommandsWidgets::ButtonClicked() {
   CommandEchoWidgets::ButtonClicked();
+  while (!task_queue.empty()) {
+    task_queue.pop();
+  }
   LoadCommands();
   Start();
 }
@@ -199,7 +204,7 @@ void SequentialCommandsWidgets::Start() {
 ////////////////////// SetProtocolWidgets /////////////////////////////
 
 SetProtocolWidgets::SetProtocolWidgets() : CommandEchoWidgets() {
-  id = 0x44;
+  id = ID();
   item_lingual = {"Protocol", "通信协议"};
   combo = new QComboBox;
   option = combo;
@@ -220,6 +225,10 @@ void SetProtocolWidgets::ButtonClicked() {
   } else {
     qDebug() << "Error: " << __FUNCTION__ << __LINE__;
   }
+}
+
+int SetProtocolWidgets::ID() {
+  return 0x44;
 }
 
 ////////////////////// SetFrequencyWidgets /////////////////////////////
@@ -459,11 +468,15 @@ void SetSerialBaudRateWidgets::Update() {
 ////////////////////// SetPortTypeWidgets /////////////////////////////
 
 SetPortTypeWidgets::SetPortTypeWidgets() {
-  id = 0x45;
+  id = ID();
   item_lingual = {"Port Type", "传输类型"};
   combo = new QComboBox;
   SetOptionLingual();
   option = combo;
+}
+
+int SetPortTypeWidgets::ID() {
+  return 0x45;
 }
 
 void SetPortTypeWidgets::SetOptionLingual() {
@@ -1128,26 +1141,64 @@ SetReleaseModeWidgets::SetReleaseModeWidgets() {
   combo = new QComboBox;
   option = combo;
   timeout = 3000;
+
+  output_format_check =
+      [this](){
+        if (echo_handler->IsOutputFormatEchoed()) {
+          return CheckStatus::succeeded;
+        }
+        return CheckStatus::no_response;
+      };
 }
 
 void SetReleaseModeWidgets::LoadCommands() {
   auto opt = combo->currentText();
   if (lingual_equal(opt, kDevelTest)) {
     LoadCommand(
-        [this](){driver->SetCustomization(Customization::common);},
+        [this](){qDebug() << __LINE__;driver->SetCustomization(Customization::common);},
         CustomizationWidgets::ID());
     LoadCommand(
-        [this](){driver->SetOutputFormatNineBytes();},
-        [this](){
-          if (echo_handler->IsOutputFormatEchoed()) {
-            return CheckStatus::succeeded;
-          }
-          return CheckStatus::no_response;
-        });
+        [this](){qDebug() << __LINE__;driver->SetTransTypeSerial();}, SetPortTypeWidgets::ID());
     LoadCommand(
-        [this](){driver->SaveSettingsToFlash();},
-        FlashSettingsWidgets::ID());
+        [this](){qDebug() << __LINE__;driver->SetDevelMode();}, SetProtocolWidgets::ID());
+  } else if (lingual_equal(opt, kUARTStandard)) {
+    LoadCommand(
+        [this](){qDebug() << __LINE__;driver->SetCustomization(Customization::common);},
+        CustomizationWidgets::ID());
+    LoadCommand(
+        [this](){qDebug() << __LINE__;driver->SetTransTypeSerial();}, SetPortTypeWidgets::ID());
+    LoadCommand(
+        [this](){qDebug() << __LINE__;driver->SetReleaseMode();}, SetProtocolWidgets::ID());
+  } else if (lingual_equal(opt, kCANStandard)) {
+    LoadCommand(
+        [this](){qDebug() << __LINE__;driver->SetCustomization(Customization::common);},
+        CustomizationWidgets::ID());
+    LoadCommand(
+        [this](){qDebug() << __LINE__;driver->SetTransTypeCAN();}, SetPortTypeWidgets::ID());
+    LoadCommand(
+        [this](){qDebug() << __LINE__;driver->SetReleaseMode();}, SetProtocolWidgets::ID());
+  } else if (lingual_equal(opt, kClientBL)) {
+    LoadCommand(
+        [this](){qDebug() << __LINE__;driver->SetCustomization(Customization::bl);},
+        CustomizationWidgets::ID());
+    LoadCommand(
+        [this](){qDebug() << __LINE__;driver->SetTransTypeSerial();}, SetPortTypeWidgets::ID());
+    LoadCommand(
+        [this](){qDebug() << __LINE__;driver->SetReleaseMode();}, SetProtocolWidgets::ID());
+  } else if (lingual_equal(opt, kClientI13)) {
+    LoadCommand(
+        [this](){qDebug() << __LINE__;driver->SetCustomization(Customization::i13);},
+        CustomizationWidgets::ID());
+    LoadCommand(
+        [this](){qDebug() << __LINE__;driver->SetTransTypeSerial();}, SetPortTypeWidgets::ID());
+    LoadCommand(
+        [this](){qDebug() << __LINE__;driver->SetReleaseMode();}, SetProtocolWidgets::ID());
+  } else {
+    return;
   }
+  LoadCommand(
+      [this](){driver->SaveSettingsToFlash();},
+      FlashSettingsWidgets::ID());
 }
 
 void SetReleaseModeWidgets::SetOptionLingual() {

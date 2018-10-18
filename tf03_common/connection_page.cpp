@@ -114,7 +114,7 @@ void ConnectionPage::Update() {
   }
 }
 
-void ConnectionPage::OnMeasured(const MeasureDevel& measure) {
+void ConnectionPage::OnMeasured(const MeasureBasic &measure) {
   auto elapse = frequency_timer_.elapsed();
 
   distance_display_label_->setText(QString::number(measure.dist));

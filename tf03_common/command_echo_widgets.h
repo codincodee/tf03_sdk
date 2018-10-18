@@ -100,6 +100,7 @@ struct SetProtocolWidgets : public CommandEchoWidgets {
   SetProtocolWidgets();
   void SetOptionLingual() override;
   void ButtonClicked() override;
+  static int ID();
   const Lingual kDevelLingual = {"Devel", "开发"};
   const Lingual kReleaseLingual = {"Release", "发布"};
   QComboBox* combo;
@@ -175,6 +176,7 @@ struct SetPortTypeWidgets : public CommandEchoWidgets {
   SetPortTypeWidgets();
   void ButtonClicked() override;
   void SetOptionLingual() override;
+  static int ID();
   QComboBox* combo;
   const Lingual kSerial = {"Serial Port", "串口"};
   const Lingual kCAN = {"CAN", "CAN"};
@@ -384,6 +386,7 @@ struct SetReleaseModeWidgets : public SequentialCommandsWidgets {
   const Lingual kCANStandard = {"CAN Standard", "CAN标品"};
   const Lingual kClientBL = {"Client BL", "BL客户"};
   const Lingual kClientI13 = {"Client I13", "I13客户"};
+  std::function<CheckStatus()> output_format_check;
   QComboBox* combo;
 };
 #endif // COMMAND_ECHO_WIDGETS_H

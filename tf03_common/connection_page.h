@@ -29,7 +29,7 @@ public:
   void SetVersionLayout(QGridLayout* layout);
   void SetDriver(std::shared_ptr<Driver> driver);
   void Update() override;
-  void OnMeasured(const MeasureDevel& measure) override;
+  void OnMeasured(const MeasureBasic& measure) override;
 public slots:
   void OnConnectButtonClicked();
 private:

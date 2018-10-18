@@ -155,19 +155,29 @@ void MainWindow::timerEvent(QTimerEvent *event) {
     return;
   }
 
-  MeasureBasic measure;
+  bool has_basic = false;
+  MeasureBasic basic;
   auto measure_basic = driver_->LastMeasure();
   if (measure_basic) {
-    measure = *measure_basic;
+    has_basic = true;
+    basic = *measure_basic;
   }
 
+  bool has_devel = false;
+  MeasureDevel devel;
   auto measure_devel = ToMeasureDevel(measure_basic);
+  if (measure_devel) {
+    has_devel = true;
+    devel = *measure_devel;
+  }
 
   command_echo_handler_->Probe();
 
-  if (measure_devel) {
-    for(auto& page : pages_) {
-      page->OnMeasured(*measure_devel);
+  for(auto& page : pages_) {
+    if (has_devel) {
+      page->OnMeasured(devel);
+    } else if (has_basic) {
+      page->OnMeasured(basic);
     }
   }
 
