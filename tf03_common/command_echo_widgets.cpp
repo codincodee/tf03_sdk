@@ -1155,44 +1155,44 @@ void SetReleaseModeWidgets::LoadCommands() {
   auto opt = combo->currentText();
   if (lingual_equal(opt, kDevelTest)) {
     LoadCommand(
-        [this](){qDebug() << __LINE__;driver->SetCustomization(Customization::common);},
+        [this](){driver->SetCustomization(Customization::common);},
         CustomizationWidgets::ID());
     LoadCommand(
-        [this](){qDebug() << __LINE__;driver->SetTransTypeSerial();}, SetPortTypeWidgets::ID());
+        [this](){driver->SetTransTypeSerial();}, SetPortTypeWidgets::ID());
     LoadCommand(
-        [this](){qDebug() << __LINE__;driver->SetDevelMode();}, SetProtocolWidgets::ID());
+        [this](){driver->SetDevelMode();}, SetProtocolWidgets::ID());
   } else if (lingual_equal(opt, kUARTStandard)) {
     LoadCommand(
-        [this](){qDebug() << __LINE__;driver->SetCustomization(Customization::common);},
+        [this](){driver->SetCustomization(Customization::common);},
         CustomizationWidgets::ID());
     LoadCommand(
-        [this](){qDebug() << __LINE__;driver->SetTransTypeSerial();}, SetPortTypeWidgets::ID());
+        [this](){driver->SetTransTypeSerial();}, SetPortTypeWidgets::ID());
     LoadCommand(
-        [this](){qDebug() << __LINE__;driver->SetReleaseMode();}, SetProtocolWidgets::ID());
+        [this](){driver->SetReleaseMode();}, SetProtocolWidgets::ID());
   } else if (lingual_equal(opt, kCANStandard)) {
     LoadCommand(
-        [this](){qDebug() << __LINE__;driver->SetCustomization(Customization::common);},
+        [this](){driver->SetCustomization(Customization::common);},
         CustomizationWidgets::ID());
     LoadCommand(
-        [this](){qDebug() << __LINE__;driver->SetTransTypeCAN();}, SetPortTypeWidgets::ID());
+        [this](){driver->SetTransTypeCAN();}, SetPortTypeWidgets::ID());
     LoadCommand(
-        [this](){qDebug() << __LINE__;driver->SetReleaseMode();}, SetProtocolWidgets::ID());
+        [this](){driver->SetReleaseMode();}, SetProtocolWidgets::ID());
   } else if (lingual_equal(opt, kClientBL)) {
     LoadCommand(
-        [this](){qDebug() << __LINE__;driver->SetCustomization(Customization::bl);},
+        [this](){driver->SetCustomization(Customization::bl);},
         CustomizationWidgets::ID());
     LoadCommand(
-        [this](){qDebug() << __LINE__;driver->SetTransTypeSerial();}, SetPortTypeWidgets::ID());
+        [this](){driver->SetTransTypeSerial();}, SetPortTypeWidgets::ID());
     LoadCommand(
-        [this](){qDebug() << __LINE__;driver->SetReleaseMode();}, SetProtocolWidgets::ID());
+        [this](){driver->SetReleaseMode();}, SetProtocolWidgets::ID());
   } else if (lingual_equal(opt, kClientI13)) {
     LoadCommand(
-        [this](){qDebug() << __LINE__;driver->SetCustomization(Customization::i13);},
+        [this](){driver->SetCustomization(Customization::i13);},
         CustomizationWidgets::ID());
     LoadCommand(
-        [this](){qDebug() << __LINE__;driver->SetTransTypeSerial();}, SetPortTypeWidgets::ID());
+        [this](){driver->SetTransTypeSerial();}, SetPortTypeWidgets::ID());
     LoadCommand(
-        [this](){qDebug() << __LINE__;driver->SetReleaseMode();}, SetProtocolWidgets::ID());
+        [this](){driver->SetReleaseMode();}, SetProtocolWidgets::ID());
   } else {
     return;
   }
