@@ -8,6 +8,7 @@
 #include "devel_mode_task.h"
 #include "apd_exp_task.h"
 #include "range_detect_task.h"
+#include <iostream>
 
 std::unique_ptr<MeasureDevel> ToMeasureDevel(
     std::unique_ptr<MeasureBasic>& basic) {
@@ -29,7 +30,8 @@ std::unordered_map<char, Lingual> Driver::kEchoStatusIDMap{
   {0x4C, {"Adaptive APD", "APD自动调节"}},
   {0x4D, {"APD Closed-loop", "APD闭环调节"}},
   {0x5A, {"Customization", "定制化"}},
-  {0x5B, {"Horizontal Angle", "水平安装角"}}
+  {0x5B, {"Horizontal Angle", "水平安装角"}},
+  {0x5C, {"Vdbs Auto Adjust", "Vdbs自动调节"}}
 };
 
 Driver::Driver()
@@ -103,7 +105,13 @@ void Driver::WorkThread() {
     HandleIncomingCommandInWorkThread();
     if (serial_port_->waitForReadyRead(100)) {
       buffer_ += serial_port_->readAll();
-//      qDebug() << buffer_;
+#ifdef DISPLAY_SERIAL_IO_MESSAGE_
+  std::cout << "Received: ";
+  for (auto& c : buffer_) {
+    std::cout << std::hex << ushort(c) << " ";
+  }
+  std::cout << std::endl;
+#endif
       ProcessBufferInWorkThread(buffer_);
     }
   }
@@ -158,8 +166,6 @@ void Driver::EnqueueReceivedMessages(Message message) {
   receive_messages_mutex_.unlock();
 }
 
-#include <iostream>
-
 bool Driver::SendMessage(const QByteArray &msg) {
   if (!serial_port_) {
     return false;
@@ -167,10 +173,13 @@ bool Driver::SendMessage(const QByteArray &msg) {
   if (!serial_port_->isOpen()) {
     return false;
   }
-//  for (auto& c : msg) {
-//    std::cout << std::hex << ushort(c) << " ";
-//  }
-//  std::cout << std::endl;
+#ifdef DISPLAY_SERIAL_IO_MESSAGE_
+  std::cout << "Sent: ";
+  for (auto& c : msg) {
+    std::cout << std::hex << ushort(c) << " ";
+  }
+  std::cout << std::endl;
+#endif
   serial_port_->write(msg);
   return true;
 }

@@ -1211,3 +1211,28 @@ void SetReleaseModeWidgets::SetOptionLingual() {
   combo->addItem(which_lingual(kClientBL));
   combo->addItem(which_lingual(kClientI13));
 }
+
+////////////////////// VdbsAutoAdjustWidgets /////////////////////////////
+
+VdbsAutoAdjustWidgets::VdbsAutoAdjustWidgets() {
+  id = 0x5C;
+  item_lingual = {"Vdbs Auto", "Vdbs自动调节"};
+  combo = new QComboBox;
+  option = combo;
+}
+
+void VdbsAutoAdjustWidgets::ButtonClicked() {
+  CommandEchoWidgets::ButtonClicked();
+  auto opt = combo->currentText();
+  if (lingual_equal(opt, kOnLingual)) {
+    driver->SetVdbsAutoAdjust(true);
+  } else if (lingual_equal(opt, kOffLingual)) {
+    driver->SetVdbsAutoAdjust(false);
+  }
+}
+
+void VdbsAutoAdjustWidgets::SetOptionLingual() {
+  combo->clear();
+  combo->addItem(which_lingual(kOnLingual));
+  combo->addItem(which_lingual(kOffLingual));
+}

@@ -200,12 +200,14 @@ void CommandEchoWidgetsManager::LoadWidgets() {
   AddWidgets(
       std::shared_ptr<DistanceLReadWidgets>(new DistanceLReadWidgets));
   AddWidgets(
-        std::shared_ptr<HorizontalAngleWidgets>(new HorizontalAngleWidgets));
+      std::shared_ptr<HorizontalAngleWidgets>(new HorizontalAngleWidgets));
 #endif
 
 #ifdef SUPPORT_DEVEL_MODE_PROTOCOL_
   AddWidgets(
-        std::shared_ptr<RangeDetectWidgets>(new RangeDetectWidgets));
+      std::shared_ptr<RangeDetectWidgets>(new RangeDetectWidgets));
+  AddWidgets(
+      std::shared_ptr<VdbsAutoAdjustWidgets>(new VdbsAutoAdjustWidgets));
 #endif
 
   if (ui_grid_) {

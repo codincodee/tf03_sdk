@@ -90,6 +90,7 @@ class API Driver
   void SetCustomization(const Customization& type);
   void RangeDetectionTask(const bool& on);
   void SetHorizontalAngle(const uint8_t& value);
+  void SetVdbsAutoAdjust(const bool& on);
 
   void SetBufferCleanerBytes(const int& bytes);
   void SetBufferCleanerBytesDefault();

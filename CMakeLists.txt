@@ -4,8 +4,8 @@ project(tf03_sdk C CXX)
 set(CMAKE_CXX_STANDARD 14)
 
 set(tf03_sdk_MAJOR_VERSION 1)
-set(tf03_sdk_MINOR_VERSION 2)
-set(tf03_sdk_PATCH_VERSION 6)
+set(tf03_sdk_MINOR_VERSION 3)
+set(tf03_sdk_PATCH_VERSION 0)
 set(tf03_sdk_VERSION
   ${tf03_sdk_MAJOR_VERSION}.${tf03_sdk_MINOR_VERSION}.${tf03_sdk_PATCH_VERSION})
 

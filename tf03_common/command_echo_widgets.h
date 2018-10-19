@@ -390,4 +390,14 @@ struct SetReleaseModeWidgets : public SequentialCommandsWidgets {
   std::function<CheckStatus()> output_format_check;
   QComboBox* combo;
 };
+
+////////////////////// VdbsAutoAdjustWidgets /////////////////////////////
+
+struct VdbsAutoAdjustWidgets : public CommandEchoWidgets {
+  VdbsAutoAdjustWidgets();
+  void ButtonClicked() override;
+  void SetOptionLingual() override;
+  QComboBox* combo;
+};
+
 #endif // COMMAND_ECHO_WIDGETS_H

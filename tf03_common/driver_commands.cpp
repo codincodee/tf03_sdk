@@ -259,8 +259,17 @@ void Driver::RequestDistanceL() {
 
 void Driver::SetHorizontalAngle(const uint8_t &value) {
   EnqueueCommand([this, value](){
+    return true;
     return SendMessage(
-        CommonCommand(char(0x5B), QByteArray(1, 0x01) + to_bytes(value)));
+        CommonCommand(char(0x5B), to_bytes(value)));
+  });
+}
+
+void Driver::SetVdbsAutoAdjust(const bool &on) {
+  EnqueueCommand([this, on](){
+    return SendMessage(
+        CommonCommand(
+            char(0x5C), on ? QByteArray(1, 0x00) : QByteArray(1, 0x01)));
   });
 }
 
