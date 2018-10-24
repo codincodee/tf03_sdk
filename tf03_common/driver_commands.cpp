@@ -265,7 +265,6 @@ void Driver::RequestDistanceL() {
 
 void Driver::SetHorizontalAngle(const uint8_t &value) {
   EnqueueCommand([this, value](){
-    return true;
     return SendMessage(
         CommonCommand(char(0x5B), to_bytes(value)));
   });
