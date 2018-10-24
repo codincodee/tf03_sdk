@@ -229,8 +229,10 @@ bool Driver::ParseOutputFormatEcho(
   std::unique_ptr<OutputFormatEcho> data(new OutputFormatEcho);
   if (msg[3] == char(0x01)) {
     data->format = OutputFormat::nine_bytes;
-  } else if (msg[3] = char(0x02)) {
+  } else if (msg[3] == char(0x02)) {
     data->format = OutputFormat::pix;
+  } else if (msg[3] == char(0x05)) {
+    data->format = OutputFormat::io;
   } else {
     return false;
   }

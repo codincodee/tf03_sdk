@@ -89,6 +89,12 @@ void Driver::SetOutputFormatPIX() {
   });
 }
 
+void Driver::SetOutputFormatIO() {
+  EnqueueCommand([this](){
+    return SendMessage(CommonCommand(char(0x05), QByteArray(1, 0x05)));
+  });
+}
+
 void Driver::SetCANSendID(const uint32_t &id) {
   EnqueueCommand([this, id](){
     return SendMessage(CommonCommand(char(0x50), to_bytes(id)));

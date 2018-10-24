@@ -515,6 +515,7 @@ void SetOutputFormatWidgets::SetOptionLingual() {
   combo->clear();
   combo->addItem(which_lingual(kNineBytes));
   combo->addItem(which_lingual(kPixhawk));
+  combo->addItem(which_lingual(kIO));
 }
 
 void SetOutputFormatWidgets::ButtonClicked() {
@@ -524,6 +525,8 @@ void SetOutputFormatWidgets::ButtonClicked() {
     driver->SetOutputFormatNineBytes();
   } else if (lingual_equal(type, kPixhawk)) {
     driver->SetOutputFormatPIX();
+  } else if (lingual_equal(type, kIO)) {
+    driver->SetOutputFormatIO();
   }
 }
 
@@ -538,6 +541,8 @@ void SetOutputFormatWidgets::Update() {
       status_lingual = status_lingual + ": " + kNineBytes;
     } else if (format == OutputFormat::pix) {
       status_lingual = status_lingual + ": " + kPixhawk;
+    } else if (format == OutputFormat::io) {
+      status_lingual = status_lingual + ": " + kIO;
     } else {
       return;
     }

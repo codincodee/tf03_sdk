@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD 14)
 
 set(tf03_sdk_MAJOR_VERSION 1)
 set(tf03_sdk_MINOR_VERSION 3)
-set(tf03_sdk_PATCH_VERSION 0)
+set(tf03_sdk_PATCH_VERSION 1)
 set(tf03_sdk_VERSION
   ${tf03_sdk_MAJOR_VERSION}.${tf03_sdk_MINOR_VERSION}.${tf03_sdk_PATCH_VERSION})
 
@@ -38,7 +38,9 @@ include_directories(
 # Add sub-directories
 add_subdirectory(tf03_common)
 add_subdirectory(tf03_setup)
-add_subdirectory(tf03_production)
+if (BUILD_PRODUCTION_CLIENT)
+  add_subdirectory(tf03_production)
+endif()
 
 # The interesting stuff goes here
 # ===============================

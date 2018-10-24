@@ -58,7 +58,7 @@ struct API BaudRateEcho : public ParsedBase {
 };
 
 enum class API OutputFormat {
-  nine_bytes, pix
+  nine_bytes, pix, io
 };
 
 struct API OutputFormatEcho : public ParsedBase {

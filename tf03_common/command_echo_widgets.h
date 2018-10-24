@@ -193,6 +193,7 @@ struct SetOutputFormatWidgets : public CommandEchoWidgets {
   QComboBox* combo;
   const Lingual kNineBytes = {"Standard", "标准串口"};
   const Lingual kPixhawk = {"Pixhawk", "Pixhawk"};
+  const Lingual kIO = {"IO", "高低电平"};
 };
 
 ////////////////////// SetCANIDWidgetsBase /////////////////////////////
