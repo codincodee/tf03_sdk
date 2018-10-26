@@ -300,7 +300,7 @@ bool APDPage::IsSampleStable(MeasureDevelStream stream) {
     return false;
   }
   int value = *values.begin();
-  for (auto& i = std::next(values.begin(), 1); i != values.end(); ++i) {
+  for (auto i = std::next(values.begin(), 1); i != values.end(); ++i) {
     if (value != (*i - 1)) {
       return false;
     } else {
