@@ -173,6 +173,8 @@ void CommandEchoWidgetsManager::LoadWidgets() {
   AddWidgets(
       std::shared_ptr<SetCANBaudRateWidgets>(new SetCANBaudRateWidgets));
   AddWidgets(
+      std::shared_ptr<CANFrameTypeWidgets>(new CANFrameTypeWidgets));
+  AddWidgets(
       std::shared_ptr<FlashSettingsWidgets>(new FlashSettingsWidgets));
   AddWidgets(
       std::shared_ptr<RestoreFactoryWidgets>(new RestoreFactoryWidgets));

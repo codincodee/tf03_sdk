@@ -401,4 +401,14 @@ struct VdbsAutoAdjustWidgets : public CommandEchoWidgets {
   QComboBox* combo;
 };
 
+////////////////////// CANFrameTypeWidgets /////////////////////////////
+
+struct CANFrameTypeWidgets : public CommandEchoWidgets {
+  CANFrameTypeWidgets();
+  void ButtonClicked() override;
+  void SetOptionLingual() override;
+  QComboBox* combo;
+  const Lingual kStandard = {"Standard", "标准帧"};
+  const Lingual kExtended = {"Extended", "扩展帧"};
+};
 #endif // COMMAND_ECHO_WIDGETS_H

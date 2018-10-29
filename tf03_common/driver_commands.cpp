@@ -278,6 +278,18 @@ void Driver::SetVdbsAutoAdjust(const bool &on) {
   });
 }
 
+void Driver::SetCANFrameTypeStandard() {
+  EnqueueCommand([this](){
+    return SendMessage(CommonCommand(char(0x5D), QByteArray(1, 0x00)));
+  });
+}
+
+void Driver::SetCANFrameTypeExtended() {
+  EnqueueCommand([this](){
+    return SendMessage(CommonCommand(char(0x5D), QByteArray(1, 0x01)));
+  });
+}
+
 void Driver::SetCustomization(const Customization &type) {
   char id;
   switch (type) {

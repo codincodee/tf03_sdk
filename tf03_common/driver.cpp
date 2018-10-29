@@ -31,7 +31,8 @@ std::unordered_map<char, Lingual> Driver::kEchoStatusIDMap{
   {0x4D, {"APD Closed-loop", "APD闭环调节"}},
   {0x5A, {"Customization", "定制化"}},
   {0x5B, {"Horizontal Angle", "水平安装角"}},
-  {0x5C, {"Vdbs Auto Adjust", "Vdbs自动调节"}}
+  {0x5C, {"Vdbs Auto Adjust", "Vdbs自动调节"}},
+  {0x5D, {"CAN Frame Type", "CAN帧类型"}}
 };
 
 Driver::Driver()

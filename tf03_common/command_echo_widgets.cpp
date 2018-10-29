@@ -1241,3 +1241,28 @@ void VdbsAutoAdjustWidgets::SetOptionLingual() {
   combo->addItem(which_lingual(kOnLingual));
   combo->addItem(which_lingual(kOffLingual));
 }
+
+////////////////////// CANFrameTypeWidgets /////////////////////////////
+
+CANFrameTypeWidgets::CANFrameTypeWidgets() {
+  id = 0x5D;
+  combo = new QComboBox;
+  item_lingual = {"CAN Frame", "CAN帧类型"};
+  option = combo;
+}
+
+void CANFrameTypeWidgets::ButtonClicked() {
+  CommandEchoWidgets::ButtonClicked();
+  auto opt = combo->currentText();
+  if (lingual_equal(opt, kStandard)) {
+    driver->SetCANFrameTypeStandard();
+  } else if (lingual_equal(opt, kExtended)) {
+    driver->SetCANFrameTypeExtended();
+  }
+}
+
+void CANFrameTypeWidgets::SetOptionLingual() {
+  combo->clear();
+  combo->addItem(which_lingual(kStandard));
+  combo->addItem(which_lingual(kExtended));
+}
