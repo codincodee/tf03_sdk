@@ -19,6 +19,7 @@ class QLineEdit;
 struct CommandEchoWidgets : public QObject
 {
   CommandEchoWidgets();
+  virtual ~CommandEchoWidgets();
 
   char id;
   QLabel* item;
@@ -73,6 +74,16 @@ struct CommandEchoWidgets : public QObject
   bool ProceedUpdate();
   virtual CheckStatus CheckCommandEcho();
   const static QString kUINullString;
+};
+
+////////////////////// EchoWidgetsBase /////////////////////////////
+
+struct EchoWidgetsBase : public CommandEchoWidgets {
+  void ButtonClicked() override;
+  bool stream_off_tip = false;
+  bool proceed_button = true;
+private:
+  bool stream_off_tip_showed = false;
 };
 
 ////////////////////// SequentialCommandsWidgets /////////////////////////////
@@ -133,8 +144,9 @@ struct OutputSwitchWidgets : public CommandEchoWidgets {
   void Update() override;
   void SetOptionLingual() override;
   QComboBox* combo;
-  const Lingual kSwitchOnLingual = {"Automated", "连续输出"};
-  const Lingual kSwitchOffLingual = {"Manual", "指令触发"};
+  static const Lingual kSwitchOnLingual;
+  static const Lingual kSwitchOffLingual;
+  static const Lingual kItemLingual;
   const Lingual kOutputOnLingual = {"Automated", "连续输出"};
   const Lingual kOutputOffLingual = {"Manual", "指令触发"};
 };
@@ -301,7 +313,7 @@ struct APDClosedLoopWidgets : public CommandEchoWidgets {
 
 ////////////////////// DistanceL1WriteWidgets /////////////////////////////
 
-struct DistanceL1WriteWidgets: public CommandEchoWidgets {
+struct DistanceL1WriteWidgets: public EchoWidgetsBase {
   DistanceL1WriteWidgets();
   void ButtonClicked() override;
   QLineEdit* edit;
@@ -309,7 +321,7 @@ struct DistanceL1WriteWidgets: public CommandEchoWidgets {
 
 ////////////////////// DistanceL1ReadWidgets /////////////////////////////
 
-struct DistanceL1ReadWidgets : public CommandEchoWidgets {
+struct DistanceL1ReadWidgets : public EchoWidgetsBase {
   DistanceL1ReadWidgets();
   void ButtonClicked() override;
   void Update() override;
@@ -317,7 +329,7 @@ struct DistanceL1ReadWidgets : public CommandEchoWidgets {
 
 ////////////////////// DistanceLWriteWidgets /////////////////////////////
 
-struct DistanceLWriteWidgets : public CommandEchoWidgets {
+struct DistanceLWriteWidgets : public EchoWidgetsBase {
   DistanceLWriteWidgets();
   void ButtonClicked() override;
   QLineEdit* edit;
@@ -325,7 +337,7 @@ struct DistanceLWriteWidgets : public CommandEchoWidgets {
 
 ////////////////////// DistanceLReadWidgets /////////////////////////////
 
-struct DistanceLReadWidgets : public CommandEchoWidgets {
+struct DistanceLReadWidgets : public EchoWidgetsBase {
   DistanceLReadWidgets();
   void ButtonClicked() override;
   void Update() override;
@@ -333,7 +345,7 @@ struct DistanceLReadWidgets : public CommandEchoWidgets {
 
 ////////////////////// CustomizationWidgets /////////////////////////////
 
-struct CustomizationWidgets : public CommandEchoWidgets {
+struct CustomizationWidgets : public EchoWidgetsBase {
   CustomizationWidgets();
   void ButtonClicked() override;
   void SetOptionLingual() override;

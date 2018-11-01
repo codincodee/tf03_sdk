@@ -23,6 +23,8 @@ CommandEchoWidgets::CommandEchoWidgets() : timeout(1000) {
   connect(button, SIGNAL(clicked()), this, SLOT(OnButtonClicked()));
 }
 
+CommandEchoWidgets::~CommandEchoWidgets() {}
+
 void CommandEchoWidgets::SetOptionLingual() {
 
 }
@@ -124,6 +126,39 @@ void CommandEchoWidgets::SetStatusLabelUINull() {
 
 void CommandEchoWidgets::SetOptionWidgetUINull() {
   SetWidgetUINullLabel(option);
+}
+
+////////////////////// EchoWidgetsBase /////////////////////////////
+
+void EchoWidgetsBase::ButtonClicked() {
+  if (stream_off_tip) {
+    if (!stream_off_tip_showed) {
+      stream_off_tip_showed = true;
+      QMessageBox box;
+      box.setWindowTitle(which_lingual(kMsgBoxInfoTitle));
+      box.setText(
+          which_lingual(
+              {"We recommend you turning off sensor data stream "
+               "before setting the device.\n"
+               "You can turn it back by setting '" +
+               OutputSwitchWidgets::kItemLingual.eng + "' to '" +
+               OutputSwitchWidgets::kSwitchOnLingual.eng + "'.",
+               "设置前建议关闭传感器数据接收。\n"
+               "你可在‘" + OutputSwitchWidgets::kItemLingual.chn + "’中"
+               "设置‘" + OutputSwitchWidgets::kSwitchOnLingual.chn + "’"
+               "以重新获得数据。"}));
+      box.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
+      box.setButtonText(QMessageBox::Ok, which_lingual({"Ignore", "忽略"}));
+      box.setButtonText(
+          QMessageBox::Cancel, which_lingual({"Set Now", "立即设置"}));
+      // proceed_button = false;
+      if (box.exec() == QMessageBox::Cancel) {
+        driver->SetOutputSwitchOff();
+      }
+    }
+  }
+  proceed_button = true;
+  CommandEchoWidgets::ButtonClicked();
 }
 
 ////////////////////// SequentialCommandsWidgets /////////////////////////////
@@ -321,11 +356,15 @@ void SerialNumberWidgets::Update() {
 
 ////////////////////// OutputSwitchWidgets /////////////////////////////
 
+const Lingual OutputSwitchWidgets::kSwitchOnLingual = {"Automated", "连续输出"};
+const Lingual OutputSwitchWidgets::kSwitchOffLingual = {"Manual", "指令触发"};
+const Lingual OutputSwitchWidgets::kItemLingual = {"Output Switch", "输出模式"};
+
 OutputSwitchWidgets::OutputSwitchWidgets() {
   id = 0x07;
   combo = new QComboBox;
   option = combo;
-  item_lingual = {"Output Switch", "输出模式"};
+  item_lingual = kItemLingual;
 }
 
 void OutputSwitchWidgets::ButtonClicked() {
@@ -858,10 +897,11 @@ DistanceL1WriteWidgets::DistanceL1WriteWidgets() {
   edit = new QLineEdit;
   SetLineEditUShortValidity(edit);
   option = edit;
+  stream_off_tip = true;
 }
 
 void DistanceL1WriteWidgets::ButtonClicked() {
-  CommandEchoWidgets::ButtonClicked();
+  EchoWidgetsBase::ButtonClicked();
   bool ok;
   auto value = edit->text().toUShort(&ok);
   if (!ok) {
@@ -877,10 +917,11 @@ DistanceL1ReadWidgets::DistanceL1ReadWidgets() {
   item_lingual = {"Read L1 (cm)", "读取L1 (cm)"};
   SetOptionWidgetUINull();
   button_lingual = kButtonRequestLingual;
+  stream_off_tip = true;
 }
 
 void DistanceL1ReadWidgets::ButtonClicked() {
-  CommandEchoWidgets::ButtonClicked();
+  EchoWidgetsBase::ButtonClicked();
   driver->RequestDistanceL1();
 }
 
@@ -911,10 +952,11 @@ DistanceLWriteWidgets::DistanceLWriteWidgets() {
   edit = new QLineEdit;
   SetLineEditUShortValidity(edit);
   option = edit;
+  stream_off_tip = true;
 }
 
 void DistanceLWriteWidgets::ButtonClicked() {
-  CommandEchoWidgets::ButtonClicked();
+  EchoWidgetsBase::ButtonClicked();
   bool ok;
   auto value = edit->text().toUShort(&ok);
   if (!ok) {
@@ -930,10 +972,11 @@ DistanceLReadWidgets::DistanceLReadWidgets() {
   item_lingual = {"Read L (cm)", "读取L (cm)"};
   button_lingual = kButtonRequestLingual;
   SetOptionWidgetUINull();
+  stream_off_tip = true;
 }
 
 void DistanceLReadWidgets::ButtonClicked() {
-  CommandEchoWidgets::ButtonClicked();
+  EchoWidgetsBase::ButtonClicked();
   driver->RequestDistanceL();
 }
 
@@ -964,6 +1007,7 @@ CustomizationWidgets::CustomizationWidgets() {
   item_lingual = {"Customization", "定制化"};
   combo = new QComboBox;
   option = combo;
+  stream_off_tip = true;
 }
 
 int CustomizationWidgets::ID() {
@@ -971,7 +1015,10 @@ int CustomizationWidgets::ID() {
 }
 
 void CustomizationWidgets::ButtonClicked() {
-  CommandEchoWidgets::ButtonClicked();
+  EchoWidgetsBase::ButtonClicked();
+  if (!proceed_button) {
+    return;
+  }
   auto text = combo->currentText();
   if (lingual_equal(text, kCommon)) {
     driver->SetCustomization(Customization::common);
