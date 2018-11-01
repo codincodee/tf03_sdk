@@ -66,6 +66,7 @@ MainWindow::MainWindow(QWidget *parent) :
     apd_core->SetDriver(driver_);
     apd_core->SetCmdEchoHandler(command_echo_handler_);
     apd_core->SetStatusLabel(ui->APDPageStatusLabel);
+    apd_core->SetLogPath("./apd_log");
     if (!apd_core->Initialize()) {
       apd_core.reset();
     }

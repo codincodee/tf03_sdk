@@ -46,6 +46,7 @@ public:
   void UsePageBaseSpecs(const bool& use = true);
   void SetLeastStartTemperature(const int& temp);
   void SetSaveSettingsWhenWriteResult(const bool& save);
+  void SetLogPath(const QString& path);
 public slots:
   void OnStartButtonClicked();
 private:
@@ -59,6 +60,8 @@ private:
   void HandleCrashed(const MeasureDevel& measure, const int& apd_crash_);
   void ProceedExperiment();
   int CalculateResultAPD(const int& apd_crash, const float& temp);
+  void HandleLogging(
+      const int& apd_crash, const int& apd_result, const float& temp);
 
   QLabel* apd_label_ = nullptr;
   QLabel* temp_label_ = nullptr;
@@ -101,6 +104,8 @@ private:
   int least_mcu_temperature_ = 0;
 
   bool save_settings_after_setting_result_apd_ = false;
+
+  QString log_dir_path_;
 };
 
 #endif // APD_PAGE_H

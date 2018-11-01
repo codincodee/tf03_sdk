@@ -15,6 +15,8 @@
 #include <set>
 #include <QMessageBox>
 #include "page_base.h"
+#include <QDir>
+#include <QTime>
 
 APDPage::APDPage()
 {
@@ -394,6 +396,7 @@ void APDPage::HandleCrashed(
   box.setButtonText(QMessageBox::No, "否");
   auto button = box.exec();
   if (button == QMessageBox::Yes) {
+    HandleLogging(apd_crash_, apd_result, measure.Celsius());
     driver_->SetAPD(apd_result);
     if (save_settings_after_setting_result_apd_) {
       driver_->SaveSettingsToFlash();
@@ -429,4 +432,31 @@ void APDPage::SetLeastStartTemperature(const int &temp) {
 
 void APDPage::SetSaveSettingsWhenWriteResult(const bool &save) {
   save_settings_after_setting_result_apd_ = save;
+}
+
+void APDPage::SetLogPath(const QString &path) {
+  log_dir_path_ = path;
+}
+
+void APDPage::HandleLogging(
+    const int &apd_crash, const int &apd_result, const float &temp) {
+  if (log_dir_path_.isEmpty()) {
+    return;
+  }
+  QDir dir(log_dir_path_);
+  if (!dir.exists()) {
+    return;
+  }
+  QFile file(
+      log_dir_path_ + "/" +
+      QDateTime::currentDateTime().toString("yyyy_MM_dd") + ".txt");
+  if (!file.open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text)) {
+    return;
+  }
+  QTextStream stream(&file);
+  if (file.size() == 0) {
+    stream << "Time (h:m:s) | APD Crash | APD Write | Temperature\n";
+  }
+  stream << QDateTime::currentDateTime().toString("hh:mm:ss") + " " << apd_crash << " " << apd_result << " " << temp << "\n";
+  file.close();
 }
