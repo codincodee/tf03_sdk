@@ -125,6 +125,7 @@ void MainWindow::timerEvent(QTimerEvent *event) {
     }
   }
 
+  elapse = frequency_timer_.elapsed();
   if (elapse > 2000) {
     ui->FrequencyDisplayLabel->clear();
     ui->DistanceDisplayLabel->clear();
