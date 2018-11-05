@@ -147,6 +147,7 @@ void APDPage::IncomingMeasure(const MeasureDevel &measure) {
 
 void APDPage::Update() {
   if (!ongoing_) {
+    DetectWriteAPDResultEcho();
     return;
   }
 
@@ -398,6 +399,10 @@ void APDPage::HandleCrashed(
   if (button == QMessageBox::Yes) {
     HandleLogging(apd_crash_, apd_result, measure.Celsius());
     driver_->SetAPD(apd_result);
+    if (echo_write_apd_result_) {
+      write_apd_result_timeout_.reset(new QElapsedTimer);
+      write_apd_result_timeout_->restart();
+    }
     if (save_settings_after_setting_result_apd_) {
       driver_->SaveSettingsToFlash();
     }
@@ -438,6 +443,10 @@ void APDPage::SetLogPath(const QString &path) {
   log_dir_path_ = path;
 }
 
+void APDPage::EchoWriteAPDResult() {
+  echo_write_apd_result_ = true;
+}
+
 void APDPage::HandleLogging(
     const int &apd_crash, const int &apd_result, const float &temp) {
   if (log_dir_path_.isEmpty()) {
@@ -459,4 +468,27 @@ void APDPage::HandleLogging(
   }
   stream << QDateTime::currentDateTime().toString("hh:mm:ss") + " " << apd_crash << " " << apd_result << " " << temp << "\n";
   file.close();
+}
+
+void APDPage::DetectWriteAPDResultEcho() {
+  if (!echo_write_apd_result_) {
+    return;
+  }
+
+  if (!write_apd_result_timeout_) {
+    return;
+  }
+  if (write_apd_result_timeout_->elapsed() > 1000) {
+    status_label_->setText("结果写入失败");
+    write_apd_result_timeout_.reset();
+    return;
+  }
+  if (echoes_->IsCommandEchoed(0x40)) {
+    if (echoes_->IsCommandSucceeded(0x40)) {
+      status_label_->setText("成功写入结果");
+    } else {
+      status_label_->setText("结果写入失败");
+    }
+    write_apd_result_timeout_.reset();
+  }
 }

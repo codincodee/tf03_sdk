@@ -67,6 +67,7 @@ MainWindow::MainWindow(QWidget *parent) :
     apd_core->SetCmdEchoHandler(command_echo_handler_);
     apd_core->SetStatusLabel(ui->APDPageStatusLabel);
     apd_core->SetLogPath("./apd_log");
+    apd_core->EchoWriteAPDResult();
     if (!apd_core->Initialize()) {
       apd_core.reset();
     }

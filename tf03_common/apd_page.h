@@ -47,6 +47,7 @@ public:
   void SetLeastStartTemperature(const int& temp);
   void SetSaveSettingsWhenWriteResult(const bool& save);
   void SetLogPath(const QString& path);
+  void EchoWriteAPDResult();
 public slots:
   void OnStartButtonClicked();
 private:
@@ -62,6 +63,7 @@ private:
   int CalculateResultAPD(const int& apd_crash, const float& temp);
   void HandleLogging(
       const int& apd_crash, const int& apd_result, const float& temp);
+  void DetectWriteAPDResultEcho();
 
   QLabel* apd_label_ = nullptr;
   QLabel* temp_label_ = nullptr;
@@ -106,6 +108,9 @@ private:
   bool save_settings_after_setting_result_apd_ = false;
 
   QString log_dir_path_;
+
+  std::shared_ptr<QElapsedTimer> write_apd_result_timeout_;
+  bool echo_write_apd_result_ = false;
 };
 
 #endif // APD_PAGE_H
