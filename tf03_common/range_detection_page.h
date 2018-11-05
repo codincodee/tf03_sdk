@@ -14,6 +14,7 @@ class API RangeDetectionPage : public PageBase
 public:
   RangeDetectionPage();
   void SetWidgetsLayout(QGridLayout* layout);
+  void SetTipsLabel(QLabel* label);
   void SetPlotLayout(QLayout* layout);
   bool Initialize() override;
   void Update() override;

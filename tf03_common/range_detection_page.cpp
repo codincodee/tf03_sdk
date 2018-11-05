@@ -16,6 +16,11 @@ void RangeDetectionPage::SetWidgetsLayout(QGridLayout *layout) {
   layout_ = layout;
 }
 
+void RangeDetectionPage::SetTipsLabel(QLabel *label) {
+  label->setText(
+      "测试环境：14m，正对黑色纸板，加18%透过率衰减片，\n测试标准：有效距离探测概率>50%");
+}
+
 void RangeDetectionPage::SetPlotLayout(QLayout *layout) {
   if (!layout) {
     return;

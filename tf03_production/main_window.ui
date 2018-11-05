@@ -347,6 +347,9 @@
        </attribute>
        <layout class="QGridLayout" name="gridLayout_10">
         <item row="1" column="0">
+         <layout class="QVBoxLayout" name="RangeDetectionPagePlotVerticalLayout"/>
+        </item>
+        <item row="3" column="0">
          <layout class="QHBoxLayout" name="horizontalLayout_2">
           <item>
            <spacer name="horizontalSpacer_12">
@@ -379,8 +382,12 @@
           </item>
          </layout>
         </item>
-        <item row="0" column="0">
-         <layout class="QVBoxLayout" name="RangeDetectionPagePlotVerticalLayout"/>
+        <item row="2" column="0">
+         <widget class="QLabel" name="RangeDetectionPageTipsLabel">
+          <property name="text">
+           <string>TextLabel</string>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>
