@@ -94,6 +94,7 @@ class API Driver
   void SetVdbsAutoAdjust(const bool& on);
   void SetCANFrameTypeExtended();
   void SetCANFrameTypeStandard();
+  void SetRangeDetectTaskThreshold(const unsigned short& threshold);
 
   void SetBufferCleanerBytes(const int& bytes);
   void SetBufferCleanerBytesDefault();

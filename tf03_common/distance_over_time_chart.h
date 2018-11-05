@@ -23,7 +23,7 @@ public:
   QtCharts::QLineSeries* Series();
   float CurrentStandardDeviation();
   void CurrentAverageAndStandardDeviation(float& average, float& stddev);
-  void Clear();
+  virtual void Clear();
   void SetLabelFont(const QFont& font);
 protected:
   bool AddPoint(

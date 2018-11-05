@@ -7,19 +7,12 @@ using ThresholdChart = DistanceOverTimeChartWithThreshold;
 
 ThresholdChart::DistanceOverTimeChartWithThreshold() : DistanceOverTimeChart()
 {
-
+  threshold_line_series_ = new QtCharts::QLineSeries;
+  this->addSeries(threshold_line_series_);
 }
 
 bool ThresholdChart::AddPoint(
-    const float &meter_in, const int &millisecond) {
-  float meter = meter_in;
-  if (meter > high_) {
-    meter = high_;
-  }
-  if (meter < low_) {
-    meter = low_;
-  }
-
+    const float &meter, const int &millisecond) {
   auto line_series = line_series_;
   if (!line_series) {
     return false;
@@ -30,10 +23,12 @@ bool ThresholdChart::AddPoint(
     }
   }
   *line_series << QPointF(millisecond, meter);
+  *threshold_line_series_ << QPointF(millisecond, threshold_);
 
   while (line_series->count()) {
     if ((line_series->at(0).x() + time_span_) < millisecond) {
       line_series->removePoints(0, 1);
+      threshold_line_series_->removePoints(0, 1);
     } else {
       break;
     }
@@ -43,49 +38,18 @@ bool ThresholdChart::AddPoint(
     return false;
   }
 
-#if 0
-  float min = line_series->at(0).y();
-  float max = min;
-  for (auto i = 0; i < line_series->count(); ++i) {
-    if (line_series->at(i).y() > max) {
-      max = line_series->at(i).y();
-    }
-    if (line_series->at(i).y() < min) {
-      min = line_series->at(i).y();
-    }
-  }
-  if (max > ceiling_) {
-    max = ceiling_;
-  }
-  if (max < floor_) {
-    max = floor_;
-  }
-#else
-  float min = low_;
-  float max = high_;
-#endif
-
-  // To make the plot look nicer, we currently set MIN to 0.0f;
-//  min = 0.0f;
-
   this->removeSeries(line_series);
   this->addSeries(line_series);
 
-#if 0
-  if (line_series_ == line_series) {
-    auto axis_y = this->axisY();
-    axis_y->setRange(min, max);
-    min_ = min;
-    max_ = max;
-    this->setAxisY(axis_y, line_series);
-    axis_y->setLabelsFont(label_font_);
-  }
-#else
+  this->removeSeries(threshold_line_series_);
+  this->addSeries(threshold_line_series_);
+
   auto axis_y = this->axisY();
-  axis_y->setRange(min, max);
+  axis_y->setRange(low_, high_);
   this->setAxisY(axis_y, line_series);
+  this->setAxisY(axis_y, threshold_line_series_);
   axis_y->setLabelsFont(label_font_);
-#endif
+  return true;
 }
 
 void ThresholdChart::SetLow(const float &low) {
@@ -94,4 +58,16 @@ void ThresholdChart::SetLow(const float &low) {
 
 void ThresholdChart::SetHigh(const float &high) {
   high_ = high;
+}
+
+void ThresholdChart::SetThreshold(const float &threshold) {
+  threshold_ = threshold;
+}
+
+void ThresholdChart::Clear() {
+  DistanceOverTimeChart::Clear();
+  if (!threshold_line_series_) {
+    return;
+  }
+  threshold_line_series_->clear();
 }

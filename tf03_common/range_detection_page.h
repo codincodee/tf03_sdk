@@ -22,6 +22,7 @@ private:
   std::shared_ptr<PlotBase> plot_;
   std::shared_ptr<RangeValidityWidgets> core_;
   QGridLayout* layout_ = nullptr;
+  const float kThreshold = 13.0f;
 };
 
 #endif // RANGE_DETECTION_PAGE_H

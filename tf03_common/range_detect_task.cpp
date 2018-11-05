@@ -3,6 +3,12 @@
 
 RangeDetectTask::RangeDetectTask()
 {
+  threshold_.store(100);
+//  threshold_.store(1300);
+}
+
+void RangeDetectTask::SetThreshold(const unsigned short &threshold) {
+  threshold_.store(threshold);
 }
 
 void RangeDetectTask::IncomingMeasure(const MeasureDevel &measure) {
@@ -19,11 +25,18 @@ void RangeDetectTask::IncomingMeasure(const MeasureDevel &measure) {
     std::unique_ptr<OutOfRangeEcho> echo(new OutOfRangeEcho);
     int cnt = 0;
     echo->too_near = false;
+    unsigned short threshold = threshold_.load();
     for (auto& measure : *stream_) {
+#if 0
       if (measure.dist >= 18000 || measure.dist == 0) {
         ++cnt;
       }
-      if (measure.dist <= 100 && measure.dist > 0) {
+#else
+      if (measure.dist >= 18000 || measure.dist <= threshold) {
+        ++cnt;
+      }
+#endif
+      if (measure.dist <= threshold && measure.dist > 0) {
         echo->too_near = true;
       }
     }

@@ -5,6 +5,7 @@
 #include <QLabel>
 #include "plot_base.h"
 #include "distance_over_time_chart_with_threshold.h"
+#include "driver.h"
 
 RangeDetectionPage::RangeDetectionPage()
 {
@@ -25,7 +26,12 @@ void RangeDetectionPage::SetPlotLayout(QLayout *layout) {
   chart->SetTimeSpan(400);
   chart->SetHigh(20.0f);
   chart->SetLow(0.0f);
+  chart->SetThreshold(kThreshold);
   plot_->SetChart(chart);
+  chart->setFont(PageBase::GetCommonFont());
+  chart->setTitleFont(PageBase::GetCommonFont());
+  chart->setTitle("距离 (m)");
+  chart->SetLabelFont(PageBase::GetSmallFont());
 }
 
 bool RangeDetectionPage::Initialize() {
@@ -38,6 +44,7 @@ bool RangeDetectionPage::Initialize() {
     }
   }
   core_.reset(new RangeValidityWidgets);
+  GetDriver()->SetRangeDetectTaskThreshold(std::round(kThreshold * 100));
   core_->driver = GetDriver();
   core_->echo_handler = EchoHandler();
   core_->SetupUI();

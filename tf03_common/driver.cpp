@@ -252,3 +252,9 @@ void Driver::LoadDevelModeTasks() {
     }
   }
 }
+
+void Driver::SetRangeDetectTaskThreshold(const unsigned short &threshold) {
+  if (range_detect_task_) {
+    range_detect_task_->SetThreshold(threshold);
+  }
+}
