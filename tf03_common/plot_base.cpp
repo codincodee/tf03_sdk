@@ -22,6 +22,10 @@ PlotBase::~PlotBase() {
   }
 }
 
+void PlotBase::SetChart(DistanceOverTimeChart *main_chart) {
+  main_chart_ = main_chart;
+}
+
 void PlotBase::SetLayout(QLayout *layout) {
   plot_layout_ = layout;
 }
@@ -30,14 +34,16 @@ bool PlotBase::Initialize() {
   if (!plot_layout_) {
     return false;
   }
-  main_chart_ = new DistanceOverTimeChart();
-  main_chart_->SetCeiling(150.0f);
-  main_chart_->SetFloor(5.0f);
+  if (!main_chart_) {
+    main_chart_ = new DistanceOverTimeChart();
+    main_chart_->SetCeiling(150.0f);
+    main_chart_->SetFloor(5.0f);
+    main_chart_->SetTimeSpan(400);
+  }
   main_chart_view_ = new QtCharts::QChartView(main_chart_);
   if (plot_layout_) {
     plot_layout_->addWidget(main_chart_view_);
   }
-  main_chart_->SetTimeSpan(400);
 
   widgets_.push_back(main_chart_view_);
   return true;

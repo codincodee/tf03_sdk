@@ -17,6 +17,7 @@ class API PlotBase : public QObject
 public:
   PlotBase();
   virtual ~PlotBase();
+  void SetChart(DistanceOverTimeChart* main_chart);
   void SetLayout(QLayout* layout);
   bool Initialize();
   void SetVisible(const bool& visible);

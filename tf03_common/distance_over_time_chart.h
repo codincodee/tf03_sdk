@@ -13,10 +13,10 @@ class API DistanceOverTimeChart : public QtCharts::QChart {
 public:
   DistanceOverTimeChart();
   virtual ~DistanceOverTimeChart();
-  bool AddPoint(const float& meter, const int& millisecond);
-  void SetTimeWindow(const int& millisecond);
+  virtual bool AddPoint(const float& meter, const int& millisecond);
   float GetMin() const;
   float GetMax() const;
+  // void SetMin(const float& min);
   void SetCeiling(const float& ceiling);
   void SetFloor(const float& floor);
   void SetTimeSpan(const int& span);
@@ -30,7 +30,7 @@ protected:
       const float &meter,
       const int &millisecond,
       QtCharts::QLineSeries* series);
-private:
+//private:
   QtCharts::QLineSeries* line_series_;
   float min_;
   float max_;

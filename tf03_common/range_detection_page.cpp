@@ -3,6 +3,8 @@
 #include <QLayout>
 #include <QPushButton>
 #include <QLabel>
+#include "plot_base.h"
+#include "distance_over_time_chart_with_threshold.h"
 
 RangeDetectionPage::RangeDetectionPage()
 {
@@ -13,9 +15,27 @@ void RangeDetectionPage::SetWidgetsLayout(QGridLayout *layout) {
   layout_ = layout;
 }
 
+void RangeDetectionPage::SetPlotLayout(QLayout *layout) {
+  if (!layout) {
+    return;
+  }
+  plot_.reset(new PlotBase);
+  plot_->SetLayout(layout);
+  auto chart = new DistanceOverTimeChartWithThreshold();
+  chart->SetTimeSpan(400);
+  chart->SetHigh(20.0f);
+  chart->SetLow(0.0f);
+  plot_->SetChart(chart);
+}
+
 bool RangeDetectionPage::Initialize() {
   if (!layout_) {
     return false;
+  }
+  if (plot_) {
+    if (!plot_->Initialize()) {
+      return false;
+    }
   }
   core_.reset(new RangeValidityWidgets);
   core_->driver = GetDriver();
@@ -30,4 +50,11 @@ bool RangeDetectionPage::Initialize() {
 
 void RangeDetectionPage::Update() {
   core_->Update();
+}
+
+void RangeDetectionPage::OnMeasured(const MeasureBasic &measure) {
+  PageBase::OnMeasured(measure);
+  if (plot_) {
+    plot_->IncomingMeasure(measure);
+  }
 }

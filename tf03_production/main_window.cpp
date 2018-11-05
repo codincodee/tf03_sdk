@@ -113,6 +113,7 @@ MainWindow::MainWindow(QWidget *parent) :
       ui->RangeDetectionPagePanelWidgetsGridLayout);
   range_detection_page->SetDriver(driver_);
   range_detection_page->SetCommandEchoHandler(command_echo_handler_);
+  range_detection_page->SetPlotLayout(ui->RangeDetectionPagePlotVerticalLayout);
   if (!range_detection_page->Initialize()) {
     exit(1);
   }

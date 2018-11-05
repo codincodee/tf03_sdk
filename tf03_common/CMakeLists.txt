@@ -66,6 +66,8 @@ add_library(
       plot_base.cpp
       distance_over_time_chart.h
       distance_over_time_chart.cpp
+      distance_over_time_chart_with_threshold.h
+      distance_over_time_chart_with_threshold.cpp
       apd_page.h
       apd_page.cpp
       command_echo_handler.cpp
