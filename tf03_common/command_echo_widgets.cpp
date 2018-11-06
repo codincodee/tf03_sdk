@@ -12,6 +12,7 @@
 #include <QFileDialog>
 #include "static_unique_ptr_cast.h"
 #include "parsed.h"
+#include "save_log_widget.h"
 
 ////////////////////// CommandEchoWidgets /////////////////////////////
 
@@ -1338,9 +1339,10 @@ void MeasureLoggingWidgets::ButtonClicked() {
     button_lingual = kStopLingual;
     status_lingual = kRecordingLingual;
   } else {
-    HandleStop();
     button_lingual = kRecordLingual;
     status_lingual = {"", ""};
+    status->setText(which_lingual(status_lingual));
+    HandleStop();
   }
   status->setText(which_lingual(status_lingual));
   button->setText(which_lingual(button_lingual));
@@ -1374,7 +1376,14 @@ void MeasureLoggingWidgets::HandleStop() {
   driver->SwitchOnMeasureStream(true);
   auto measures = driver->GetMeasures();
 
-  QString file_name = "log.txt";
+  SaveLogWidget widget;
+  widget.SetPath(save_path_);
+  widget.show();
+  auto file_name = widget.WaitForFileName();
+  if (file_name.isEmpty()) {
+    return;
+  }
+  file_name += ".txt";
 
   QFile file(save_path_ + "/" + file_name);
   if (!file.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text)) {

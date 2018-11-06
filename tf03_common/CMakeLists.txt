@@ -101,6 +101,9 @@ add_library(
       release_mode_page.cpp
       release_mode_page.h
       static_unique_ptr_cast.h
+      save_log_widget.cpp
+      save_log_widget.h
+      save_log_widget.ui
 )
 
 target_link_libraries(
