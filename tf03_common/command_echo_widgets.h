@@ -423,4 +423,22 @@ struct CANFrameTypeWidgets : public CommandEchoWidgets {
   const Lingual kStandard = {"Standard", "标准帧"};
   const Lingual kExtended = {"Extended", "扩展帧"};
 };
+
+////////////////////// MeasureLoggingWidgets /////////////////////////////
+
+struct MeasureLoggingWidgets : public CommandEchoWidgets {
+  MeasureLoggingWidgets();
+  void ButtonClicked() override;
+  void SetOptionLingual() override;
+  QPushButton* browse;
+  const Lingual kBrowseTip = {"Browse Folder on Click", "单击选择文件夹"};
+  const Lingual kBrowseReady = {"Folder Selected", "文件夹已选择"};
+  const Lingual kRecordLingual = {"Record", "录制"};
+  const Lingual kStopLingual = {"Stop", "停止"};
+  Lingual browse_lingual;
+
+  Q_OBJECT
+public slots:
+  void OnBrowseButtonClicked();
+};
 #endif // COMMAND_ECHO_WIDGETS_H

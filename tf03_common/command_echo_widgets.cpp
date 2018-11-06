@@ -1314,3 +1314,39 @@ void CANFrameTypeWidgets::SetOptionLingual() {
   combo->addItem(which_lingual(kStandard));
   combo->addItem(which_lingual(kExtended));
 }
+
+////////////////////// MeasureLoggingWidgets /////////////////////////////
+
+MeasureLoggingWidgets::MeasureLoggingWidgets() {
+  item_lingual = {"Measure Logging", "录制数据"};
+  browse = new QPushButton;
+  option = browse;
+  browse_lingual = kBrowseTip;
+  button_lingual = kRecordLingual;
+  connect(browse, SIGNAL(clicked()), this, SLOT(OnBrowseButtonClicked()));
+}
+
+void MeasureLoggingWidgets::ButtonClicked() {
+  if (!lingual_equal(browse->text(), kBrowseReady)) {
+    return;
+  }
+  if (lingual_equal(button->text(), kRecordLingual)) {
+    button_lingual = kStopLingual;
+  } else {
+    button_lingual = kRecordLingual;
+  }
+  button->setText(which_lingual(button_lingual));
+}
+
+void MeasureLoggingWidgets::SetOptionLingual() {
+  browse->setText(which_lingual(browse_lingual));
+}
+
+void MeasureLoggingWidgets::OnBrowseButtonClicked() {
+  if (lingual_equal(browse->text(), kBrowseTip)) {
+    browse_lingual = kBrowseReady;
+  } else {
+    browse_lingual = kBrowseTip;
+  }
+  browse->setText(which_lingual(browse_lingual));
+}

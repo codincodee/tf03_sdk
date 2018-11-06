@@ -210,6 +210,8 @@ void CommandEchoWidgetsManager::LoadWidgets() {
       std::shared_ptr<RangeDetectWidgets>(new RangeDetectWidgets));
   AddWidgets(
       std::shared_ptr<VdbsAutoAdjustWidgets>(new VdbsAutoAdjustWidgets));
+  AddWidgets(
+      std::shared_ptr<MeasureLoggingWidgets>(new MeasureLoggingWidgets));
 #endif
 
   if (ui_grid_) {
