@@ -293,6 +293,9 @@ bool Driver::ParseDevelModeMeasure(
   data->dist = data->dist1;
   data->amp = 0;
   data->id = measure_id_++;
+#ifdef ATTACH_RAW_MSG_TO_MEASURE
+  data->raw_msg = msg;
+#endif
   HandleDevelMeasureOtherTasks(*data);
   parsed.data = std::move(data);
   return true;
@@ -358,6 +361,9 @@ bool Driver::ParseNineByteMeasure(
   measure->id = measure_id_;
   memcpy(&measure->dist, msg.data() + 2, 2);
   memcpy(&measure->amp, msg.data() + 4, 2);
+#ifdef ATTACH_RAW_MSG_TO_MEASURE
+  measure->raw_msg = msg;
+#endif
   parsed.type = MessageType::measure;
   parsed.data = std::move(measure);
 //  static QElapsedTimer timer;

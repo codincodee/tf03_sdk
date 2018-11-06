@@ -25,6 +25,10 @@ if (DISPLAY_PLOT_ON_SETUP_PAGE)
   add_definitions(-DDISPLAY_PLOT_ON_SETUP_PAGE)
 endif()
 
+if (ATTACH_RAW_MSG_TO_MEASURE)
+  add_definitions(-DATTACH_RAW_MSG_TO_MEASURE)
+endif()
+
 if (SWITCH_ON_ALL_FEATURES)
   add_definitions(-DSWITCH_ON_ALL_FEATURES)
   add_definitions(-DSUPPORT_DEVEL_MODE_PROTOCOL_)
@@ -32,6 +36,7 @@ if (SWITCH_ON_ALL_FEATURES)
   add_definitions(-DAUTOMATIC_SERIAL_CONNECTION)
   add_definitions(-DCLIENT_BL_CUSTOMIZATION)
   add_definitions(-DDISPLAY_PLOT_ON_SETUP_PAGE)
+  add_definitions(-DATTACH_RAW_MSG_TO_MEASURE)
 endif()
 
 if (DISPLAY_SERIAL_IO_MESSAGE)

@@ -1373,8 +1373,8 @@ void MeasureLoggingWidgets::HandleStart() {
 }
 
 void MeasureLoggingWidgets::HandleStop() {
-  driver->SwitchOnMeasureStream(true);
   auto measures = driver->GetMeasures();
+  driver->SwitchOnMeasureStream(false);
 
   SaveLogWidget widget;
   widget.SetPath(save_path_);
@@ -1391,7 +1391,12 @@ void MeasureLoggingWidgets::HandleStop() {
   }
   QTextStream stream(&file);
 
-  stream << "# Release: dist (cm)\n";
+  stream << "# Release: dist (cm)";
+#ifdef ATTACH_RAW_MSG_TO_MEASURE
+  stream << " | [Raw Message]";
+#endif
+  stream << "\n";
+
 #ifdef SUPPORT_DEVEL_MODE_PROTOCOL_
   stream
       << "# Develop: "
@@ -1403,7 +1408,11 @@ void MeasureLoggingWidgets::HandleStop() {
          "raw_dist3 | "
          "APD | "
          "voltage | "
-         "temperature\n";
+         "temperature";
+#ifdef ATTACH_RAW_MSG_TO_MEASURE
+  stream << " | " << "[Raw Message]";
+#endif
+  stream << "\n";
 #endif
   if (!measures) {
     return;
@@ -1425,9 +1434,17 @@ void MeasureLoggingWidgets::HandleStop() {
           << devel->raw_dist3 << " "
           << devel->apd << " "
           << devel->volt << " "
-          << devel->Celsius() << "\n";
+          << devel->Celsius();
+#ifdef ATTACH_RAW_MSG_TO_MEASURE
+      stream << " [" << devel->raw_msg.toHex(' ') << "]";
+#endif
+      stream << "\n";
     } else {
-      stream << basic_measure.dist << "\n";
+      stream << basic_measure.dist;
+#ifdef ATTACH_RAW_MSG_TO_MEASURE
+      stream << " [" << basic_measure.raw_msg.toHex(' ') << "]";
+#endif
+      stream << "\n";
     }
   }
   file.close();

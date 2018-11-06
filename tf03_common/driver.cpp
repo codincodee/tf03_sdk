@@ -275,5 +275,8 @@ void Driver::SetRangeDetectTaskThreshold(const unsigned short &threshold) {
 }
 
 void Driver::SwitchOnMeasureStream(const bool &on) {
+  receive_measures_mutex_.lock();
+  receive_measures_.reset(new std::list<Message>);
+  receive_measures_mutex_.unlock();
   retrieve_full_measure_stream_.store(on);
 }
