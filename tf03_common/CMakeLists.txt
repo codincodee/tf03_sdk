@@ -100,6 +100,7 @@ add_library(
       serial_number_page.h
       release_mode_page.cpp
       release_mode_page.h
+      static_unique_ptr_cast.h
 )
 
 target_link_libraries(

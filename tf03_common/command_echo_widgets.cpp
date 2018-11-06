@@ -9,6 +9,9 @@
 #include <QSizePolicy>
 #include <QMessageBox>
 #include <tf03_common/utils.h>
+#include <QFileDialog>
+#include "static_unique_ptr_cast.h"
+#include "parsed.h"
 
 ////////////////////// CommandEchoWidgets /////////////////////////////
 
@@ -1331,10 +1334,15 @@ void MeasureLoggingWidgets::ButtonClicked() {
     return;
   }
   if (lingual_equal(button->text(), kRecordLingual)) {
+    HandleStart();
     button_lingual = kStopLingual;
+    status_lingual = kRecordingLingual;
   } else {
+    HandleStop();
     button_lingual = kRecordLingual;
+    status_lingual = {"", ""};
   }
+  status->setText(which_lingual(status_lingual));
   button->setText(which_lingual(button_lingual));
 }
 
@@ -1343,10 +1351,75 @@ void MeasureLoggingWidgets::SetOptionLingual() {
 }
 
 void MeasureLoggingWidgets::OnBrowseButtonClicked() {
+  auto folder =
+      QFileDialog::getExistingDirectory(
+          option,
+          which_lingual({"Select Save Folder", "选择保存文件夹"}),
+          QDir::homePath());
+  if (folder.isEmpty()) {
+    return;
+  }
+  save_path_ = folder;
   if (lingual_equal(browse->text(), kBrowseTip)) {
     browse_lingual = kBrowseReady;
-  } else {
-    browse_lingual = kBrowseTip;
+    browse->setText(which_lingual(browse_lingual));
   }
-  browse->setText(which_lingual(browse_lingual));
+}
+
+void MeasureLoggingWidgets::HandleStart() {
+  driver->SwitchOnMeasureStream(true);
+}
+
+void MeasureLoggingWidgets::HandleStop() {
+  driver->SwitchOnMeasureStream(true);
+  auto measures = driver->GetMeasures();
+
+  QString file_name = "log.txt";
+
+  QFile file(save_path_ + "/" + file_name);
+  if (!file.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text)) {
+    return;
+  }
+  QTextStream stream(&file);
+
+  stream << "# Release: dist (cm)\n";
+#ifdef SUPPORT_DEVEL_MODE_PROTOCOL_
+  stream
+      << "# Develop: "
+         "dist1 | "
+         "dist2 | "
+         "dist3 | "
+         "raw_dist1 | "
+         "raw_dist2 | "
+         "raw_dist3 | "
+         "APD | "
+         "voltage | "
+         "temperature\n";
+#endif
+  if (!measures) {
+    return;
+  }
+  for (auto& message : *measures) {
+    auto basic = dynamic_unique_ptr_cast<MeasureBasic>(std::move(message.data));
+    if (!basic) {
+      continue;
+    }
+    MeasureBasic basic_measure = *basic;
+    auto devel = ToMeasureDevel(basic);
+    if (devel) {
+      stream
+          << devel->dist1 << " "
+          << devel->dist2 << " "
+          << devel->dist3 << " "
+          << devel->raw_dist1 << " "
+          << devel->raw_dist2 << " "
+          << devel->raw_dist3 << " "
+          << devel->apd << " "
+          << devel->volt << " "
+          << devel->Celsius() << "\n";
+    } else {
+      stream << basic_measure.dist << "\n";
+    }
+  }
+  file.close();
 }

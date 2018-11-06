@@ -431,14 +431,18 @@ struct MeasureLoggingWidgets : public CommandEchoWidgets {
   void ButtonClicked() override;
   void SetOptionLingual() override;
   QPushButton* browse;
-  const Lingual kBrowseTip = {"Browse Folder on Click", "单击选择文件夹"};
+  const Lingual kBrowseTip = {"Browse Folder", "单击选择文件夹"};
   const Lingual kBrowseReady = {"Folder Selected", "文件夹已选择"};
   const Lingual kRecordLingual = {"Record", "录制"};
   const Lingual kStopLingual = {"Stop", "停止"};
+  const Lingual kRecordingLingual = {"Recording", "录制中"};
   Lingual browse_lingual;
+  QString save_path_;
 
   Q_OBJECT
 public slots:
+  void HandleStart();
+  void HandleStop();
   void OnBrowseButtonClicked();
 };
 #endif // COMMAND_ECHO_WIDGETS_H
