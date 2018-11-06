@@ -39,6 +39,8 @@ Driver::Driver()
   : baud_rate_(115200) {
   buffer_cleaner_from_bytes_.store(kDefaultBufferCleanerBytes);
   LoadDevelModeTasks();
+  retrieve_full_measure_stream_.store(false);
+  receive_measures_.reset(new std::list<Message>);
 }
 
 void Driver::SetBufferCleanerBytes(const int &bytes) {
@@ -136,6 +138,7 @@ void Driver::HandleIncomingCommandInWorkThread() {
 
 void Driver::ProcessBufferInWorkThread(QByteArray &buffer) {
   Message parsed;
+  bool full_stream = retrieve_full_measure_stream_.load();
   while (true) {
     int from = 0, to = 0;
     int parsed_cnt = 0;
@@ -144,6 +147,12 @@ void Driver::ProcessBufferInWorkThread(QByteArray &buffer) {
         ++parsed_cnt;
         buffer = buffer.remove(0, to + 1);
         if (parsed.type == MessageType::measure) {
+          if (full_stream) {
+            Message message;
+            message.type = parsed.type;
+            message.data = parsed.data->Clone();
+            EnqueueReceivedMeasures(std::move(message));
+          }
           latest_measure_mutex_.lock();
           latest_measure_ = std::move(parsed);
           latest_measure_mutex_.unlock();
@@ -165,6 +174,12 @@ void Driver::EnqueueReceivedMessages(Message message) {
   receive_messages_mutex_.lock();
   receive_messages_.emplace_back(std::move(message));
   receive_messages_mutex_.unlock();
+}
+
+void Driver::EnqueueReceivedMeasures(Message message) {
+  receive_measures_mutex_.lock();
+  receive_measures_->emplace_back(std::move(message));
+  receive_measures_mutex_.unlock();
 }
 
 bool Driver::SendMessage(const QByteArray &msg) {
@@ -257,4 +272,8 @@ void Driver::SetRangeDetectTaskThreshold(const unsigned short &threshold) {
   if (range_detect_task_) {
     range_detect_task_->SetThreshold(threshold);
   }
+}
+
+void Driver::SwitchOnMeasureStream(const bool &on) {
+  retrieve_full_measure_stream_.store(on);
 }

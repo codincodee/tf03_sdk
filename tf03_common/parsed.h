@@ -26,6 +26,7 @@ enum class API MessageType {
 struct API ParsedBase {
   unsigned long id = 0;
   virtual ~ParsedBase();
+  virtual std::unique_ptr<ParsedBase> Clone();
 };
 
 struct API StatusEcho : public ParsedBase {
@@ -80,12 +81,14 @@ struct API OutOfRangeEcho : public ParsedBase {
 
 struct API MeasureBasic : public ParsedBase {
   ~MeasureBasic();
+  virtual std::unique_ptr<ParsedBase> Clone() override;
   unsigned short dist;
   unsigned short amp;
 };
 
 struct API MeasureDevel : public MeasureBasic {
   virtual ~MeasureDevel();
+  virtual std::unique_ptr<ParsedBase> Clone() override;
   unsigned short raw_dist1;
   unsigned short raw_dist2;
   unsigned short raw_dist3;

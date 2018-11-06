@@ -95,11 +95,13 @@ class API Driver
   void SetCANFrameTypeExtended();
   void SetCANFrameTypeStandard();
   void SetRangeDetectTaskThreshold(const unsigned short& threshold);
+  void SwitchOnMeasureStream(const bool& on);
 
   void SetBufferCleanerBytes(const int& bytes);
   void SetBufferCleanerBytesDefault();
 
   std::vector<Message> GetMessages();
+  std::shared_ptr<std::list<Message>> GetMeasures();
   bool DetectAndAutoConnect();
   static std::vector<int> BaudRates();
   static std::vector<int> CANBaudRates();
@@ -112,6 +114,7 @@ class API Driver
   bool SendMessage(const QByteArray& msg);
   void EnqueueCommand(const CommandFunc& command);
   void EnqueueReceivedMessages(Message message);
+  void EnqueueReceivedMeasures(Message message);
   QByteArray CommonCommand(const char& id, const QByteArray& data);
   QByteArray CalculateSum(const QByteArray& msg);
   void WorkThread();
@@ -178,6 +181,9 @@ class API Driver
   std::mutex command_queue_mutex_;
   std::queue<CommandFunc> command_queue_;
 
+  std::mutex receive_measures_mutex_;
+  std::shared_ptr<std::list<Message>> receive_measures_;
+
   void LoadAllParsers(std::vector<ReceiveParser>& parsers);
 
   static std::unordered_map<char, Lingual> kEchoStatusIDMap;
@@ -192,6 +198,8 @@ class API Driver
 
   std::shared_ptr<APDExpTask> apd_exp_task_;
   std::shared_ptr<RangeDetectTask> range_detect_task_;
+
+  std::atomic_bool retrieve_full_measure_stream_;
 };
 
 #endif // DRIVER_H

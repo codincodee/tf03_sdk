@@ -329,6 +329,14 @@ std::vector<Message> Driver::GetMessages() {
   return messages;
 }
 
+std::shared_ptr<std::list<Message>> Driver::GetMeasures() {
+  receive_measures_mutex_.lock();
+  auto ptr = receive_measures_;
+  receive_measures_.reset(new std::list<Message>);
+  receive_measures_mutex_.unlock();
+  return ptr;
+}
+
 QByteArray Driver::CommonCommand(const char &id, const QByteArray &data) {
   QByteArray msg;
   msg += 0x5a;
