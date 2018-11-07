@@ -84,9 +84,9 @@ struct API MeasureBasic : public ParsedBase {
   virtual std::unique_ptr<ParsedBase> Clone() override;
   unsigned short dist;
   unsigned short amp;
-#ifdef ATTACH_RAW_MSG_TO_MEASURE
+// #ifdef ATTACH_RAW_MSG_TO_MEASURE
   QByteArray raw_msg;
-#endif
+// #endif
 };
 
 struct API MeasureDevel : public MeasureBasic {
