@@ -37,7 +37,7 @@ bool CommandEchoWidgets::ProceedUpdate() {
   if (button->isEnabled()) {
     return false;
   }
-#if 0
+#if 1
   if (timer.elapsed() > timeout) {
     if (retry_cnt < retry) {
       OnRetry();

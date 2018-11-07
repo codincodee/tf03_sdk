@@ -75,7 +75,7 @@ struct CommandEchoWidgets : public QObject
   virtual CheckStatus CheckCommandEcho();
   virtual void OnRetry();
   const static QString kUINullString;
-  int retry = 1;
+  int retry = 2;
   int retry_cnt = 0;
 };
 
