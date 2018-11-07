@@ -36,8 +36,9 @@ if (SWITCH_ON_ALL_FEATURES)
   add_definitions(-DAUTOMATIC_SERIAL_CONNECTION)
   add_definitions(-DCLIENT_BL_CUSTOMIZATION)
   add_definitions(-DDISPLAY_PLOT_ON_SETUP_PAGE)
-  # add_definitions(-DATTACH_RAW_MSG_TO_MEASURE)
 endif()
+
+add_definitions(-DATTACH_RAW_MSG_TO_MEASURE)
 
 if (DISPLAY_SERIAL_IO_MESSAGE)
   add_definitions(-DDISPLAY_SERIAL_IO_MESSAGE_)
