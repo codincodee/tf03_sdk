@@ -73,7 +73,10 @@ struct CommandEchoWidgets : public QObject
   void SetStatusLabelUINull();
   bool ProceedUpdate();
   virtual CheckStatus CheckCommandEcho();
+  virtual void OnRetry();
   const static QString kUINullString;
+  int retry = 1;
+  int retry_cnt = 0;
 };
 
 ////////////////////// EchoWidgetsBase /////////////////////////////

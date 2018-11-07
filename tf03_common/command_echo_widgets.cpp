@@ -37,12 +37,26 @@ bool CommandEchoWidgets::ProceedUpdate() {
   if (button->isEnabled()) {
     return false;
   }
+#if 0
+  if (timer.elapsed() > timeout) {
+    if (retry_cnt < retry) {
+      OnRetry();
+      ++retry_cnt;
+    } else {
+      button->setDisabled(false);
+      status->setText(which_lingual(kNoResponseLingual));
+      status_lingual = kNoResponseLingual;
+      return false;
+    }
+  }
+#else
   if (timer.elapsed() > timeout) {
     button->setDisabled(false);
     status->setText(which_lingual(kNoResponseLingual));
     status_lingual = kNoResponseLingual;
     return false;
   }
+#endif
   return true;
 }
 
@@ -55,6 +69,10 @@ CommandEchoWidgets::CheckStatus CommandEchoWidgets::CheckCommandEcho() {
     }
   }
   return CheckStatus::no_response;
+}
+
+void CommandEchoWidgets::OnRetry() {
+  ButtonClicked();
 }
 
 void CommandEchoWidgets::Update() {
@@ -86,6 +104,7 @@ void CommandEchoWidgets::OnButtonClicked() {
   if (!respond_button_click) {
     return;
   }
+  retry_cnt = 0;
   return ButtonClicked();
 }
 void CommandEchoWidgets::ButtonClicked() {
