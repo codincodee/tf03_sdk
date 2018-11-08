@@ -760,6 +760,16 @@ bool WriteSerialNumberWidgets::ButtonClickedImpl() {
   CommandEchoWidgets::ButtonClicked();
   auto sn = edit->text();
   if (sn.size() != kSNLength) {
+    QMessageBox box(button);
+    box.setWindowTitle(which_lingual(kMsgBoxErrorTitle));
+    box.setText(
+        which_lingual(
+            {"Please Enter " + QString::number(kSNLength) + " numbers.",
+            "请输入" + QString::number(kSNLength) + "数字。"}));
+    box.setStandardButtons(QMessageBox::Ok);
+    box.setButtonText(QMessageBox::Ok, which_lingual(kMsgBoxOk));
+    box.exec();
+    button->setDisabled(false);
     return false;
   }
   driver->WriteSerialNumber(sn);
