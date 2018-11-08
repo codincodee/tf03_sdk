@@ -41,6 +41,7 @@ add_subdirectory(tf03_setup)
 if (BUILD_PRODUCTION_CLIENT)
   add_subdirectory(tf03_production)
 endif()
+add_subdirectory(tf03_demo)
 
 # The interesting stuff goes here
 # ===============================
