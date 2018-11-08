@@ -201,7 +201,11 @@ bool Driver::SendMessage(const QByteArray &msg) {
 }
 
 std::vector<int> Driver::BaudRates() {
-  return {115200, 460800, 256000, 57600, 38400, 19200, 9600, 4800, 2400};
+  return {
+#ifdef SUPPORT_10KHZ_OUTPUT
+    1000000,
+#endif
+    115200, 460800, 256000, 57600, 38400, 19200, 9600, 4800, 2400};
 }
 
 std::vector<int> Driver::CANBaudRates() {

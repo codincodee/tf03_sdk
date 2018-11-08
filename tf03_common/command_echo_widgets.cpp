@@ -315,7 +315,9 @@ SetFrequencyWidgets::SetFrequencyWidgets() : CommandEchoWidgets() {
   combo->addItem("800");
   combo->addItem("900");
   combo->addItem("1000");
-//  combo->addItem("10000");
+#ifdef SUPPORT_10KHZ_OUTPUT
+  combo->addItem("10000");
+#endif
   item_lingual = {"Frequency (Hz)", "帧率 (Hz)"};
   option = combo;
 }
