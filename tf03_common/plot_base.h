@@ -11,6 +11,7 @@ namespace QtCharts {
   class QChartView;
 }
 struct API MeasureBasic;
+struct API MeasureDevel;
 
 class API PlotBase : public QObject
 {
@@ -22,6 +23,7 @@ public:
   bool Initialize();
   void SetVisible(const bool& visible);
   void IncomingMeasure(const MeasureBasic& measure);
+  void IncomingMeasureRawDist2(const MeasureDevel& measure);
   DistanceOverTimeChart& GetPlot();
   DistanceOverTimeChart* GetPlotPtr();
 private:

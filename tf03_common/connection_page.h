@@ -28,6 +28,7 @@ public:
   bool Initialize() override;
   void SetDistanceDisplayLabel(QLabel* label);
   void SetFrequencyDisplayLabel(QLabel* label);
+  void SetRawDistDisplayLabel(QLabel* label);
   void SetPortComboBox(QComboBox* combo);
   void SetBaudRateComboxBox(QComboBox* combo);
   void SetConnectPushButton(QPushButton* button);
@@ -35,6 +36,7 @@ public:
   void SetDriver(std::shared_ptr<Driver> driver);
   void Update() override;
   void OnMeasured(const MeasureBasic& measure) override;
+  void OnMeasured(const MeasureDevel& measure) override;
 public slots:
   void OnConnectButtonClicked();
 private:
@@ -42,6 +44,7 @@ private:
 
   QLabel* distance_display_label_ = nullptr;
   QLabel* frequency_display_label_ = nullptr;
+  QLabel* raw_dist_display_label_ = nullptr;
   QComboBox* port_combo_ = nullptr;
   QComboBox* baud_rate_ = nullptr;
   QPushButton* connect_button_ = nullptr;
@@ -57,6 +60,7 @@ private:
   std::shared_ptr<SetProtocolWidgets> protocol_widgets_;
 #endif
   QElapsedTimer frequency_timer_;
+  QElapsedTimer rawdist_frequency_timer_;
   unsigned long last_freq_measure_id_ = 0;
 
   QStringList port_list_;

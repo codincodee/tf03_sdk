@@ -8,7 +8,7 @@ APDPageWrapper::APDPageWrapper()
 
 void APDPageWrapper::SetAPDPageCore(std::shared_ptr<APDPage> core) {
   core_ = core;
-  core_->SetLeastStartTemperature(30);
+  core_->SetLeastStartTemperature(33);
   core_->SetSaveSettingsWhenWriteResult(true);
 }
 

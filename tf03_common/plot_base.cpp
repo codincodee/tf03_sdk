@@ -65,6 +65,13 @@ void PlotBase::IncomingMeasure(const MeasureBasic& measure) {
   main_chart_->AddPoint(measure.dist / 100.f, measure.id);
 }
 
+void PlotBase::IncomingMeasureRawDist2(const MeasureDevel &measure) {
+  if (!visible_) {
+    return;
+  }
+  main_chart_->AddPoint(measure.raw_dist2 / 100.f, measure.id);
+}
+
 DistanceOverTimeChart& PlotBase::GetPlot() {
   return *main_chart_;
 }

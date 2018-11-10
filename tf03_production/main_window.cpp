@@ -93,6 +93,7 @@ MainWindow::MainWindow(QWidget *parent) :
   connection_page_->SetConnectPushButton(ui->ConnectPushButton);
   connection_page_->SetVersionLayout(ui->ConnectionPageVersionGridLayout);
   connection_page_->SetCommandEchoHandler(command_echo_handler_);
+  connection_page_->SetRawDistDisplayLabel(ui->RawDistDisplayLabel);
   connection_page_->SetDriver(driver_);
   if (!connection_page_->Initialize()) {
     exit(1);

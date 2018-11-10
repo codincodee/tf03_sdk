@@ -39,6 +39,7 @@ if (SWITCH_ON_ALL_FEATURES)
 endif()
 
 add_definitions(-DATTACH_RAW_MSG_TO_MEASURE)
+add_definitions(-DAPD_EXPERIMENT_USE_RAWDIST2)
 
 if (DISPLAY_SERIAL_IO_MESSAGE)
   add_definitions(-DDISPLAY_SERIAL_IO_MESSAGE_)

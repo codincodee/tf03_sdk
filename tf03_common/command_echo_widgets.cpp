@@ -1142,7 +1142,7 @@ RangeValidityWidgets::RangeValidityWidgets() {
   item_lingual = {"Range Validity", "量程筛选"};
   label = new QLabel;
   option = label;
-  timeout = 3000;
+  timeout = 7000;
   button_lingual = {"Detect", "检测"};
   indicator = new QLabel;
   indicator->setText(" ");

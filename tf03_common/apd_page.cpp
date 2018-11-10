@@ -122,11 +122,19 @@ bool APDPage::Initialize() {
   apd_to_edit_->setText("180");
   threshold_edit_->setText("20");
   ongoing_ = false;
+#ifdef APD_EXPERIMENT_USE_RAWDIST2_DEPRECATED
+  GetPlot().setTitle("Raw Distance 2 (m)");
+#else
   GetPlot().setTitle("Raw Distance (m)");
+#endif
   if (use_page_base_specs_) {
     GetPlot().setFont(PageBase::GetCommonFont());
     GetPlot().setTitleFont(PageBase::GetCommonFont());
+#ifdef APD_EXPERIMENT_USE_RAWDIST2_DEPRECATED
+    GetPlot().setTitle("Raw Dist 2 (m)");
+#else
     GetPlot().setTitle("原始距离 (m)");
+#endif
     GetPlot().SetLabelFont(PageBase::GetSmallFont());
   }
   status_label_->clear();
@@ -136,7 +144,11 @@ bool APDPage::Initialize() {
 void APDPage::IncomingMeasure(const MeasureDevel &measure) {
   last_measure_ = measure;
   last_measure_.stamp.restart();
+#ifdef APD_EXPERIMENT_USE_RAWDIST2_DEPRECATED
+  GetPlot().AddPoint(measure.e / 100.f, measure.id);
+#else
   GetPlot().AddPoint(measure.raw_dist1 / 100.f, measure.id);
+#endif
   if (apd_label_) {
     apd_label_->setText(QString::number(measure.apd));
   }
@@ -321,7 +333,11 @@ int APDPage::CalculateStandardDistance(MeasureDevelStream stream) {
   dists.sort(
     [](const MeasureDevel& a,
        const MeasureDevel& b){
+#ifdef APD_EXPERIMENT_USE_RAWDIST2_DEPRECATED
+      return a.raw_dist2 > b.raw_dist2;
+#else
       return a.raw_dist1 > b.raw_dist1;
+#endif
     }
   );
   int total = 0;
@@ -329,7 +345,11 @@ int APDPage::CalculateStandardDistance(MeasureDevelStream stream) {
   auto begin = std::next(dists.begin(), kMaxToIgnore);
   auto end = std::prev(dists.end(), kMinToIgnore);
   for (auto i = begin; i != end; ++i) {
+#ifdef APD_EXPERIMENT_USE_RAWDIST2_DEPRECATED
+    total += i->raw_dist2;
+#else
     total += i->raw_dist1;
+#endif
   }
   return total * 1.0f / (dists.size() - kMaxToIgnore - kMinToIgnore);
 }
@@ -351,7 +371,11 @@ bool APDPage::IsCrashed(
   std::vector<float> dist_vec;
   dist_vec.reserve(dists.size());
   for (auto& i : dists) {
+#ifdef APD_EXPERIMENT_USE_RAWDIST2_DEPRECATED
+    dist_vec.push_back(i.raw_dist2 * 1.0f / std_dist);
+#else
     dist_vec.push_back(i.raw_dist1 * 1.0f / std_dist);
+#endif
   }
   std::sort(dist_vec.begin(), dist_vec.end());
   auto begin = std::next(dist_vec.begin(), kMaxToIgnore);

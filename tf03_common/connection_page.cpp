@@ -23,6 +23,10 @@ bool ConnectionPage::Initialize() {
     return false;
   }
   frequency_display_label_->setFont(GetLargeBoldFont());
+
+  if (raw_dist_display_label_) {
+    raw_dist_display_label_->setFont(GetLargeBoldFont());
+  }
   if (!port_combo_) {
     return false;
   }
@@ -82,6 +86,10 @@ void ConnectionPage::SetFrequencyDisplayLabel(QLabel *label) {
   frequency_display_label_ = label;
 }
 
+void ConnectionPage::SetRawDistDisplayLabel(QLabel *label) {
+  raw_dist_display_label_ = label;
+}
+
 void ConnectionPage::SetPortComboBox(QComboBox *combo) {
   port_combo_ = combo;
 }
@@ -109,11 +117,21 @@ void ConnectionPage::Update() {
     connect_button_->setText(kDisconnectPushButtonText);
   }
 
-  if (frequency_timer_.elapsed() > 2000) {
+  constexpr int kTimeout = 2000;
+  if (rawdist_frequency_timer_.elapsed() > kTimeout) {
+    if (raw_dist_display_label_) {
+      raw_dist_display_label_->clear();
+    }
+  }
+
+  if (frequency_timer_.elapsed() > kTimeout) {
     frequency_display_label_->clear();
     distance_display_label_->clear();
     version_widgets_->status->clear();
     version_widgets_->label->clear();
+//    if (raw_dist_display_label_) {
+//      raw_dist_display_label_->clear();
+//    }
 #ifdef SHOW_PROTOCOL_WIDGETS_ON_CONNECTION_PAGE
     if (protocol_widgets_) {
       protocol_widgets_->status->clear();
@@ -135,6 +153,16 @@ void ConnectionPage::Update() {
     protocol_widgets_->Update();
   }
 #endif
+}
+
+void ConnectionPage::OnMeasured(const MeasureDevel &measure) {
+  PageBase::OnMeasured(measure);
+
+  rawdist_frequency_timer_.restart();
+
+  if (raw_dist_display_label_) {
+    raw_dist_display_label_->setText(QString::number(measure.raw_dist1));
+  }
 }
 
 void ConnectionPage::OnMeasured(const MeasureBasic &measure) {
