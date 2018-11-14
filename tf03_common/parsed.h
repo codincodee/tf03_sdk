@@ -126,4 +126,10 @@ struct API DistanceEcho : public ParsedBase {
   uint16_t distance;
   bool success;
 };
+
+struct API Message {
+  MessageType type;
+  std::unique_ptr<ParsedBase> data;
+};
+
 #endif // PARSED_H

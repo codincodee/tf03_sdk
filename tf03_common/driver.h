@@ -30,11 +30,6 @@ QByteArray to_bytes(const T& value) {
 std::unique_ptr<MeasureDevel> API ToMeasureDevel(
     std::unique_ptr<MeasureBasic>& basic);
 
-struct API Message {
-  MessageType type;
-  std::unique_ptr<ParsedBase> data;
-};
-
 enum class API Customization {
   common, bl, i13, ql
 };

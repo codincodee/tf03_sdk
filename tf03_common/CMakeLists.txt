@@ -115,6 +115,8 @@ add_library(
       save_log_widget.cpp
       save_log_widget.h
       save_log_widget.ui
+      driver_base.cpp
+      driver_base.h
 )
 
 target_link_libraries(
