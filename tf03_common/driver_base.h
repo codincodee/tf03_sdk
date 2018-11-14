@@ -39,15 +39,20 @@ protected:
   using CommandFunc = std::function<bool()>;
   virtual void LoadAllParsers(std::vector<ReceiveParser>& parsers);
   virtual void LoadDevelModeTasks();
-  void WorkThread();
-  void HandleIncomingCommandInWorkThread();
-  void ProcessBufferInWorkThread(QByteArray& buffer);
-  void EnqueueReceivedMeasures(Message message);
-  void EnqueueReceivedMessages(Message message);
-  void EnqueueCommand(const CommandFunc &command);
   bool SendMessage(const QByteArray &msg);
+  void EnqueueCommand(const CommandFunc &command);
   QByteArray CalculateSum(const QByteArray &msg);
   static bool CheckSum(const QByteArray &buffer, const int &from, const int &to);
+  // For special uses
+  std::shared_ptr<QSerialPort> serial_port_;
+  QByteArray buffer_;
+  void ProcessBufferInWorkThread(QByteArray& buffer);
+  void EnqueueReceivedMessages(Message message);
+
+private:
+  void WorkThread();
+  void HandleIncomingCommandInWorkThread();
+  void EnqueueReceivedMeasures(Message message);
 
   std::vector<ReceiveParser> receive_parsers_;
   std::atomic<int> buffer_cleaner_from_bytes_;
@@ -56,9 +61,7 @@ protected:
   int baud_rate_;
   bool stop_signal_;
   std::thread work_thead_;
-  std::shared_ptr<QSerialPort> serial_port_;
   QString port_name_;
-  QByteArray buffer_;
   std::mutex command_queue_mutex_;
   std::queue<CommandFunc> command_queue_;
   std::mutex latest_measure_mutex_;
