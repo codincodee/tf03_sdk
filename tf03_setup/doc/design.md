@@ -176,7 +176,7 @@ Lingual lingual = {"An English String", "一个中文字符串"};
 
    在”command_echo_widgets_manager.cpp“中构建并添加SetPortTypeWidgets。
 
-   ```
+   ```c++
    void CommandEchoWidgetsManager::LoadWidgets() {
      // ...
      AddWidgets(
