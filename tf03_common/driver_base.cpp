@@ -1,7 +1,9 @@
 #include "driver_base.h"
+#include "static_unique_ptr_cast.h"
+#include <QSerialPortInfo>
 
 DriverBase::DriverBase()
-  : baud_rate_(115200) {
+  : baud_rate_(DefaultBaudRate()) {
   buffer_cleaner_from_bytes_.store(kDefaultBufferCleanerBytes);
   LoadDevelModeTasks();
   retrieve_full_measure_stream_.store(false);
@@ -121,3 +123,146 @@ void DriverBase::EnqueueReceivedMeasures(Message message) {
   receive_measures_mutex_.unlock();
 }
 
+void DriverBase::SetBufferCleanerBytes(const int &bytes) {
+  buffer_cleaner_from_bytes_.store(bytes);
+}
+
+void DriverBase::SetBufferCleanerBytesDefault() {
+  SetBufferCleanerBytes(kDefaultBufferCleanerBytes);
+}
+
+void DriverBase::SetPortName(const QString &port) {
+  port_name_ = port;
+}
+
+void DriverBase::SetBaudRate(const int &baudrate) {
+  baud_rate_ = baudrate;
+}
+
+bool DriverBase::LastMeasure(MeasureBasic &measure) {
+  latest_measure_mutex_.lock();
+  auto ptr =
+      dynamic_unique_ptr_cast<MeasureBasic>(std::move(latest_measure_.data));
+  latest_measure_mutex_.unlock();
+  if (ptr) {
+    measure = *ptr;
+    return true;
+  } else {
+    return false;
+  }
+}
+
+std::unique_ptr<MeasureBasic> DriverBase::LastMeasure() {
+  latest_measure_mutex_.lock();
+  auto measure =
+      dynamic_unique_ptr_cast<MeasureBasic>(std::move(latest_measure_.data));
+  latest_measure_mutex_.unlock();
+  return measure;
+}
+
+std::vector<int> DriverBase::BaudRates() {
+  return {
+#ifdef SUPPORT_10KHZ_OUTPUT
+    1000000,
+#endif
+    115200, 460800, 256000, 57600, 38400, 19200, 9600, 4800, 2400};
+}
+
+std::vector<int> DriverBase::CANBaudRates() {
+  return {1000000, 500000, 250000, 125000};
+}
+
+int DriverBase::DefaultBaudRate() {
+  return 115200;
+}
+
+bool DriverBase::DetectAndAutoConnect() {
+  auto ports = QSerialPortInfo::availablePorts();
+  if (ports.isEmpty()) {
+    last_serial_ports_.clear();
+  }
+  if (ports.size() != 1) {
+    return false;
+  }
+  if (last_serial_ports_.isEmpty()) {
+    last_serial_ports_ = ports;
+    Close();
+    SetPortName(ports.front().portName());
+    Open();
+    return true;
+  }
+  if (last_serial_ports_.size() != 1) {
+    return false;
+  }
+  if (last_serial_ports_.front().portName() != ports.front().portName()) {
+    last_serial_ports_ = ports;
+    Close();
+    SetPortName(ports.front().portName());
+    Open();
+    return true;
+  }
+  return false;
+}
+
+void DriverBase::SwitchOnMeasureStream(const bool &on) {
+  receive_measures_mutex_.lock();
+  receive_measures_.reset(new std::list<Message>);
+  receive_measures_mutex_.unlock();
+  retrieve_full_measure_stream_.store(on);
+}
+
+void DriverBase::EnqueueCommand(const CommandFunc &command) {
+  command_queue_mutex_.lock();
+  command_queue_.push(command);
+  command_queue_mutex_.unlock();
+}
+
+bool DriverBase::SendMessage(const QByteArray &msg) {
+  if (!serial_port_) {
+    return false;
+  }
+  if (!serial_port_->isOpen()) {
+    return false;
+  }
+#ifdef DISPLAY_SERIAL_IO_MESSAGE_
+  std::cout << "Sent: ";
+  for (auto& c : msg) {
+    std::cout << std::hex << ushort(c) << " ";
+  }
+  std::cout << std::endl;
+#endif
+  serial_port_->write(msg);
+  return true;
+}
+
+std::vector<Message> DriverBase::GetMessages() {
+  receive_messages_mutex_.lock();
+  auto messages = std::move(receive_messages_);
+  receive_messages_mutex_.unlock();
+  return messages;
+}
+
+QByteArray DriverBase::CalculateSum(const QByteArray &msg) {
+  char sum = 0;
+  for (auto& b : msg) {
+    sum += b;
+  }
+  return QByteArray(1, sum);
+}
+
+bool DriverBase::CheckSum(
+    const QByteArray &buffer, const int &from, const int &to) {
+  char sum = 0;
+  for (int i = from; i < to; ++i) {
+    sum += buffer[i];
+  }
+  return buffer[to] == sum;
+}
+
+std::shared_ptr<std::list<Message>> DriverBase::GetMeasures() {
+  receive_measures_mutex_.lock();
+  auto ptr = receive_measures_;
+  receive_measures_.reset(new std::list<Message>);
+  receive_measures_mutex_.unlock();
+  return ptr;
+}

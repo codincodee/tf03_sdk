@@ -530,10 +530,10 @@ bool Driver::ParseDistanceLEcho(
   return false;
 }
 
-bool Driver::CheckSum(const QByteArray &buffer, const int &from, const int &to) {
-  char sum = 0;
-  for (int i = from; i < to; ++i) {
-    sum += buffer[i];
-  }
-  return buffer[to] == sum;
-}
+//bool Driver::CheckSum(const QByteArray &buffer, const int &from, const int &to) {
+//  char sum = 0;
+//  for (int i = from; i < to; ++i) {
+//    sum += buffer[i];
+//  }
+//  return buffer[to] == sum;
+//}

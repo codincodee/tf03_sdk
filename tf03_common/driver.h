@@ -13,6 +13,7 @@
 #include <QSerialPortInfo>
 #include <atomic>
 #include "export.h"
+#include "driver_base.h"
 
 class QSerialPort;
 class QByteArray;
@@ -34,19 +35,19 @@ enum class API Customization {
   common, bl, i13, ql
 };
 
-class API Driver
+class API Driver : public DriverBase
 {
  public:
-  Driver();
-  // Configurations
-  void SetPortName(const QString& port);
-  void SetBaudRate(const int& baudrate);
+//  Driver();
+//  // Configurations
+//  void SetPortName(const QString& port);
+//  void SetBaudRate(const int& baudrate);
 
-  // Initialize
-  bool Open();
-  bool Close();
-  bool LastMeasure(MeasureBasic& measure);
-  std::unique_ptr<MeasureBasic> LastMeasure();
+//  // Initialize
+//  bool Open();
+//  bool Close();
+//  bool LastMeasure(MeasureBasic& measure);
+//  std::unique_ptr<MeasureBasic> LastMeasure();
   void SetDevelMode();
   void SetReleaseMode();
   void SetFrequency(const unsigned short& frequency);
@@ -90,42 +91,42 @@ class API Driver
   void SetCANFrameTypeExtended();
   void SetCANFrameTypeStandard();
   void SetRangeDetectTaskThreshold(const unsigned short& threshold);
-  void SwitchOnMeasureStream(const bool& on);
+//  void SwitchOnMeasureStream(const bool& on);
 
-  void SetBufferCleanerBytes(const int& bytes);
-  void SetBufferCleanerBytesDefault();
+//  void SetBufferCleanerBytes(const int& bytes);
+//  void SetBufferCleanerBytesDefault();
 
-  std::vector<Message> GetMessages();
-  std::shared_ptr<std::list<Message>> GetMeasures();
-  bool DetectAndAutoConnect();
-  static std::vector<int> BaudRates();
-  static std::vector<int> CANBaudRates();
-  static int DefaultBaudRate();
+//  std::vector<Message> GetMessages();
+//  std::shared_ptr<std::list<Message>> GetMeasures();
+//  bool DetectAndAutoConnect();
+//  static std::vector<int> BaudRates();
+//  static std::vector<int> CANBaudRates();
+//  static int DefaultBaudRate();
 
  private:
   friend class DevelModeTask;
-  using CommandFunc = std::function<bool()>;
+//  using CommandFunc = std::function<bool()>;
 
-  bool SendMessage(const QByteArray& msg);
-  void EnqueueCommand(const CommandFunc& command);
-  void EnqueueReceivedMessages(Message message);
-  void EnqueueReceivedMeasures(Message message);
+//  bool SendMessage(const QByteArray& msg);
+//  void EnqueueCommand(const CommandFunc& command);
+//  void EnqueueReceivedMessages(Message message);
+//  void EnqueueReceivedMeasures(Message message);
   QByteArray CommonCommand(const char& id, const QByteArray& data);
-  QByteArray CalculateSum(const QByteArray& msg);
-  void WorkThread();
+//  QByteArray CalculateSum(const QByteArray& msg);
+//  void WorkThread();
 
   void HandleDevelMeasureOtherTasks(const MeasureDevel& measure);
-  void LoadDevelModeTasks();
+  void LoadDevelModeTasks() override;
   std::vector<std::shared_ptr<DevelModeTask>> devel_mode_tasks_;
 
-  std::thread work_thead_;
-  bool stop_signal_;
+//  std::thread work_thead_;
+//  bool stop_signal_;
 
-  // In work thread only
-  void HandleIncomingCommandInWorkThread();
-  void ProcessBufferInWorkThread(QByteArray& buffer);
-  QByteArray buffer_;
-  std::shared_ptr<QSerialPort> serial_port_;
+//  // In work thread only
+//  void HandleIncomingCommandInWorkThread();
+//  void ProcessBufferInWorkThread(QByteArray& buffer);
+//  QByteArray buffer_;
+//  std::shared_ptr<QSerialPort> serial_port_;
   unsigned long measure_id_ = 0;
 
   // Parsers
@@ -161,40 +162,40 @@ class API Driver
       const QByteArray &buffer, Message &parsed, int &from, int &to);
   static bool ParseDistanceLEcho(
       const QByteArray &buffer, Message &parsed, int &from, int &to);
-  static bool CheckSum(const QByteArray& buffer, const int& from, const int& to);
-  using ReceiveParser =
-      std::function<bool(
-          const QByteArray& buffer, Message& parsed, int& from, int& to)>;
-  std::vector<ReceiveParser> receive_parsers_;
+//  static bool CheckSum(const QByteArray& buffer, const int& from, const int& to);
+//  using ReceiveParser =
+//      std::function<bool(
+//          const QByteArray& buffer, Message& parsed, int& from, int& to)>;
+//  std::vector<ReceiveParser> receive_parsers_;
 
-  std::mutex receive_messages_mutex_;
-  std::vector<Message> receive_messages_;
+//  std::mutex receive_messages_mutex_;
+//  std::vector<Message> receive_messages_;
 
-  std::mutex latest_measure_mutex_;
-  Message latest_measure_;
+//  std::mutex latest_measure_mutex_;
+//  Message latest_measure_;
 
-  std::mutex command_queue_mutex_;
-  std::queue<CommandFunc> command_queue_;
+//  std::mutex command_queue_mutex_;
+//  std::queue<CommandFunc> command_queue_;
 
-  std::mutex receive_measures_mutex_;
-  std::shared_ptr<std::list<Message>> receive_measures_;
+//  std::mutex receive_measures_mutex_;
+//  std::shared_ptr<std::list<Message>> receive_measures_;
 
-  void LoadAllParsers(std::vector<ReceiveParser>& parsers);
+  void LoadAllParsers(std::vector<ReceiveParser>& parsers) override;
 
   static std::unordered_map<char, Lingual> kEchoStatusIDMap;
 
-  QList<QSerialPortInfo> last_serial_ports_;
+//  QList<QSerialPortInfo> last_serial_ports_;
 
-  QString port_name_;
-  int baud_rate_;
+//  QString port_name_;
+//  int baud_rate_;
 
-  std::atomic<int> buffer_cleaner_from_bytes_;
-  const int kDefaultBufferCleanerBytes = 30;
+//  std::atomic<int> buffer_cleaner_from_bytes_;
+//  const int kDefaultBufferCleanerBytes = 30;
 
   std::shared_ptr<APDExpTask> apd_exp_task_;
   std::shared_ptr<RangeDetectTask> range_detect_task_;
 
-  std::atomic_bool retrieve_full_measure_stream_;
+//  std::atomic_bool retrieve_full_measure_stream_;
 };
 
 #endif // DRIVER_H
