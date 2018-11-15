@@ -9,6 +9,7 @@
 #include <QElapsedTimer>
 
 enum class API MessageType {
+  unknown,
   measure,
   status,
   frequency,
@@ -20,7 +21,7 @@ enum class API MessageType {
   version,
   measure_devel_stream,
   distance_echo,
-  out_of_range
+  out_of_range,
 };
 
 struct API ParsedBase {

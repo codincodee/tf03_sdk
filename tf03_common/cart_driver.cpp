@@ -1,0 +1,129 @@
+#include "cart_driver.h"
+#include "static_unique_ptr_cast.h"
+
+CartDriver::CartDriver()
+{
+
+}
+
+bool CartDriver::Start() {
+  if (!get_current_measure_) {
+    return false;
+  }
+  cart_steps_buffer_mutex_.lock();
+  cart_steps_buffer_.reset(new std::list<CartStep>);
+  cart_steps_buffer_mutex_.unlock();
+  cart_steps_.clear();
+  current_position_ = 0;
+  first_half_ = true;
+  return true;
+}
+
+std::shared_ptr<std::list<CartStep>> CartDriver::GetStepBuffer() {
+  cart_steps_buffer_mutex_.lock();
+  auto ptr = cart_steps_buffer_;
+  cart_steps_buffer_.reset(new std::list<CartStep>);
+  cart_steps_buffer_mutex_.unlock();
+  return ptr;
+}
+
+std::list<CartStep> CartDriver::GetFullSteps() {
+  return std::move(cart_steps_);
+}
+
+void CartDriver::SetStepLength(const int &len) {
+  step_length_ = len;
+}
+
+void CartDriver::RegisterMeasureCallback(
+    std::function<std::unique_ptr<MeasureBasic> ()> func) {
+  get_current_measure_ = func;
+}
+
+void CartDriver::LoadAllParsers(std::vector<ReceiveParser> &parsers) {
+  DriverBase::LoadAllParsers(parsers);
+  parsers.push_back(
+      std::bind(
+          &CartDriver::Parse,
+          this,
+          std::placeholders::_1,
+          std::placeholders::_2,
+          std::placeholders::_3,
+          std::placeholders::_4));
+}
+
+bool CartDriver::Parse(
+    const QByteArray &buffer, Message &parsed, int &from, int &to) {
+  auto msg = ParseBuffer(buffer, from, to);
+  if (msg.isEmpty()) {
+    return false;
+  }
+  switch (msg[4]) {
+  case 0x11: // Step forward
+  {
+    if (first_half_) {
+      current_position_ += step_length_;
+    } else {
+      current_position_ -= step_length_;
+    }
+    CartStep step_buffer, step;
+    step_buffer.first_half = step.first_half = first_half_;
+    step_buffer.position = step.position = current_position_;
+    step.measure = get_current_measure_();
+    if (step.measure) {
+      step_buffer.measure =
+          dynamic_unique_ptr_cast<MeasureBasic>(step.measure->Clone());
+    }
+    cart_steps_buffer_mutex_.lock();
+    if (cart_steps_buffer_) {
+      cart_steps_buffer_->emplace_back(std::move(step_buffer));
+    }
+    cart_steps_buffer_mutex_.unlock();
+    cart_steps_.emplace_back(std::move(step));
+  } break;
+  case 0x12: // Reached end point
+    first_half_ = false;
+    break;
+  case 0x13: // Reached start point
+
+    break;
+  default:
+    break;
+  }
+  return true;
+}
+
+QByteArray CartDriver::ParseBuffer(
+    const QByteArray &buffer, int &from, int &to) {
+  QByteArray result;
+  for (int i = 0; i < buffer.size(); ++i) {
+    if (buffer[i] == 0x50) {
+      auto ii = i + 1;
+      if (ii < buffer.size()) {
+        if (buffer[ii] == 0x4F) {
+          auto iii = ii + 1;
+          if (iii < buffer.size()) {
+            if (buffer[iii] == 0x53) {
+              auto iiii = iii + 1;
+              if (iiii < buffer.size()) {
+                if (buffer[iiii] == 0x49) {
+                  auto end = iiii + 1;
+                  if (end < buffer.size()) {
+                    from = i;
+                    to = end;
+                    result.reserve(to - from + 1);
+                    for (int j = from; j <= to; ++j) {
+                      result.push_back(buffer[j]);
+                    }
+                    break;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  return result;
+}

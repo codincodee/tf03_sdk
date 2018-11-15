@@ -84,6 +84,7 @@ void DriverBase::ProcessBufferInWorkThread(QByteArray &buffer) {
     int from = 0, to = 0;
     int parsed_cnt = 0;
     for (auto& parser : receive_parsers_) {
+      parsed.type = MessageType::unknown;
       if (parser(buffer, parsed, from, to)) {
         ++parsed_cnt;
         buffer = buffer.remove(0, to + 1);
@@ -97,6 +98,8 @@ void DriverBase::ProcessBufferInWorkThread(QByteArray &buffer) {
           latest_measure_mutex_.lock();
           latest_measure_ = std::move(parsed);
           latest_measure_mutex_.unlock();
+        } else if (parsed.type == MessageType::unknown) {
+          // Skip
         } else {
           EnqueueReceivedMessages(std::move(parsed));
         }

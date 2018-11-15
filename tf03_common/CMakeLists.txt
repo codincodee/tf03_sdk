@@ -117,6 +117,10 @@ add_library(
       save_log_widget.ui
       driver_base.cpp
       driver_base.h
+      tf02_driver.cpp
+      tf02_driver.h
+      cart_driver.cpp
+      cart_driver.h
 )
 
 target_link_libraries(
