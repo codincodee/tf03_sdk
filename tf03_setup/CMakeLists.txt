@@ -32,6 +32,11 @@ if (SWITCH_ON_ALL_FEATURES)
   add_definitions(-DAUTOMATIC_SERIAL_CONNECTION)
   add_definitions(-DCLIENT_BL_CUSTOMIZATION)
   add_definitions(-DDISPLAY_PLOT_ON_SETUP_PAGE)
+  add_definitions(-DSUPPORT_CART_TEST_PAGE)
+endif()
+
+if (SUPPORT_CART_TEST_PAGE)
+  add_definitions(-DSUPPORT_CART_TEST_PAGE)
 endif()
 
 find_package(Qt5Widgets)

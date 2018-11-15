@@ -24,6 +24,7 @@ public:
   void SetBaudRate(const int &baudrate);
   bool LastMeasure(MeasureBasic &measure);
   std::unique_ptr<MeasureBasic> LastMeasure();
+  virtual std::vector<int> DriverBaudRates();
   static std::vector<int> BaudRates();
   static std::vector<int> CANBaudRates();
   static int DefaultBaudRate();

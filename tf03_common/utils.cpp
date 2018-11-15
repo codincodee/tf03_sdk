@@ -3,6 +3,8 @@
 #include <QIntValidator>
 #include <QLayout>
 #include <QLayoutItem>
+#include <QSerialPortInfo>
+#include <QComboBox>
 
 void SetLineEditIntValidity(
     QLineEdit *edit, const int& min, const int& max) {
@@ -24,5 +26,32 @@ void ClearLayout(QLayout *layout) {
           delete child->widget();
       }
       delete child;
+  }
+}
+
+void UpdatePortNameComboBox(QComboBox* combo, QStringList& port_list) {
+  auto ports = QSerialPortInfo::availablePorts();
+  auto update = [combo, &port_list, ports](){
+    combo->clear();
+    for (auto& port : ports) {
+      combo->addItem(port.portName());
+    }
+    port_list.clear();
+    for (auto& port : ports) {
+      port_list.push_back(port.portName());
+    }
+  };
+  if (ports.size() != port_list.size()) {
+    update();
+    return;
+  }
+  bool should_update = false;
+  for (auto& port : ports) {
+    if (!port_list.contains(port.portName())) {
+      should_update = true;
+    }
+  }
+  if (should_update) {
+    update();
   }
 }

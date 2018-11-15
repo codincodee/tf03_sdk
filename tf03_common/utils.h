@@ -5,6 +5,8 @@
 
 class QLineEdit;
 class QLayout;
+class QComboBox;
+class QStringList;
 
 void API SetLineEditIntValidity(
     QLineEdit *edit, const int& min, const int& max);
@@ -28,4 +30,6 @@ inline bool API IsAPDExperimentPagUsed() {
   return false;
 #endif
 }
+
+void UpdatePortNameComboBox(QComboBox* combo, QStringList& port_list);
 #endif // UTILS_H

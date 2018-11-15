@@ -121,6 +121,12 @@ add_library(
       tf02_driver.h
       cart_driver.cpp
       cart_driver.h
+      cart_test_widget.cpp
+      cart_test_widget.h
+      cart_test_widget.ui
+      cart_test_sheet_widget.cpp
+      cart_test_sheet_widget.h
+      cart_test_sheet_widget.ui
 )
 
 target_link_libraries(

@@ -10,6 +10,7 @@
 #include <QDesktopWidget>
 #include <tf03_common/apd_page.h>
 #include <tf03_common/measure_manifest.h>
+#include <tf03_common/cart_test_widget.h>
 
 MainWindow::MainWindow(QWidget *parent) :
   QMainWindow(parent),
@@ -76,6 +77,17 @@ MainWindow::MainWindow(QWidget *parent) :
 //  this->showFullScreen();
 #else
   measure_manifest_->SetVisible(false);
+#endif
+
+#ifdef SUPPORT_CART_TEST_PAGE
+  auto cart_page = new CartTestWidget(this);
+  cart_page->SetSensor(driver_);
+  if (!cart_page->Initialize()) {
+    qApp->exit(1);
+  }
+  ui->CartPageVerticalLayout->addWidget(cart_page);
+#else
+  ui->tabWidget->removeTab(2);
 #endif
 
   ui->tabWidget->setCurrentIndex(0);

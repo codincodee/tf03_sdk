@@ -163,6 +163,10 @@ std::unique_ptr<MeasureBasic> DriverBase::LastMeasure() {
   return measure;
 }
 
+std::vector<int> DriverBase::DriverBaudRates() {
+  return BaudRates();
+}
+
 std::vector<int> DriverBase::BaudRates() {
   return {
 #ifdef SUPPORT_10KHZ_OUTPUT
