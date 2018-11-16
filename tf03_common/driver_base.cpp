@@ -97,6 +97,11 @@ void DriverBase::ProcessBufferInWorkThread(QByteArray &buffer) {
           }
           latest_measure_mutex_.lock();
           latest_measure_ = std::move(parsed);
+          if (latest_measure_.data) {
+            latest_measure_static_ =
+                dynamic_unique_ptr_cast<MeasureBasic>(
+                    latest_measure_.data->Clone());
+          }
           latest_measure_mutex_.unlock();
         } else if (parsed.type == MessageType::unknown) {
           // Skip
@@ -159,6 +164,17 @@ std::unique_ptr<MeasureBasic> DriverBase::LastMeasure() {
   latest_measure_mutex_.lock();
   auto measure =
       dynamic_unique_ptr_cast<MeasureBasic>(std::move(latest_measure_.data));
+  latest_measure_mutex_.unlock();
+  return measure;
+}
+
+std::unique_ptr<MeasureBasic> DriverBase::LastMeasureStatic() {
+  latest_measure_mutex_.lock();
+  std::unique_ptr<MeasureBasic> measure;
+  if (latest_measure_static_) {
+    measure =
+        dynamic_unique_ptr_cast<MeasureBasic>(latest_measure_static_->Clone());
+  }
   latest_measure_mutex_.unlock();
   return measure;
 }

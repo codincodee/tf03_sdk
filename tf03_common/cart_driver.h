@@ -8,13 +8,13 @@ enum class CartSendCommandType {
   start, end, step
 };
 
-struct CartStep {
+struct API CartStep {
   int position = 0;
   std::unique_ptr<MeasureBasic> measure;
   bool first_half = true;
 };
 
-class CartDriver : public DriverBase
+class API CartDriver : public DriverBase
 {
 public:
   CartDriver();

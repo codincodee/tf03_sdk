@@ -1,6 +1,6 @@
 #include "cart_test_widget.h"
 #include "ui_cart_test_widget.h"
-#include "cart_test_sheet_widget.h"
+#include "cart_test_sheet.h"
 #include "cart_driver.h"
 #include "utils.h"
 
@@ -9,7 +9,7 @@ CartTestWidget::CartTestWidget(QWidget *parent) :
   ui(new Ui::CartTestWidget)
 {
   ui->setupUi(this);
-  sheet_ = new CartTestSheetWidget(this);
+  sheet_ = new CartTestSheet(this);
   ui->SheetVerticalLayout->addWidget(sheet_);
   ui->ConnectPushButton->setText(kConnectButtonConnect);
   timer_id_ = startTimer(100);
@@ -25,6 +25,15 @@ void CartTestWidget::timerEvent(QTimerEvent *event) {
     return;
   }
   UpdateSerialPortCombo();
+  if (ui->StartPushButton->text() == kStartButtonStart) {
+    return;
+  }
+  auto steps = cart_->GetStepBuffer();
+  if (steps) {
+    if (!steps->empty()) {
+      sheet_->Update(*steps);
+    }
+  }
 }
 
 void CartTestWidget::SetSensor(std::shared_ptr<DriverBase> driver) {
@@ -36,6 +45,7 @@ bool CartTestWidget::Initialize() {
     return false;
   }
   cart_.reset(new CartDriver);
+  cart_->RegisterMeasureCallback([this](){return sensor_->LastMeasureStatic();});
   return true;
 }
 

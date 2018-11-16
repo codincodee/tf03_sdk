@@ -5,7 +5,7 @@
 #include "export.h"
 #include <memory>
 
-class CartTestSheetWidget;
+class CartTestSheet;
 class DriverBase;
 class CartDriver;
 
@@ -35,7 +35,7 @@ private:
   void UpdateSerialPortCombo();
 
   Ui::CartTestWidget *ui;
-  CartTestSheetWidget* sheet_ = nullptr;
+  CartTestSheet* sheet_ = nullptr;
   std::shared_ptr<DriverBase> sensor_;
   std::shared_ptr<CartDriver> cart_;
   int timer_id_;

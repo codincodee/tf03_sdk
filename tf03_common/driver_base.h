@@ -24,6 +24,7 @@ public:
   void SetBaudRate(const int &baudrate);
   bool LastMeasure(MeasureBasic &measure);
   std::unique_ptr<MeasureBasic> LastMeasure();
+  std::unique_ptr<MeasureBasic> LastMeasureStatic();
   virtual std::vector<int> DriverBaudRates();
   static std::vector<int> BaudRates();
   static std::vector<int> CANBaudRates();
@@ -67,6 +68,7 @@ private:
   std::queue<CommandFunc> command_queue_;
   std::mutex latest_measure_mutex_;
   Message latest_measure_;
+  std::unique_ptr<MeasureBasic> latest_measure_static_;
   std::mutex receive_messages_mutex_;
   std::vector<Message> receive_messages_;
   std::mutex receive_measures_mutex_;
