@@ -4,10 +4,12 @@
 #include <QWidget>
 #include "export.h"
 #include <memory>
+#include <QTextStream>
 
 class CartTestSheet;
 class DriverBase;
 class CartDriver;
+struct CartStep;
 
 namespace Ui {
   class CartTestWidget;
@@ -21,10 +23,14 @@ public:
   explicit CartTestWidget(QWidget *parent = 0);
   bool Initialize();
   void SetSensor(std::shared_ptr<DriverBase> driver);
-  ~CartTestWidget();
+  virtual ~CartTestWidget();
 
 protected:
   void timerEvent(QTimerEvent *event);
+  virtual bool Archive(const std::list<CartStep>& full);
+  virtual bool Archive(const std::list<CartStep>& full, QTextStream& stream);
+  QString ArchiveFolder();
+  QString ArchiveFilePath();
 
 private slots:
   void on_StartPushButton_clicked();
@@ -44,6 +50,8 @@ private:
   const QString kConnectButtonDisconnect = "Disconnect";
   const QString kStartButtonStart = "Start";
   const QString kStartButtonFinish = "Finish";
+  QString archive_folder_ = "./cart_logs";
+  QString archive_file_name_ = "log";
 };
 
 #endif // CART_TEST_WIDGET_H

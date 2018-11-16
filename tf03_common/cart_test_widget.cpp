@@ -3,6 +3,7 @@
 #include "cart_test_sheet.h"
 #include "cart_driver.h"
 #include "utils.h"
+#include <QFile>
 
 CartTestWidget::CartTestWidget(QWidget *parent) :
   QWidget(parent),
@@ -65,6 +66,8 @@ void CartTestWidget::on_StartPushButton_clicked()
     }
     return;
   }
+  auto full = cart_->GetFullSteps();
+  Archive(full);
   button->setText(kStartButtonStart);
 }
 
@@ -93,4 +96,33 @@ void CartTestWidget::on_ConnectPushButton_clicked()
 
 void CartTestWidget::UpdateSerialPortCombo() {
   UpdatePortNameComboBox(ui->PortComboBox, port_list_);
+}
+
+bool CartTestWidget::Archive(const std::list<CartStep> &full) {
+  QFile file(ArchiveFilePath());
+  if (!file.open(QIODevice::WriteOnly | QIODevice::Truncate| QIODevice::Text)) {
+    return false;
+  }
+  QTextStream stream(&file);
+  Archive(full, stream);
+  file.close();
+  return true;
+}
+
+bool CartTestWidget::Archive(
+    const std::list<CartStep> &full, QTextStream &stream) {
+  for (auto& step : full) {
+    stream
+        << step.position << " "
+        << (step.measure ? QString::number(step.measure->dist) : "") << "\n";
+  }
+  return true;
+}
+
+QString CartTestWidget::ArchiveFolder() {
+  return archive_folder_;
+}
+
+QString CartTestWidget::ArchiveFilePath() {
+  return archive_folder_ + "/" + archive_file_name_ + ".txt";
 }
