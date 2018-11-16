@@ -4,6 +4,7 @@
 #include <QDebug>
 #include "apd_exp_task.h"
 #include "range_detect_task.h"
+#include "utils.h"
 
 //void Driver::EnqueueCommand(const CommandFunc &command) {
 //  command_queue_mutex_.lock();

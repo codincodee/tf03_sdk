@@ -7,6 +7,7 @@ class QLineEdit;
 class QLayout;
 class QComboBox;
 class QStringList;
+class QByteArray;
 
 void API SetLineEditIntValidity(
     QLineEdit *edit, const int& min, const int& max);
@@ -32,4 +33,11 @@ inline bool API IsAPDExperimentPagUsed() {
 }
 
 void UpdatePortNameComboBox(QComboBox* combo, QStringList& port_list);
+
+template<typename T>
+QByteArray to_bytes(const T& value) {
+  QByteArray buffer(sizeof(value), 0);
+  memcpy(buffer.data(), &value, sizeof(value));
+  return buffer;
+}
 #endif // UTILS_H

@@ -21,13 +21,6 @@ class DevelModeTask;
 class APDExpTask;
 class RangeDetectTask;
 
-template<typename T>
-QByteArray to_bytes(const T& value) {
-  QByteArray buffer(sizeof(value), 0);
-  memcpy(buffer.data(), &value, sizeof(value));
-  return buffer;
-}
-
 std::unique_ptr<MeasureDevel> API ToMeasureDevel(
     std::unique_ptr<MeasureBasic>& basic);
 

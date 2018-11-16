@@ -1,9 +1,28 @@
 #include "cart_driver.h"
 #include "static_unique_ptr_cast.h"
+#include "utils.h"
 
 CartDriver::CartDriver()
+  : kHeadSegment(
+      QByteArray(1, 0x50) +
+      QByteArray(1, 0x4F) +
+      QByteArray(1, 0x53) +
+      QByteArray(1, 0x49))
 {
 
+}
+
+void CartDriver::StartCart(
+    const uint32_t &distance, const uint32_t &step_length) {
+  EnqueueCommand([this, distance, step_length](){
+    return
+        SendMessage(
+            CommonCommand(char(0x01), distance, step_length, uint32_t(1)));
+  });
+}
+
+void CartDriver::SetDistance(const int &distance) {
+  distance_ = distance;
 }
 
 bool CartDriver::Start() {
@@ -16,6 +35,7 @@ bool CartDriver::Start() {
   cart_steps_.clear();
   current_position_ = 0;
   first_half_ = true;
+  StartCart(distance_, step_length_);
   return true;
 }
 
@@ -126,4 +146,12 @@ QByteArray CartDriver::ParseBuffer(
     }
   }
   return result;
+}
+
+QByteArray CartDriver::CommonCommand(
+    const char& id,
+    const uint32_t &arg1, const uint32_t &arg2, const uint32_t &arg3) {
+  return
+      kHeadSegment + to_bytes(id) +
+      to_bytes(arg1) + to_bytes(arg2) + to_bytes(arg3);
 }

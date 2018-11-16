@@ -44,6 +44,12 @@ void CartTestWidget::on_StartPushButton_clicked()
   auto button = ui->StartPushButton;
   if (button->text() == kStartButtonStart) {
     sheet_->Clear();
+    bool ok;
+    auto distance = ui->DistanceLineEdit->text().toUInt(&ok);
+    if (!ok) {
+      return;
+    }
+    cart_->SetDistance(distance);
     if (cart_->Start()) {
       button->setText(kStartButtonFinish);
     }
