@@ -52,7 +52,7 @@ void CartTestSheetWidget::UpdateWing(
     std::queue<std::pair<int, int>>& que) {
   for (auto& step : steps) {
     que.push(step);
-    if (que.size() > display_queue_size_) {
+    while (que.size() > display_queue_size_) {
       que.pop();
     }
   }
