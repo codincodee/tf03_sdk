@@ -7,7 +7,7 @@ class QLineEdit;
 class QLayout;
 class QComboBox;
 class QStringList;
-class QByteArray;
+#include <QByteArray>
 
 void API SetLineEditIntValidity(
     QLineEdit *edit, const int& min, const int& max);

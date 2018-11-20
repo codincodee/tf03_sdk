@@ -10,6 +10,7 @@
 #include "parsed.h"
 #include <QSerialPort>
 #include <queue>
+#include <thread>
 
 class API DriverBase
 {
@@ -31,7 +32,7 @@ public:
   static int DefaultBaudRate();
   bool DetectAndAutoConnect();
   void SwitchOnMeasureStream(const bool &on);
-  std::vector<Message> DriverBase::GetMessages();
+  std::vector<Message> GetMessages();
   std::shared_ptr<std::list<Message>> GetMeasures();
 
 protected:

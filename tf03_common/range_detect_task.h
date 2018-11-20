@@ -11,7 +11,7 @@ public:
   void SetThreshold(const unsigned short& threshold);
 private:
   std::unique_ptr<std::list<MeasureDevel>> stream_;
-  std::atomic_uint16_t threshold_;
+  std::atomic<uint16_t> threshold_;
 };
 
 #endif // RANGE_DETECT_TASK_H

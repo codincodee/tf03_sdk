@@ -51,7 +51,7 @@ private:
   const QString kStartButtonStart = "Start";
   const QString kStartButtonFinish = "Finish";
   QString archive_folder_ = "./cart_logs";
-  QString archive_file_name_ = "log";
+  QString kArchiveFileNameDefault = "log";
 };
 
 #endif // CART_TEST_WIDGET_H

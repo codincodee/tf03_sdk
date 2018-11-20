@@ -4,6 +4,9 @@
 #include "cart_driver.h"
 #include "utils.h"
 #include <QFile>
+#include <QDesktopServices>
+#include <QUrl>
+#include <QMessageBox>
 
 CartTestWidget::CartTestWidget(QWidget *parent) :
   QWidget(parent),
@@ -13,6 +16,9 @@ CartTestWidget::CartTestWidget(QWidget *parent) :
   sheet_ = new CartTestSheet(this);
   ui->SheetVerticalLayout->addWidget(sheet_);
   ui->ConnectPushButton->setText(kConnectButtonConnect);
+  ui->DistanceLineEdit->setValidator(new QIntValidator(0, 10000, this));
+  ui->DistanceLineEdit->setText(QString::number(1000));
+  ui->LogFileNameLineEdit->setText(kArchiveFileNameDefault);
   timer_id_ = startTimer(100);
 }
 
@@ -66,6 +72,16 @@ void CartTestWidget::on_StartPushButton_clicked()
     }
     return;
   }
+  QMessageBox box;
+  box.setWindowTitle("Warning");
+  box.setText("Please reset the cart before proceeding.");
+  box.setWindowModality(Qt::WindowModal);
+  box.addButton(QMessageBox::Ok);
+  box.addButton(QMessageBox::Cancel);
+  box.setButtonText(QMessageBox::Ok, "I know");
+  if (box.exec() != QMessageBox::Ok) {
+    return;
+  }
   auto full = cart_->GetFullSteps();
   Archive(full);
   button->setText(kStartButtonStart);
@@ -73,7 +89,7 @@ void CartTestWidget::on_StartPushButton_clicked()
 
 void CartTestWidget::on_OpenFolderPushButton_clicked()
 {
-
+  QDesktopServices::openUrl(QUrl::fromLocalFile(ArchiveFolder()));
 }
 
 void CartTestWidget::on_ConnectPushButton_clicked()
@@ -124,5 +140,9 @@ QString CartTestWidget::ArchiveFolder() {
 }
 
 QString CartTestWidget::ArchiveFilePath() {
-  return archive_folder_ + "/" + archive_file_name_ + ".txt";
+  auto file_name = ui->LogFileNameLineEdit->text();
+  return
+      archive_folder_ + "/" +
+      (file_name.isEmpty() ?  kArchiveFileNameDefault : file_name) +
+      ".txt";
 }

@@ -2,12 +2,27 @@
 #include "ui_cart_test_sheet_widget.h"
 #include <queue>
 #include <QPlainTextEdit>
+#include <QScrollBar>
 
 CartTestSheetWidget::CartTestSheetWidget(QWidget *parent) :
   QWidget(parent),
   ui(new Ui::CartTestSheetWidget)
 {
   ui->setupUi(this);
+  ui->FirstHalfDistancePlainTextEdit->verticalScrollBar()->setVisible(false);
+  ui->SecondHalfDistancePlainTextEdit->verticalScrollBar()->setVisible(false);
+  connect(
+      ui->FirstHalfPositionPlainTextEdit->verticalScrollBar(),
+      &QScrollBar::valueChanged,
+      [this](int i){
+        ui->FirstHalfDistancePlainTextEdit->
+            verticalScrollBar()->setValue(i);});
+  connect(
+      ui->SecondHalfPositionPlainTextEdit->verticalScrollBar(),
+      &QScrollBar::valueChanged,
+      [this](int i){
+        ui->SecondHalfDistancePlainTextEdit->
+            verticalScrollBar()->setValue(i);});
 }
 
 CartTestSheetWidget::~CartTestSheetWidget()
