@@ -153,5 +153,5 @@ QByteArray CartDriver::CommonCommand(
     const uint32_t &arg1, const uint32_t &arg2, const uint32_t &arg3) {
   return
       kHeadSegment + to_bytes(id) +
-      to_bytes(arg1) + to_bytes(arg2) + to_bytes(arg3);
+      to_bytes(arg1) + to_bytes(arg2) + to_bytes(arg3) + to_bytes(uint32_t(1));
 }

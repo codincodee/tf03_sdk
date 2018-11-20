@@ -1,6 +1,7 @@
 #include "driver_base.h"
 #include "static_unique_ptr_cast.h"
 #include <QSerialPortInfo>
+#include <iostream>
 
 DriverBase::DriverBase()
   : baud_rate_(DefaultBaudRate()) {
@@ -11,7 +12,7 @@ DriverBase::DriverBase()
 }
 
 DriverBase::~DriverBase() {
-
+  Close();
 }
 
 bool DriverBase::Open() {
