@@ -233,6 +233,8 @@ bool Driver::ParseOutputFormatEcho(
     data->format = OutputFormat::pix;
   } else if (msg[3] == char(0x05)) {
     data->format = OutputFormat::io;
+  } else if (msg[3] == char(0x06)) {
+    data->format = OutputFormat::k485;
   } else {
     return false;
   }

@@ -209,6 +209,7 @@ struct SetOutputFormatWidgets : public CommandEchoWidgets {
   const Lingual kNineBytes = {"Standard", "标准串口"};
   const Lingual kPixhawk = {"Pixhawk", "Pixhawk"};
   const Lingual kIO = {"IO", "高低电平"};
+  const Lingual k485 = {"485", "485"};
 };
 
 ////////////////////// SetCANIDWidgetsBase /////////////////////////////

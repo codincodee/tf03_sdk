@@ -581,6 +581,9 @@ void SetOutputFormatWidgets::SetOptionLingual() {
   combo->addItem(which_lingual(kNineBytes));
   combo->addItem(which_lingual(kPixhawk));
   combo->addItem(which_lingual(kIO));
+#ifdef SUPPORT_DEVEL_MODE_PROTOCOL_
+  combo->addItem(which_lingual(k485));
+#endif
 }
 
 void SetOutputFormatWidgets::ButtonClicked() {
@@ -592,6 +595,8 @@ void SetOutputFormatWidgets::ButtonClicked() {
     driver->SetOutputFormatPIX();
   } else if (lingual_equal(type, kIO)) {
     driver->SetOutputFormatIO();
+  } else if (lingual_equal(type, k485)) {
+    driver->SetOutputFormat485();
   }
 }
 
@@ -608,6 +613,8 @@ void SetOutputFormatWidgets::Update() {
       status_lingual = status_lingual + ": " + kPixhawk;
     } else if (format == OutputFormat::io) {
       status_lingual = status_lingual + ": " + kIO;
+    } else if (format == OutputFormat::k485) {
+      status_lingual = status_lingual + ": " + k485;
     } else {
       return;
     }

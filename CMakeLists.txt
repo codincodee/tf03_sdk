@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD 14)
 
 set(tf03_sdk_MAJOR_VERSION 1)
 set(tf03_sdk_MINOR_VERSION 5)
-set(tf03_sdk_PATCH_VERSION 0)
+set(tf03_sdk_PATCH_VERSION 1)
 set(tf03_sdk_VERSION
   ${tf03_sdk_MAJOR_VERSION}.${tf03_sdk_MINOR_VERSION}.${tf03_sdk_PATCH_VERSION})
 
