@@ -129,6 +129,14 @@ add_library(
       cart_test_sheet_widget.ui
       cart_test_sheet.cpp
       cart_test_sheet.h
+      connection_widget.cpp
+      connection_widget.h
+      connection_widget.ui
+      measure_display_widget.cpp
+      measure_display_widget.h
+      measure_display_widget.ui
+      custom_widget.cpp
+      custom_widget.h
 )
 
 target_link_libraries(

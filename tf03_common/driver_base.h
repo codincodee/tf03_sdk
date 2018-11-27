@@ -24,8 +24,9 @@ public:
   void SetPortName(const QString &port);
   void SetBaudRate(const int &baudrate);
   bool LastMeasure(MeasureBasic &measure);
-  std::unique_ptr<MeasureBasic> LastMeasure();
+  [[deprecated]] std::unique_ptr<MeasureBasic> LastMeasure();
   std::unique_ptr<MeasureBasic> LastMeasureStatic();
+  std::unique_ptr<MeasureBasic> Measure();
   virtual std::vector<int> DriverBaudRates();
   static std::vector<int> BaudRates();
   static std::vector<int> CANBaudRates();

@@ -169,6 +169,10 @@ std::unique_ptr<MeasureBasic> DriverBase::LastMeasure() {
   return measure;
 }
 
+std::unique_ptr<MeasureBasic> DriverBase::Measure() {
+  return LastMeasureStatic();
+}
+
 std::unique_ptr<MeasureBasic> DriverBase::LastMeasureStatic() {
   latest_measure_mutex_.lock();
   std::unique_ptr<MeasureBasic> measure;
