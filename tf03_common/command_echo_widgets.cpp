@@ -1296,6 +1296,15 @@ void SetReleaseModeWidgets::LoadCommands() {
     LoadCommand(
         [this](){driver->SaveSettingsToFlash();},
         FlashSettingsWidgets::ID());
+  } else if (lingual_equal(opt, kClientQL)) {
+    LoadCommand(
+        [this](){driver->SetCustomization(Customization::ql);},
+        CustomizationWidgets::ID());
+    LoadCommand(
+        [this](){driver->SetReleaseMode();}, SetProtocolWidgets::ID());
+    LoadCommand(
+        [this](){driver->SaveSettingsToFlash();},
+        FlashSettingsWidgets::ID());
   }
 }
 
@@ -1305,6 +1314,7 @@ void SetReleaseModeWidgets::SetOptionLingual() {
   combo->addItem(which_lingual(kCANStandard));
   combo->addItem(which_lingual(kClientBL));
   combo->addItem(which_lingual(kClientI13));
+  combo->addItem(which_lingual(kClientQL));
 }
 
 ////////////////////// VdbsAutoAdjustWidgets /////////////////////////////

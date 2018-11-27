@@ -404,6 +404,7 @@ struct SetReleaseModeWidgets : public SequentialCommandsWidgets {
   const Lingual kCANStandard = {"CAN Standard", "CAN标品"};
   const Lingual kClientBL = {"Client BL", "BL客户"};
   const Lingual kClientI13 = {"Client I13", "I13客户"};
+  const Lingual kClientQL = {"Client QL", "QL客户"};
   std::function<CheckStatus()> output_format_check;
   QComboBox* combo;
 };
