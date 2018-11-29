@@ -30,6 +30,14 @@ float MeasureDevel::Celsius() const {
   return (temp * 3300 / 4096 - 760) / 2.5 + 25;
 }
 
+MiniMeasure29B::~MiniMeasure29B() {}
+
+std::unique_ptr<ParsedBase> MiniMeasure29B::Clone() {
+  std::unique_ptr<MiniMeasure29B> ptr(new MiniMeasure29B);
+  *ptr = *this;
+  return ptr;
+}
+
 MeasureBasic ToMeasureBasic(const MeasureDevel& devel) {
   MeasureBasic basic;
   basic.amp = devel.amp;

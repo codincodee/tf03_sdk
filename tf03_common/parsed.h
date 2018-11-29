@@ -60,7 +60,7 @@ struct API BaudRateEcho : public ParsedBase {
 };
 
 enum class API OutputFormat {
-  nine_bytes, pix, io, k485
+  nine_bytes, pix, io, k485, msg
 };
 
 struct API OutputFormatEcho : public ParsedBase {
@@ -103,6 +103,23 @@ struct API MeasureDevel : public MeasureBasic {
   unsigned short volt;
   unsigned short temp;
   float Celsius() const;
+};
+
+struct API MiniMeasure29B : public MeasureBasic {
+  virtual ~MiniMeasure29B();
+  virtual std::unique_ptr<ParsedBase> Clone() override;
+  unsigned short raw_dist;
+  unsigned short temp;
+  unsigned short amb;
+  unsigned short temp_d;
+  unsigned short amb_d;
+  unsigned short ref_d;
+  unsigned short cor_d;
+  unsigned short table_d;
+  unsigned short temp_amp;
+  unsigned short amb_amp;
+  unsigned short dcs3;
+  uint8_t inttime;
 };
 
 MeasureBasic ToMeasureBasic(const MeasureDevel& devel);

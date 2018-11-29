@@ -57,6 +57,7 @@ class API Driver : public DriverBase
   void SetOutputFormatPIX();
   void SetOutputFormatIO();
   void SetOutputFormat485();
+  void SetOutputFormatMsg();
   void SetCANSendID(const uint32_t& id);
   void SetCANReceiveID(const uint32_t& id);
   void SetDeviceCANBaudRate(const uint32_t& rate);

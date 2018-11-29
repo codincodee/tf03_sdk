@@ -76,6 +76,7 @@ private:
   std::mutex receive_measures_mutex_;
   std::shared_ptr<std::list<Message>> receive_measures_;
   QList<QSerialPortInfo> last_serial_ports_;
+  unsigned long measure_id_ = 0;
 };
 
 #endif // DRIVER_BASE_H

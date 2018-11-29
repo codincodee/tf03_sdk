@@ -584,6 +584,9 @@ void SetOutputFormatWidgets::SetOptionLingual() {
 #ifdef SUPPORT_DEVEL_MODE_PROTOCOL_
   combo->addItem(which_lingual(k485));
 #endif
+#ifdef CLIENT_BL_CUSTOMIZATION
+  combo->addItem(which_lingual(kMsg));
+#endif
 }
 
 void SetOutputFormatWidgets::ButtonClicked() {
@@ -597,6 +600,8 @@ void SetOutputFormatWidgets::ButtonClicked() {
     driver->SetOutputFormatIO();
   } else if (lingual_equal(type, k485)) {
     driver->SetOutputFormat485();
+  } else if (lingual_equal(type, kMsg)) {
+    driver->SetOutputFormatMsg();
   }
 }
 
@@ -615,6 +620,8 @@ void SetOutputFormatWidgets::Update() {
       status_lingual = status_lingual + ": " + kIO;
     } else if (format == OutputFormat::k485) {
       status_lingual = status_lingual + ": " + k485;
+    } else if (format == OutputFormat::msg) {
+      status_lingual = status_lingual + ": " + kMsg;
     } else {
       return;
     }

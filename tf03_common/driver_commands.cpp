@@ -90,6 +90,12 @@ void Driver::SetOutputFormatPIX() {
   });
 }
 
+void Driver::SetOutputFormatMsg() {
+  EnqueueCommand([this](){
+    return SendMessage(CommonCommand(char(0x05), QByteArray(1, 0x04)));
+  });
+}
+
 void Driver::SetOutputFormatIO() {
   EnqueueCommand([this](){
     return SendMessage(CommonCommand(char(0x05), QByteArray(1, 0x05)));
