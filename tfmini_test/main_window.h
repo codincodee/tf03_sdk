@@ -2,6 +2,9 @@
 #define MAIN_WINDOW_H
 
 #include <QMainWindow>
+#include <memory>
+
+class TFMiniDriver;
 
 namespace Ui {
   class MainWindow;
@@ -15,8 +18,13 @@ public:
   explicit MainWindow(QWidget *parent = 0);
   ~MainWindow();
 
+private slots:
+  void on_DebugPushButton_clicked();
+
 private:
   Ui::MainWindow *ui;
+
+  std::shared_ptr<TFMiniDriver> driver_;
 };
 
 #endif // MAIN_WINDOW_H

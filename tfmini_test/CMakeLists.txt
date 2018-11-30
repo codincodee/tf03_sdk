@@ -5,6 +5,10 @@ set(CMAKE_AUTORCC ON)
 
 find_package(Qt5Widgets)
 
+if(DEVEL_DEBUG)
+  add_definitions(-DDEVEL_DEBUG)
+endif()
+
 add_executable(
   tfmini_test
   WIN32

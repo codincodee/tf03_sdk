@@ -137,8 +137,21 @@ add_library(
       measure_display_widget.ui
       custom_widget.cpp
       custom_widget.h
+      tfmini_driver_parser.cpp
+      tfmini_driver_command.cpp
       tfmini_driver.cpp
       tfmini_driver.h
+      tfmini_command_widgets.cpp
+      tfmini_command_widgets.h
+      common_command_widget.cpp
+      common_command_widget.h
+      common_tfmini_widget.cpp
+      common_tfmini_widget.h
+      tfmini_driver_server.cpp
+      tfmini_driver_server.h
+      command_block.cpp
+      command_block.h
+      command_block.ui
 )
 
 target_link_libraries(
