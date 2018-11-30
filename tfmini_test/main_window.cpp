@@ -7,6 +7,7 @@
 #include <tf03_common/command_block.h>
 #include <tf03_common/tfmini_command_widgets.h>
 #include <QDebug>
+#include <tf03_common/tfmini_plot_widget.h>
 
 MainWindow::MainWindow(QWidget *parent) :
   QMainWindow(parent),
@@ -27,6 +28,9 @@ MainWindow::MainWindow(QWidget *parent) :
   connection_widget->SetDriver(driver);
   ui->gridLayout->addWidget(connection_widget);
 
+  auto plot_widget = new TFMiniPlotWidget(this);
+  plot_widget->SetDriver(driver);
+  ui->gridLayout->addWidget(plot_widget);
 
   auto command_block = new CommandBlock(this);
   ui->gridLayout->addWidget(command_block);

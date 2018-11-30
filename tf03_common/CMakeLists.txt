@@ -152,6 +152,9 @@ add_library(
       command_block.cpp
       command_block.h
       command_block.ui
+      tfmini_plot_widget.cpp
+      tfmini_plot_widget.h
+      tfmini_plot_widget.ui
 )
 
 target_link_libraries(
