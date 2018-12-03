@@ -21,7 +21,7 @@ public:
   void SetDriver(std::shared_ptr<TFMiniDriver> driver);
 protected:
   void CommonTimerCallback();
-
+  void OnMeasureCalled(std::unique_ptr<MeasureBasic> measure) override;
 private:
   Ui::TFMiniPlotWidget *ui;
   DistanceOverTimeChart* chart_;

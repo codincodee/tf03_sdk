@@ -155,6 +155,8 @@ add_library(
       tfmini_plot_widget.cpp
       tfmini_plot_widget.h
       tfmini_plot_widget.ui
+      driver_server.cpp
+      driver_server.h
 )
 
 target_link_libraries(

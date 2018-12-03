@@ -20,7 +20,7 @@ void CommandBlock::NewLayout() {
 }
 
 void CommandBlock::LoadWidgets(
-    const std::vector<std::shared_ptr<CommonCommandWidget> > &widgets) {
+    const std::vector<CommonCommandWidget*> &widgets) {
   widgets_ = widgets;
   auto layout = ui->gridLayout;
   ClearLayout(layout);

@@ -3,7 +3,7 @@
 
 CustomWidget::CustomWidget(QWidget *parent) : QWidget(parent)
 {
-  timer_id_ = startTimer(100);
+  timer_id_ = startTimer(DefaultTimerInterval());
 }
 
 CustomWidget::~CustomWidget() {}
@@ -20,3 +20,20 @@ void CustomWidget::CommonTimerCallback() {}
 void CustomWidget::SetDriver(std::shared_ptr<DriverBase> driver) {
   this->driver = driver;
 }
+
+void CustomWidget::SetReceiveMeasureEveryUpdate(const bool &receive) {
+  receive_measure_every_update_ = receive;
+}
+
+void CustomWidget::MeasureCallback(std::unique_ptr<MeasureBasic> measure) {
+  OnMeasureCalled(std::move(measure));
+}
+
+void CustomWidget::OnMeasureCalled(std::unique_ptr<MeasureBasic> measure) {
+
+}
+
+int CustomWidget::DefaultTimerInterval() {
+  return 100;
+}
+

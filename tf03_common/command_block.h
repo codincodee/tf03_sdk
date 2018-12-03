@@ -19,7 +19,7 @@ public:
   explicit CommandBlock(QWidget *parent = nullptr);
   ~CommandBlock();
   void LoadWidgets(
-      const std::vector<std::shared_ptr<CommonCommandWidget>>& widgets);
+      const std::vector<CommonCommandWidget*>& widgets);
 signals:
 
 public slots:
@@ -29,7 +29,7 @@ private:
 
   Ui::CommandBlock *ui;
   QGridLayout* layout_ = nullptr;
-  std::vector<std::shared_ptr<CommonCommandWidget>> widgets_;
+  std::vector<CommonCommandWidget*> widgets_;
 };
 
 #endif // COMMAND_BLOCK_H

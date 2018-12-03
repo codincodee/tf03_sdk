@@ -16,12 +16,13 @@ public:
   ~MeasureDisplayWidget();
 
 protected:
-  void CommonTimerCallback();
-
+  void CommonTimerCallback() override;
+  void OnMeasureCalled(std::unique_ptr<MeasureBasic> measure) override;
 private:
   Ui::MeasureDisplayWidget *ui;
   QElapsedTimer frequency_timer_;
   unsigned long last_freq_measure_id_ = 0;
+  std::unique_ptr<MeasureBasic> measure_;
 };
 
 #endif // MEASURE_DISPLAY_WIDGET_H

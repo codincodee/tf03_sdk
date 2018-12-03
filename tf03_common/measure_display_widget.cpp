@@ -14,6 +14,11 @@ MeasureDisplayWidget::~MeasureDisplayWidget()
   delete ui;
 }
 
+void MeasureDisplayWidget::OnMeasureCalled(
+    std::unique_ptr<MeasureBasic> measure) {
+  measure_ = std::move(measure);
+}
+
 void MeasureDisplayWidget::CommonTimerCallback() {
   if (!driver) {
     return;
@@ -22,7 +27,7 @@ void MeasureDisplayWidget::CommonTimerCallback() {
   auto dist_label = ui->DistanceLabel;
   auto freq_label = ui->FrequencyLabel;
 
-  auto measure = driver->Measure();
+  auto measure = std::move(measure_);
   bool new_measure = false;
   if (measure) {
     dist_label->setText(QString::number(measure->dist));

@@ -25,14 +25,13 @@ TFMiniPlotWidget::~TFMiniPlotWidget()
   delete ui;
 }
 
-void TFMiniPlotWidget::CommonTimerCallback() {
-  if (!driver_) {
-    return;
-  }
-  auto measure = driver_->LastMeasureStatic();
+void TFMiniPlotWidget::OnMeasureCalled(std::unique_ptr<MeasureBasic> measure) {
   if (measure) {
     chart_->AddPoint(measure->dist / 1000.0f, measure->id);
   }
+}
+
+void TFMiniPlotWidget::CommonTimerCallback() {
 }
 
 void TFMiniPlotWidget::SetDriver(std::shared_ptr<TFMiniDriver> driver) {
