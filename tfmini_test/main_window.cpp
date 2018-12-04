@@ -9,6 +9,9 @@
 #include <QDebug>
 #include <tf03_common/tfmini_plot_widget.h>
 #include <tf03_common/driver_server.h>
+#include <tf03_common/mini_rte_cart.h>
+#include <tf03_common/rte_cart_server.h>
+#include <tf03_common/rte_cart_widget.h>
 
 MainWindow::MainWindow(QWidget *parent) :
   QMainWindow(parent),
@@ -55,20 +58,39 @@ MainWindow::MainWindow(QWidget *parent) :
     widgets.push_back(w);
   }
 
-  driver_server_.reset(new DriverServer);
-  driver_server_->SetDriver(driver);
-  if (!driver_server_->Initialize()) {
+  auto cart_driver = std::shared_ptr<MiniRTECart>(new MiniRTECart);
+
+  auto cart_connect_widget = new ConnectionWidget(this);
+  cart_connect_widget->SetDriver(cart_driver);
+  ui->gridLayout->addWidget(cart_connect_widget);
+  widgets.push_back(cart_connect_widget);
+
+  auto cart_driver_server = std::shared_ptr<RTECartServer>(new RTECartServer);
+  cart_driver_server->SetDriver(cart_driver);
+  if (!cart_driver_server->Initialize()) {
+    exit(1);
+  }
+
+  auto cart_test_widget = new RTECartWidget(this);
+  cart_test_widget->SetDriverServer(cart_driver_server);
+  ui->gridLayout->addWidget(cart_test_widget);
+  widgets.push_back(cart_test_widget);
+
+  auto driver_server = std::shared_ptr<DriverServer>(new DriverServer);
+  driver_server->SetDriver(driver);
+  if (!driver_server->Initialize()) {
     exit(1);
   }
 
   for (auto& w : widgets) {
-    driver_server_->RegisterAsyncMeasureCallback(
+    driver_server->RegisterAsyncMeasureCallback(
         std::bind(&CustomWidget::MeasureCallback, w, std::placeholders::_1));
   }
   command_block->LoadWidgets(ccws);
 #ifdef DEVEL_DEBUG
   ui->DebugPushButton->setVisible(true);
   driver_ = driver;
+  cart_ = cart_driver;
 #endif
   timer_id_ = startTimer(CustomWidget::DefaultTimerInterval());
 }
@@ -80,8 +102,11 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_DebugPushButton_clicked()
 {
-  if (driver_) {
-    driver_->SetOutputFormat(TFMiniOutputFormat::b_29);
+//  if (driver_) {
+//    driver_->SetOutputFormat(TFMiniOutputFormat::b_29);
+//  }
+  if (cart_) {
+    cart_->GoOn();
   }
 }
 
@@ -89,7 +114,7 @@ void MainWindow::timerEvent(QTimerEvent *event) {
   if (event->timerId() != timer_id_) {
     return;
   }
-  if (driver_server_) {
-    driver_server_->Spin();
-  }
+//  if (driver_server_) {
+//    driver_server_->Spin();
+//  }
 }

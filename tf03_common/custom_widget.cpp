@@ -1,5 +1,6 @@
 #include "custom_widget.h"
 #include <QTimerEvent>
+#include "custom_object.h"
 
 CustomWidget::CustomWidget(QWidget *parent) : QWidget(parent)
 {
@@ -34,6 +35,6 @@ void CustomWidget::OnMeasureCalled(std::unique_ptr<MeasureBasic> measure) {
 }
 
 int CustomWidget::DefaultTimerInterval() {
-  return 100;
+  return CustomObject::DefaultTimerInterval();
 }
 

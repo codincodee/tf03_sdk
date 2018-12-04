@@ -157,6 +157,15 @@ add_library(
       tfmini_plot_widget.ui
       driver_server.cpp
       driver_server.h
+      mini_rte_cart.cpp
+      mini_rte_cart.h
+      rte_cart_server.cpp
+      rte_cart_server.h
+      rte_cart_widget.cpp
+      rte_cart_widget.h
+      rte_cart_widget.ui
+      custom_object.cpp
+      custom_object.h
 )
 
 target_link_libraries(

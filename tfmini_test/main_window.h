@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <memory>
 
+class MiniRTECart;
 class DriverServer;
 class TFMiniDriver;
 
@@ -30,6 +31,7 @@ private:
 
   std::shared_ptr<TFMiniDriver> driver_;
   std::shared_ptr<DriverServer> driver_server_;
+  std::shared_ptr<MiniRTECart> cart_;
   int timer_id_;
 };
 

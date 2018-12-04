@@ -9,8 +9,11 @@ CartDriver::CartDriver()
       QByteArray(1, 0x53) +
       QByteArray(1, 0x49))
 {
-
+  RegisterMeasureCallback([](){
+      return std::unique_ptr<MeasureBasic>(new MeasureBasic);});
 }
+
+CartDriver::~CartDriver() {}
 
 void CartDriver::StartCart(
     const uint32_t &distance, const uint32_t &step_length) {
@@ -21,8 +24,22 @@ void CartDriver::StartCart(
   });
 }
 
+void CartDriver::GoOn() {
+  EnqueueCommand([this](){
+    return SendMessage(CommonCommand(char(0x04), 0, 0, 0, 1));
+  });
+}
+
 void CartDriver::SetDistance(const int &distance) {
   distance_ = distance;
+}
+
+CartSendCommandType CartDriver::CurrentStage() {
+  return cart_send_command_.load();
+}
+
+std::vector<int> CartDriver::DriverBaudRates() {
+  return std::vector<int>(1, 460800);
 }
 
 bool CartDriver::Start() {
@@ -35,6 +52,7 @@ bool CartDriver::Start() {
   cart_steps_.clear();
   current_position_ = 0;
   first_half_ = true;
+  cart_send_command_.store(CartSendCommandType::step);
   StartCart(distance_, step_length_);
   return true;
 }
@@ -53,6 +71,10 @@ std::list<CartStep> CartDriver::GetFullSteps() {
 
 void CartDriver::SetStepLength(const int &len) {
   step_length_ = len;
+}
+
+int CartDriver::GetStepLength() {
+  return step_length_;
 }
 
 void CartDriver::RegisterMeasureCallback(
@@ -100,12 +122,16 @@ bool CartDriver::Parse(
     }
     cart_steps_buffer_mutex_.unlock();
     cart_steps_.emplace_back(std::move(step));
+    OnStep(current_position_);
   } break;
   case 0x12: // Reached end point
     first_half_ = false;
+    OnEndPoint();
+//    cart_send_command_.store(CartSendCommandType::end);
     break;
   case 0x13: // Reached start point
-
+    OnStartPoint();
+//    cart_send_command_.store(CartSendCommandType::start);
     break;
   default:
     break;
@@ -150,8 +176,24 @@ QByteArray CartDriver::ParseBuffer(
 
 QByteArray CartDriver::CommonCommand(
     const char& id,
+    const uint32_t &arg1, const uint32_t &arg2,
+    const uint32_t &arg3, const uint32_t& arg4) {
+  return
+      kHeadSegment + to_bytes(id) +
+      to_bytes(arg1) + to_bytes(arg2) + to_bytes(arg3) + to_bytes(arg4);
+}
+
+QByteArray CartDriver::CommonCommand(
+    const char& id,
     const uint32_t &arg1, const uint32_t &arg2, const uint32_t &arg3) {
   return
       kHeadSegment + to_bytes(id) +
       to_bytes(arg1) + to_bytes(arg2) + to_bytes(arg3) + to_bytes(uint32_t(1));
 }
+
+void CartDriver::OnStep(const int& current_position) {
+}
+
+void CartDriver::OnEndPoint() {}
+
+void CartDriver::OnStartPoint() {}

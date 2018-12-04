@@ -4,8 +4,9 @@
 #include "export.h"
 #include <functional>
 #include "driver_base.h"
+#include "custom_object.h"
 
-class API DriverServer
+class API DriverServer : public CustomObject
 {
 public:
   DriverServer();
@@ -14,7 +15,11 @@ public:
   virtual bool Initialize();
   using MeasureCallback = std::function<void(std::unique_ptr<MeasureBasic>)>;
   void RegisterAsyncMeasureCallback(MeasureCallback func);
-  void Spin();
+  virtual void Spin();
+protected:
+  virtual bool OnInitialized();
+  virtual void CommonTimerCallback() override;
+  bool initialized = false;
 private:
   std::vector<MeasureCallback> measure_callbacks_;
   std::shared_ptr<DriverBase> driver_;

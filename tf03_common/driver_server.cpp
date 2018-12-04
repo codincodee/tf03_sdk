@@ -1,5 +1,6 @@
 #include "driver_server.h"
 #include "static_unique_ptr_cast.h"
+#include <QDebug>
 
 DriverServer::DriverServer()
 {
@@ -13,11 +14,25 @@ void DriverServer::SetDriver(std::shared_ptr<DriverBase> driver) {
 }
 
 bool DriverServer::Initialize() {
+  if (!OnInitialized()) {
+    return false;
+  }
+  initialized = true;
+  return true;
+}
+
+bool DriverServer::OnInitialized() {
   return true;
 }
 
 void DriverServer::RegisterAsyncMeasureCallback(MeasureCallback func) {
   measure_callbacks_.push_back(std::move(func));
+}
+
+void DriverServer::CommonTimerCallback() {
+  if (initialized) {
+    Spin();
+  }
 }
 
 void DriverServer::Spin() {
