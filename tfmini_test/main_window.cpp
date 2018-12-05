@@ -22,7 +22,7 @@ MainWindow::MainWindow(QWidget *parent) :
   this->setWindowIcon(QIcon(":/image/logo.png"));
   this->setWindowTitle(QString("TFMini Test v") + tf03_sdk_VERSION_STRING);
 
-  auto driver = std::shared_ptr<TFMiniDriver>(new TFMiniDriver);
+  std::shared_ptr<TFMiniDriver> driver(new TFMiniDriver);
 
   std::vector<CustomWidget*> widgets;
 
@@ -58,7 +58,8 @@ MainWindow::MainWindow(QWidget *parent) :
     widgets.push_back(w);
   }
 
-  auto cart_driver = std::shared_ptr<MiniRTECart>(new MiniRTECart);
+  std::shared_ptr<MiniRTECart> cart_driver(new MiniRTECart);
+  cart_driver->RegisterMeasureCallback([driver](){return driver->Measure();});
 //  auto cart_driver = std::shared_ptr<CartDriver>(new CartDriver);
 
   auto cart_connect_widget = new ConnectionWidget(this);
