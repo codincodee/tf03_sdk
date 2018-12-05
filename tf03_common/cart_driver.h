@@ -32,6 +32,7 @@ public:
   void SetDistance(const int& distance);
   [[deprecated]] CartSendCommandType CurrentStage();
   void GoOn();
+  void StartCartSingle(const uint32_t& distance, const uint32_t& step_length);
 protected:
   void LoadAllParsers(std::vector<ReceiveParser>& parsers) override;
   virtual void OnStep(const int& current_position);

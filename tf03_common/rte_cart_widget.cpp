@@ -21,7 +21,7 @@ RTECartWidget::~RTECartWidget()
 void RTECartWidget::SetDriverServer(std::shared_ptr<RTECartServer> server) {
   server_ = server;
   driver_ = server_->Driver();
-  driver_->SetDistance(100);
+  driver_->SetDistance(1200);
   connect(server_.get(), SIGNAL(I037Burn()), this, SLOT(OnI037Burn()));
   connect(server_.get(), SIGNAL(I037TempBurn()), this, SLOT(OnI037TempBurn()));
   connect(server_.get(), SIGNAL(Heating()), this, SLOT(OnHeating()));
@@ -35,7 +35,7 @@ void RTECartWidget::OnI037Burn() {
   ui->InformationLabel->setText("i037 Burn");
 
   qApp->processEvents();
-  QThread::msleep(1000);
+  QThread::msleep(3000);
   if (driver_) {
     driver_->GoOn();
   }
@@ -45,7 +45,7 @@ void RTECartWidget::OnI037TempBurn() {
   ui->InformationLabel->setText("i037 Temp Burn");
 
   qApp->processEvents();
-  QThread::msleep(1000);
+  QThread::msleep(3000);
   if (driver_) {
     driver_->GoOn();
   }

@@ -7,6 +7,7 @@
 class MiniRTECart;
 class DriverServer;
 class TFMiniDriver;
+class CartDriver;
 
 namespace Ui {
   class MainWindow;
@@ -26,11 +27,14 @@ protected:
 private slots:
   void on_DebugPushButton_clicked();
 
+  void on_DebugAlphaPushButton_clicked();
+
 private:
   Ui::MainWindow *ui;
 
   std::shared_ptr<TFMiniDriver> driver_;
   std::shared_ptr<DriverServer> driver_server_;
+//  std::shared_ptr<CartDriver> cart_;
   std::shared_ptr<MiniRTECart> cart_;
   int timer_id_;
 };

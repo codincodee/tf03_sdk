@@ -24,6 +24,15 @@ void CartDriver::StartCart(
   });
 }
 
+void CartDriver::StartCartSingle(
+    const uint32_t &distance, const uint32_t &step_length) {
+  EnqueueCommand([this, distance, step_length](){
+    return
+        SendMessage(
+            CommonCommand(char(0x0C), distance, step_length, uint32_t(1)));
+  });
+}
+
 void CartDriver::GoOn() {
   EnqueueCommand([this](){
     return SendMessage(CommonCommand(char(0x04), 0, 0, 0, 1));

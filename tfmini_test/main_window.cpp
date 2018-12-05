@@ -59,6 +59,7 @@ MainWindow::MainWindow(QWidget *parent) :
   }
 
   auto cart_driver = std::shared_ptr<MiniRTECart>(new MiniRTECart);
+//  auto cart_driver = std::shared_ptr<CartDriver>(new CartDriver);
 
   auto cart_connect_widget = new ConnectionWidget(this);
   cart_connect_widget->SetDriver(cart_driver);
@@ -117,4 +118,12 @@ void MainWindow::timerEvent(QTimerEvent *event) {
 //  if (driver_server_) {
 //    driver_server_->Spin();
 //  }
+}
+
+void MainWindow::on_DebugAlphaPushButton_clicked()
+{
+  if (cart_) {
+    cart_->SetDistance(1200);
+    cart_->Start();
+  }
 }

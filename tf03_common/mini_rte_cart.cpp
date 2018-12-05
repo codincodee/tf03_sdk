@@ -14,11 +14,7 @@ bool MiniRTECart::Start() {
 
 void MiniRTECart::StartCart(
     const uint32_t &distance, const uint32_t &step_length) {
-  EnqueueCommand([this, distance, step_length](){
-    return
-        SendMessage(
-            CommonCommand(char(0x0C), distance, step_length, uint32_t(1)));
-  });
+  StartCartSingle(distance, step_length);
 }
 
 RTEStageType MiniRTECart::RTEStage() {
