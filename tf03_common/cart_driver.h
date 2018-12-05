@@ -58,7 +58,7 @@ private:
 //  std::atomic_bool ended_;
   int current_position_;
   int step_length_ = 1;
-  int distance_ = 500;
+  int distance_ = 0;
   bool first_half_ = true;
   std::function<std::unique_ptr<MeasureBasic>()> get_current_measure_;
   std::atomic<CartSendCommandType> cart_send_command_;

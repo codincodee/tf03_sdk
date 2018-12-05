@@ -82,6 +82,7 @@ MainWindow::MainWindow(QWidget *parent) :
   if (!driver_server->Initialize()) {
     exit(1);
   }
+  driver_server_ = driver_server;
 
   for (auto& w : widgets) {
     driver_server->RegisterAsyncMeasureCallback(

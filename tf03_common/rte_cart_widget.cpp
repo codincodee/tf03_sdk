@@ -11,6 +11,8 @@ RTECartWidget::RTECartWidget(QWidget *parent) :
   ui->setupUi(this);
   ui->StartPushButton->setText(kStartButtonStart);
   ui->ContinuePushButton->setVisible(false);
+  ui->DistanceLineEdit->setValidator(new QIntValidator(0, 2000, this));
+  ui->InformationLabel->clear();
 }
 
 RTECartWidget::~RTECartWidget()
@@ -21,7 +23,6 @@ RTECartWidget::~RTECartWidget()
 void RTECartWidget::SetDriverServer(std::shared_ptr<RTECartServer> server) {
   server_ = server;
   driver_ = server_->Driver();
-  driver_->SetDistance(1200);
   connect(server_.get(), SIGNAL(I037Burn()), this, SLOT(OnI037Burn()));
   connect(server_.get(), SIGNAL(I037TempBurn()), this, SLOT(OnI037TempBurn()));
   connect(server_.get(), SIGNAL(Heating()), this, SLOT(OnHeating()));
@@ -75,10 +76,15 @@ void RTECartWidget::on_StartPushButton_clicked()
   auto button = ui->StartPushButton;
   if (button->text() == kStartButtonStart) {
     ui->InformationLabel->setText("I037");
-    if (server_) {
-      server_->Start();
+    if (server_ && driver_) {
+      bool ok;
+      auto distance = ui->DistanceLineEdit->text().toUInt(&ok);
+      if (ok) {
+        driver_->SetDistance(distance);
+        server_->Start();
+        button->setText(kStartButtonStop);
+      }
     }
-    button->setText(kStartButtonStop);
   } else if (button->text() == kStartButtonStop) {
     button->setText(kStartButtonStart);
   }
