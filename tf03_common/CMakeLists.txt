@@ -58,6 +58,37 @@ find_package(Qt5Widgets)
 find_package(Qt5SerialPort REQUIRED)
 find_package(Qt5Charts REQUIRED)
 
+if("${MATLAB_PATH}" STREQUAL "")
+else()
+  message("Found MATLAB")
+  include_directories("${MATLAB_PATH}/extern/include")
+  if("${MATLAB_LIB_DIR}" STREQUAL "")
+    set(MATLAB_LIB_DIR "${MATLAB_PATH}/extern/lib/win64/microsoft")
+  endif()
+  set(
+    MATLAB_DLL_LIBS
+      "${MATLAB_LIB_DIR}/libmat.lib"
+      "${MATLAB_LIB_DIR}/mclmcr.lib"
+      "${MATLAB_LIB_DIR}/libmx.lib"
+      "${MATLAB_LIB_DIR}/mclmcrrt.lib"
+  )
+  if("${MATLAB_TF_ALGORITHM_PACK_PATH}" STREQUAL "")
+  else()
+    message("Build TF Algorithm Pack")
+    include_directories("${MATLAB_TF_ALGORITHM_PACK_PATH}")
+    set(
+      MATLAB_TF_ALGORITHM_PACK_LIBS
+        ${MATLAB_DLL_LIBS}
+        "${MATLAB_TF_ALGORITHM_PACK_PATH}/generate_table_8.lib"
+    )
+    set(
+      MATLAB_TF_ALGORITHM_PACK_SRC
+        tf_algorithm_pack.cpp
+        tf_algorithm_pack.h
+    )
+  endif()
+endif()
+
 add_library(
   tf03_common
     SHARED
@@ -166,6 +197,7 @@ add_library(
       rte_cart_widget.ui
       custom_object.cpp
       custom_object.h
+      ${MATLAB_TF_ALGORITHM_PACK_SRC}
 )
 
 target_link_libraries(
@@ -173,6 +205,7 @@ target_link_libraries(
     Qt5::Widgets
     Qt5::SerialPort
     Qt5::Charts
+    ${MATLAB_TF_ALGORITHM_PACK_LIBS}
 )
 
 set(

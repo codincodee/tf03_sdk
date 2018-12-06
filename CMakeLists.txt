@@ -42,7 +42,9 @@ if (BUILD_PRODUCTION_CLIENT)
   add_subdirectory(tf03_production)
 endif()
 add_subdirectory(tf03_demo)
-add_subdirectory(tfmini_test)
+if (BUILD_TFMINI_TEST)
+  add_subdirectory(tfmini_test)
+endif()
 
 # The interesting stuff goes here
 # ===============================
@@ -52,7 +54,6 @@ export(
   TARGETS
     tf03_common
     tf03_setup
-    tfmini_test
   FILE
     "${PROJECT_BINARY_DIR}/tf03_sdkTargets.cmake"
 )
