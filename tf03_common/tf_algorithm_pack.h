@@ -7,7 +7,7 @@ class API TFAlgorithmPack
 {
 public:
   TFAlgorithmPack();
-  void Test();
+  bool Test();
 };
 
 #endif // TF_ALGORITHM_PACK_H

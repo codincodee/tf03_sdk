@@ -80,11 +80,14 @@ else()
       MATLAB_TF_ALGORITHM_PACK_LIBS
         ${MATLAB_DLL_LIBS}
         "${MATLAB_TF_ALGORITHM_PACK_PATH}/generate_table_8.lib"
+        "${MATLAB_TF_ALGORITHM_PACK_PATH}/test.lib"
     )
     set(
       MATLAB_TF_ALGORITHM_PACK_SRC
         tf_algorithm_pack.cpp
         tf_algorithm_pack.h
+        mini_generate_table_8.cpp
+        mini_generate_table_8.h
     )
   endif()
 endif()

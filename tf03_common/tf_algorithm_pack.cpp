@@ -1,10 +1,5 @@
 #include "tf_algorithm_pack.h"
 
-#include "matrix.h"
-#include "mclmcr.h"
-#include "mclcppclass.h"
-#include "mex.h"
-#include "generate_table_8.h"
 #include <QDebug>
 
 TFAlgorithmPack::TFAlgorithmPack()
@@ -12,12 +7,30 @@ TFAlgorithmPack::TFAlgorithmPack()
 
 }
 
-void TFAlgorithmPack::Test() {
+bool TFAlgorithmPack::Test() {
+#if 0
+  mwArray in(2, 2, mxDOUBLE_CLASS, mxREAL);
+  mwArray out;
+  mxInt32 a[4] = {1, 2, 3, 4};
+
+  in.SetData(a, 4);
+  if (!testInitialize()) {
+    return false;
+  }
+  try {
+    test(1, out, in);
+  } catch (...) {
+    qDebug() << __LINE__;
+  }
+  testTerminate();
+  return true;
+#endif
+#if 0
   mwArray dist(200, 3, mxDOUBLE_CLASS, mxREAL);
   mwArray realdist(200, 3, mxDOUBLE_CLASS, mxREAL);
-  mwArray int0(5000, 1, mxDOUBLE_CLASS, mxREAL);
-  mwArray int3(5000, 1, mxDOUBLE_CLASS, mxREAL);
-  mwArray int7(5000, 1, mxDOUBLE_CLASS, mxREAL);
+  mwArray int0;
+  mwArray int3;
+  mwArray int7;
 
   double num1[600], num2[600];
   for (int i = 0; i < 600; ++i) {
@@ -34,4 +47,6 @@ void TFAlgorithmPack::Test() {
   mxUint32 dimi[2];
   dim.GetData(dimi, 2);
   qDebug() << dimi[0] << dimi[1];
+#endif
+  return true;
 }
