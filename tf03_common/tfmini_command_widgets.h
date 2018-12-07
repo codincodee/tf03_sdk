@@ -55,6 +55,18 @@ private:
   const QString kMM = "mm";
   const QString kCM = "cm";
 };
+
+// SetIntTimeMode
+class API SetIntTimeMode : public CommonTFMiniWidget {
+public:
+  SetIntTimeMode(QWidget* parent);
+private:
+  void OnButtonClickedCommon() override;
+  void OnUpdate() override;
+  QComboBox* combo = nullptr;
+  const QString kTypical = "Typical";
+  const QString kFixed = "Fixed";
+};
 } // namespace tfmini
 
 #endif // TFMINI_COMMAND_WIDGETS_H

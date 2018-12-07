@@ -86,7 +86,7 @@ void SetTimer::OnUpdate() {
 // SetMetricUnit
 SetMetricUnit::SetMetricUnit(QWidget *parent)
   : CommonTFMiniWidget(parent) {
-  item_label->setText("Set Metric Unit");
+  item_label->setText("Metric Unit");
   combo = new QComboBox(this);
   combo->addItem(kMM);
   combo->addItem(kCM);
@@ -106,6 +106,32 @@ void SetMetricUnit::OnButtonClickedCommon() {
 }
 
 void SetMetricUnit::OnUpdate() {
+  SetCommandEchoed(true);
+}
+
+// SetIntTimeMode
+SetIntTimeMode::SetIntTimeMode(QWidget *parent)
+  : CommonTFMiniWidget(parent) {
+  item_label->setText("Int-time Mode");
+  combo = new QComboBox(this);
+  combo->addItem(kTypical);
+  combo->addItem(kFixed);
+  option = combo;
+}
+
+void SetIntTimeMode::OnButtonClickedCommon() {
+  if (!driver) {
+    return;
+  }
+  auto current = combo->currentText();
+  if (current == kTypical) {
+    driver->SetIntTimeMode(TFMiniIntTimeMode::typical);
+  } else if (current == kFixed) {
+    driver->SetIntTimeMode(TFMiniIntTimeMode::fixed);
+  }
+}
+
+void SetIntTimeMode::OnUpdate() {
   SetCommandEchoed(true);
 }
 }

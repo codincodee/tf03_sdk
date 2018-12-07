@@ -63,6 +63,10 @@ MainWindow::MainWindow(QWidget *parent) :
       new tfmini::SetMetricUnit(command_block);
   mini_widgets.push_back(set_metric_unit);
 
+  auto set_inttime_mode =
+      new tfmini::SetIntTimeMode(command_block);
+  mini_widgets.push_back(set_inttime_mode);
+
   std::vector<CommonCommandWidget*> ccws;
   for (auto& w : mini_widgets) {
     w->SetDriver(driver);

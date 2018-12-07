@@ -32,3 +32,9 @@ void TFMiniDriver::SetTimer(const bool &on) {
     return SendMessage(CommonCommand(char(0x40), char(on ? 0x01 : 0x00)));
   });
 }
+
+void TFMiniDriver::SetIntTimeMode(const TFMiniIntTimeMode &mode) {
+  EnqueueCommand([this, mode](){
+    return SendMessage(CommonCommand(char(0x14), char(mode)));
+  });
+}

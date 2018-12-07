@@ -8,6 +8,10 @@ enum class TFMiniOutputFormat {
   b_9 = 0x01, b_29 = 0x03,
 };
 
+enum class TFMiniIntTimeMode {
+  typical = 0x00, fixed = 0x01
+};
+
 class API TFMiniDriver : public DriverBase
 {
 public:
@@ -16,6 +20,7 @@ public:
   void TriggerIntTimeMeasure(const int& inttime);
   void SetMetricUnit(const bool& mm);
   void SetTimer(const bool& on);
+  void SetIntTimeMode(const TFMiniIntTimeMode& mode);
 protected:
   void LoadAllParsers(std::vector<ReceiveParser>& parsers) override;
 private:

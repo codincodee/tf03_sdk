@@ -3,6 +3,7 @@
 
 #include "driver_server.h"
 #include "mini_rte_cart.h"
+#include "tfmini_driver.h"
 
 class API RTECartServer : public DriverServer
 {
@@ -11,8 +12,10 @@ public:
   RTECartServer();
   bool Start();
   void SetDriver(std::shared_ptr<MiniRTECart> driver);
+  void SetMiniDriver(std::shared_ptr<TFMiniDriver> driver);
   std::shared_ptr<MiniRTECart> Driver();
   void Spin() override;
+  void PrintMeasures(std::shared_ptr<std::list<Message>> measures);
 protected:
   bool OnInitialized() override;
 signals:
@@ -32,6 +35,7 @@ private:
   void OnI037Back();
   void OnI037Temp();
   std::shared_ptr<MiniRTECart> driver_;
+  std::shared_ptr<TFMiniDriver> sensor_;
   RTEStageType last_stage_;
 };
 

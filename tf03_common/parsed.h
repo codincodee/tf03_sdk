@@ -108,6 +108,7 @@ struct API MeasureDevel : public MeasureBasic {
 struct API MiniMeasure29B : public MeasureBasic {
   virtual ~MiniMeasure29B();
   virtual std::unique_ptr<ParsedBase> Clone() override;
+  QString Manifest();
   unsigned short raw_dist;
   unsigned short temp;
   unsigned short amb;
