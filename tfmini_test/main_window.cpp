@@ -51,6 +51,18 @@ MainWindow::MainWindow(QWidget *parent) :
       new tfmini::SetOutputFormat(command_block);
   mini_widgets.push_back(set_output_format);
 
+  auto trigger_inttime_measure =
+      new tfmini::TriggerIntTimeMeasure(command_block);
+  mini_widgets.push_back(trigger_inttime_measure);
+
+  auto set_timer =
+      new tfmini::SetTimer(command_block);
+  mini_widgets.push_back(set_timer);
+
+  auto set_metric_unit =
+      new tfmini::SetMetricUnit(command_block);
+  mini_widgets.push_back(set_metric_unit);
+
   std::vector<CommonCommandWidget*> ccws;
   for (auto& w : mini_widgets) {
     w->SetDriver(driver);
@@ -60,6 +72,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
   std::shared_ptr<MiniRTECart> cart_driver(new MiniRTECart);
   cart_driver->RegisterMeasureCallback([driver](){return driver->Measure();});
+  cart_driver->RegisterIntTimeTriggerCallback(
+      [driver](int i){driver->TriggerIntTimeMeasure(i);});
 //  auto cart_driver = std::shared_ptr<CartDriver>(new CartDriver);
 
   auto cart_connect_widget = new ConnectionWidget(this);

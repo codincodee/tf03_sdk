@@ -13,6 +13,9 @@ class API TFMiniDriver : public DriverBase
 public:
   TFMiniDriver();
   void SetOutputFormat(const TFMiniOutputFormat& format);
+  void TriggerIntTimeMeasure(const int& inttime);
+  void SetMetricUnit(const bool& mm);
+  void SetTimer(const bool& on);
 protected:
   void LoadAllParsers(std::vector<ReceiveParser>& parsers) override;
 private:

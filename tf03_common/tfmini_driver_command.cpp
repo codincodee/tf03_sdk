@@ -14,3 +14,21 @@ void TFMiniDriver::SetOutputFormat(const TFMiniOutputFormat &format) {
     return SendMessage(CommonCommand(char(0x06), char(format)));
   });
 }
+
+void TFMiniDriver::TriggerIntTimeMeasure(const int &inttime) {
+  EnqueueCommand([this, inttime](){
+    return SendMessage(CommonCommand(char(0x42), char(inttime)));
+  });
+}
+
+void TFMiniDriver::SetMetricUnit(const bool &mm) {
+  EnqueueCommand([this, mm](){
+    return SendMessage(CommonCommand(char(0x1A), char(mm ? 0x00 : 0x01)));
+  });
+}
+
+void TFMiniDriver::SetTimer(const bool &on) {
+  EnqueueCommand([this, on](){
+    return SendMessage(CommonCommand(char(0x40), char(on ? 0x01 : 0x00)));
+  });
+}
