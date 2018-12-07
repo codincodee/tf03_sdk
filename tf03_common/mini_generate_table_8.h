@@ -29,6 +29,10 @@ public:
       std::vector<mxInt32> &int7);
   static int TempCompensateInt0(
       const int& refdist, const int& realdist, const int& temp);
+  static int TempCompensateInt3(
+      const int& refdist, const int& realdist, const int& temp);
+  static int TempCompensateInt7(
+      const int& refdist, const int& realdist, const int& temp);
 };
 
 #endif // MINI_GENERATE_TABLE_8_H
