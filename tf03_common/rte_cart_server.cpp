@@ -205,5 +205,8 @@ void RTECartServer::HandleOnI037BurnFinished(
   if (MiniGenerateTable8::GenerateWithoutException(
           dist, realdist, amp, table_0, table_3, table_7)) {
     // table_0, table_3, table_7
+    auto tab_0 = MiniGenerateTable8::ConvertToDriverTable(table_0);
+    auto tab_3 = MiniGenerateTable8::ConvertToDriverTable(table_3);
+    auto tab_7 = MiniGenerateTable8::ConvertToDriverTable(table_7);
   }
 }

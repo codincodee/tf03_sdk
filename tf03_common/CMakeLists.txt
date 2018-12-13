@@ -200,6 +200,10 @@ add_library(
       rte_cart_widget.ui
       custom_object.cpp
       custom_object.h
+      mini_table_burner.cpp
+      mini_table_burner.h
+      mini_table_burner_base.cpp
+      mini_table_burner_base.h
       ${MATLAB_TF_ALGORITHM_PACK_SRC}
 )
 

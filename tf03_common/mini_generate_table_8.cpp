@@ -353,3 +353,13 @@ void MiniGenerateTable8::TrimInput(Int037Input &input) {
   input.i3.erase(std::next(input.i3.begin(), minimum), input.i3.end());
   input.i7.erase(std::next(input.i7.begin(), minimum), input.i7.end());
 }
+
+std::vector<uint16_t> MiniGenerateTable8::ConvertToDriverTable(
+    const std::vector<mxInt32> &table) {
+  std::vector<uint16_t> result;
+  result.reserve(table.size());
+  for (auto& entry : table) {
+    result.push_back(entry);
+  }
+  return result;
+}

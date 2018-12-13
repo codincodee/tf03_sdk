@@ -29,6 +29,8 @@ public:
       std::vector<mxInt32> &int0,
       std::vector<mxInt32> &int3,
       std::vector<mxInt32> &int7);
+  static std::vector<uint16_t> ConvertToDriverTable(
+      const std::vector<mxInt32>& table);
   static int TempCompensateInt0(
       const int& refdist, const int& realdist, const int& temp);
   static int TempCompensateInt3(
