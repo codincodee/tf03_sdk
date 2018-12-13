@@ -15,7 +15,7 @@ public:
   void SetMiniDriver(std::shared_ptr<TFMiniDriver> driver);
   std::shared_ptr<MiniRTECart> Driver();
   void Spin() override;
-  void PrintMeasures(std::shared_ptr<std::list<Message>> measures);
+  void PrintSteps(std::shared_ptr<std::list<CartStep>> measures);
 protected:
   bool OnInitialized() override;
 signals:
@@ -34,6 +34,8 @@ private:
   void OnAutoI();
   void OnI037Back();
   void OnI037Temp();
+
+  void HandleOnI037BurnFinished(std::shared_ptr<std::list<CartStep>> measures);
   std::shared_ptr<MiniRTECart> driver_;
   std::shared_ptr<TFMiniDriver> sensor_;
   RTEStageType last_stage_;

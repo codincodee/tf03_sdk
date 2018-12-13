@@ -2,6 +2,7 @@
 #include <QDebug>
 #include <QThread>
 #include "static_unique_ptr_cast.h"
+#include "mini_generate_table_8.h"
 
 RTECartServer::RTECartServer()
 {
@@ -30,6 +31,7 @@ bool RTECartServer::Start() {
     sensor_->SetOutputFormat(TFMiniOutputFormat::b_29);
     sensor_->SetTimer(false);
     QThread::msleep(1000);
+    sensor_->TriggerIntTimeMeasure(0);
   }
   return driver_->Start();
 }
@@ -69,9 +71,10 @@ void RTECartServer::OnI037Burn() {
     return;
   }
   if (driver_) {
-    auto measures = driver_->GetMeasures();
+    auto steps = driver_->GetStepBuffer();
     qDebug() << "I037 Burn";
-    PrintMeasures(measures);
+    PrintSteps(steps);
+    HandleOnI037BurnFinished(steps);
   }
   emit I037Burn();
 }
@@ -81,9 +84,9 @@ void RTECartServer::OnI037TempBurn() {
     return;
   }
   if (driver_) {
-    auto measures = driver_->GetMeasures();
+    auto steps = driver_->GetStepBuffer();
     qDebug() << "I037 Temp Burn";
-    PrintMeasures(measures);
+    PrintSteps(steps);
   }
   if (sensor_) {
     sensor_->SetIntTimeMode(TFMiniIntTimeMode::typical);
@@ -104,9 +107,9 @@ void RTECartServer::OnStop() {
     return;
   }
   if (driver_) {
-    auto measures = driver_->GetMeasures();
+    auto steps = driver_->GetStepBuffer();
     qDebug() << "Auto Int";
-    PrintMeasures(measures);
+    PrintSteps(steps);
   }
   emit Finished();
 }
@@ -132,18 +135,75 @@ void RTECartServer::OnI037Temp() {
   emit I037Temp();
 }
 
-void RTECartServer::PrintMeasures(
-    std::shared_ptr<std::list<Message> > measures) {
-  if (!measures) {
+void RTECartServer::PrintSteps(
+    std::shared_ptr<std::list<CartStep> > steps) {
+  if (!steps) {
     return;
   }
-  for (auto& measure : *measures) {
+  for (auto& step : *steps) {
+    if (!step.measure) {
+      continue;
+    }
+    auto measure = step.measure->Clone();
     std::unique_ptr<MiniMeasure29B> b29 =
-          dynamic_unique_ptr_cast<MiniMeasure29B>(std::move(measure.data));
+          dynamic_unique_ptr_cast<MiniMeasure29B>(std::move(measure));
     if (!b29) {
       qDebug() << "One Corrupted Measure";
       continue;
     }
-    qDebug() << b29->Manifest();
+    qDebug() << step.position << b29->Manifest();
+  }
+}
+
+void RTECartServer::HandleOnI037BurnFinished(
+    std::shared_ptr<std::list<CartStep> > steps) {
+  if (!sensor_) {
+    return;
+  }
+  if (!steps) {
+    return;
+  }
+  Int037Input dist, realdist, amp;
+  for (auto& step : *steps) {
+    if (!step.measure) {
+      continue;
+    }
+    auto measure = step.measure->Clone();
+    std::unique_ptr<MiniMeasure29B> b29 =
+          dynamic_unique_ptr_cast<MiniMeasure29B>(std::move(measure));
+    if (!b29) {
+      qDebug() << "One Corrupted Measure";
+      continue;
+    }
+    auto d = b29->ref_d;
+    auto a = b29->amp;
+    auto t = b29->temp;
+    auto r = step.position;
+    if (b29->inttime == 0) {
+      r = MiniGenerateTable8::TempCompensateInt0(d, r, t);
+      dist.i0.push_back(d);
+      amp.i0.push_back(a);
+      realdist.i0.push_back(r);
+    } else if (b29->inttime == 3) {
+      r = MiniGenerateTable8::TempCompensateInt3(d, r, t);
+      dist.i3.push_back(d);
+      amp.i3.push_back(a);
+      realdist.i3.push_back(r);
+    } else if (b29->inttime == 7) {
+      r = MiniGenerateTable8::TempCompensateInt7(d, r, t);
+      dist.i7.push_back(d);
+      amp.i7.push_back(a);
+      realdist.i7.push_back(r);
+    } else {
+      qDebug() << "One Unexpected Int-time";
+    }
+  }
+  MiniGenerateTable8::TrimInput(dist);
+  MiniGenerateTable8::TrimInput(amp);
+  MiniGenerateTable8::TrimInput(realdist);
+  std::vector<mxInt32> table_0, table_3, table_7;
+  if (MiniGenerateTable8::GenerateWithoutException(
+          dist, realdist, amp, table_0, table_3, table_7)) {
+    // table_0, table_3, table_7
   }
 }

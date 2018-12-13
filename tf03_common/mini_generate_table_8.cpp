@@ -1,6 +1,7 @@
 #include "mini_generate_table_8.h"
 #include "matlab_dependencies.h"
 #include <tf_algorithms/generate_table_8.h>
+#include <set>
 
 MiniGenerateTable8::MiniGenerateTable8()
 {
@@ -10,12 +11,13 @@ MiniGenerateTable8::MiniGenerateTable8()
 bool MiniGenerateTable8::GenerateWithoutException(
     const Int037Input &dist,
     const Int037Input &realdist,
+    const Int037Input& amp,
     std::vector<mxInt32> &int0,
     std::vector<mxInt32> &int3,
     std::vector<mxInt32> &int7) {
   bool success = false;
   try {
-    success = Generate(dist, realdist, int0, int3, int7);
+    success = Generate(dist, realdist, amp, int0, int3, int7);
   } catch (...) {
     success = false;
   }
@@ -23,7 +25,9 @@ bool MiniGenerateTable8::GenerateWithoutException(
 }
 
 bool MiniGenerateTable8::Generate(
-    const Int037Input& dist, const Int037Input& realdist,
+    const Int037Input& dist,
+    const Int037Input& realdist,
+    const Int037Input& amp,
     std::vector<mxInt32>& int0,
     std::vector<mxInt32>& int3,
     std::vector<mxInt32>& int7) {
@@ -40,7 +44,13 @@ bool MiniGenerateTable8::Generate(
     return false;
   }
 
-  if (!generate_table_8Initialize()) {
+  if (amp.i0.size() != row_len ||
+      amp.i3.size() != row_len ||
+      amp.i7.size() != row_len) {
+    return false;
+  }
+
+  if (!Generate_table_8Initialize()) {
     return false;
   }
 
@@ -76,11 +86,26 @@ bool MiniGenerateTable8::Generate(
   }
   mrealdist.SetData(mrealdist_arr, row_len * 3);
 
+  mwArray mamp(row_len, 3, mxINT32_CLASS, mxREAL);
+  mxInt32* mamp_arr = new mxInt32[row_len * 3];
+  recycle.push_back(mamp_arr);
+  index = 0;
+  for (int i = 0; i < row_len; ++i) {
+    mamp_arr[index++] = amp.i0[i];
+  }
+  for (int i = 0; i < row_len; ++i) {
+    mamp_arr[index++] = amp.i3[i];
+  }
+  for (int i = 0; i < row_len; ++i) {
+    mamp_arr[index++] = amp.i7[i];
+  }
+  mamp.SetData(mamp_arr, row_len * 3);
+
   mwArray mint0;
   mwArray mint3;
   mwArray mint7;
 
-  Generate_table_8(1, mint0, mint3, mint7, mdist, mrealdist);
+  Generate_table_8(1, mint0, mint3, mint7, mdist, mrealdist, mamp);
 
   int0.clear();
   int3.clear();
@@ -130,7 +155,7 @@ bool MiniGenerateTable8::Generate(
     int7.push_back(mint7_arr[i]);
   }
 
-  generate_table_8Terminate();
+  Generate_table_8Terminate();
 
   for (auto& a : recycle) {
     delete [] a;
@@ -316,4 +341,15 @@ int MiniGenerateTable8::TempCompensateInt7(
     z = z1 + (z2 - z1) * (idx_now - idx_down);
   }
   return std::round(realdist - z);
+}
+
+void MiniGenerateTable8::TrimInput(Int037Input &input) {
+  std::set<int> sizes;
+  sizes.insert(input.i0.size());
+  sizes.insert(input.i3.size());
+  sizes.insert(input.i7.size());
+  auto minimum = *sizes.begin();
+  input.i0.erase(std::next(input.i0.begin(), minimum), input.i0.end());
+  input.i3.erase(std::next(input.i3.begin(), minimum), input.i3.end());
+  input.i7.erase(std::next(input.i7.begin(), minimum), input.i7.end());
 }

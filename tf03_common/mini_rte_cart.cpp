@@ -1,9 +1,10 @@
 #include "mini_rte_cart.h"
 #include <QDebug>
+#include <QThread>
 
 MiniRTECart::MiniRTECart()
 {
-
+  SetStepLength(10);
 }
 
 bool MiniRTECart::Start() {

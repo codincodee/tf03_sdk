@@ -117,6 +117,7 @@ bool CartDriver::Parse(
     } else {
       current_position_ -= step_length_;
     }
+    OnStep(current_position_);
     CartStep step_buffer, step;
     step_buffer.first_half = step.first_half = first_half_;
     step_buffer.position = step.position = current_position_;
@@ -131,7 +132,6 @@ bool CartDriver::Parse(
     }
     cart_steps_buffer_mutex_.unlock();
     cart_steps_.emplace_back(std::move(step));
-    OnStep(current_position_);
   } break;
   case 0x12: // Reached end point
     first_half_ = false;
