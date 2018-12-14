@@ -4,3 +4,11 @@ MiniTableBurnerBase::MiniTableBurnerBase()
 {
 
 }
+
+void MiniTableBurnerBase::SetDriver(std::shared_ptr<TFMiniDriver> driver) {
+  this->driver = driver;
+}
+
+void MiniTableBurnerBase::EnterSettingMode() {
+
+}

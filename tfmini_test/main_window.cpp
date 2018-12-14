@@ -86,6 +86,7 @@ MainWindow::MainWindow(QWidget *parent) :
   widgets.push_back(cart_connect_widget);
 
   auto cart_driver_server = std::shared_ptr<RTECartServer>(new RTECartServer);
+  cart_driver_server->SetMiniDriver(driver);
   cart_driver_server->SetDriver(cart_driver);
   if (!cart_driver_server->Initialize()) {
     exit(1);

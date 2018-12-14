@@ -21,6 +21,7 @@ public:
   void SetMetricUnit(const bool& mm);
   void SetTimer(const bool& on);
   void SetIntTimeMode(const TFMiniIntTimeMode& mode);
+  void EnterSettingMode();
 protected:
   void LoadAllParsers(std::vector<ReceiveParser>& parsers) override;
 private:

@@ -5,6 +5,8 @@
 #include "mini_rte_cart.h"
 #include "tfmini_driver.h"
 
+class MiniTableBurner;
+
 class API RTECartServer : public DriverServer
 {
   Q_OBJECT
@@ -38,6 +40,7 @@ private:
   void HandleOnI037BurnFinished(std::shared_ptr<std::list<CartStep>> measures);
   std::shared_ptr<MiniRTECart> driver_;
   std::shared_ptr<TFMiniDriver> sensor_;
+  std::shared_ptr<MiniTableBurner> burner_;
   RTEStageType last_stage_;
 };
 

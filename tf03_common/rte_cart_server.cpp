@@ -3,6 +3,7 @@
 #include <QThread>
 #include "static_unique_ptr_cast.h"
 #include "mini_generate_table_8.h"
+#include "mini_table_burner.h"
 
 RTECartServer::RTECartServer()
 {
@@ -63,6 +64,11 @@ bool RTECartServer::OnInitialized() {
   if (!driver_) {
     return false;
   }
+  if (!sensor_) {
+    return false;
+  }
+  burner_.reset(new MiniTableBurner);
+  burner_->SetDriver(sensor_);
   return true;
 }
 
@@ -74,7 +80,7 @@ void RTECartServer::OnI037Burn() {
     auto steps = driver_->GetStepBuffer();
     qDebug() << "I037 Burn";
     PrintSteps(steps);
-    HandleOnI037BurnFinished(steps);
+    // HandleOnI037BurnFinished(steps);
   }
   emit I037Burn();
 }
@@ -85,8 +91,8 @@ void RTECartServer::OnI037TempBurn() {
   }
   if (driver_) {
     auto steps = driver_->GetStepBuffer();
-    qDebug() << "I037 Temp Burn";
-    PrintSteps(steps);
+//    qDebug() << "I037 Temp Burn";
+//    PrintSteps(steps);
   }
   if (sensor_) {
     sensor_->SetIntTimeMode(TFMiniIntTimeMode::typical);
@@ -108,8 +114,8 @@ void RTECartServer::OnStop() {
   }
   if (driver_) {
     auto steps = driver_->GetStepBuffer();
-    qDebug() << "Auto Int";
-    PrintSteps(steps);
+//    qDebug() << "Auto Int";
+//    PrintSteps(steps);
   }
   emit Finished();
 }
@@ -208,5 +214,8 @@ void RTECartServer::HandleOnI037BurnFinished(
     auto tab_0 = MiniGenerateTable8::ConvertToDriverTable(table_0);
     auto tab_3 = MiniGenerateTable8::ConvertToDriverTable(table_3);
     auto tab_7 = MiniGenerateTable8::ConvertToDriverTable(table_7);
+    if (burner_) {
+      burner_->StartBurn(tab_0, tab_3, tab_7);
+    }
   }
 }
