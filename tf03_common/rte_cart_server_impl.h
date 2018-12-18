@@ -12,9 +12,9 @@ public:
 protected:
   bool OnInitialized() override;
   void Spin() override;
-  bool I037BurnCallback(std::list<MiniCartStep> steps) override;
-  bool I037TempBurnCallback(std::list<MiniCartStep> steps) override;
-  bool AutoIntCheckCallback(std::list<MiniCartStep> steps) override;
+  bool I037BurnCallback(std::list<MiniCartStep29B> steps) override;
+  bool I037TempBurnCallback(std::list<MiniCartStep29B> steps) override;
+  bool AutoIntCheckCallback(std::list<MiniCartStep29B> steps) override;
 private:
   std::shared_ptr<TFMiniDriverImpl> sensor_;
 };

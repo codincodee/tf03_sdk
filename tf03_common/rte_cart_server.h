@@ -7,6 +7,11 @@
 
 class MiniTableBurner;
 
+struct MiniCartStep29B {
+  int position = 0;
+  std::list<MiniMeasure29B> measures;
+};
+
 class API RTECartServer : public DriverServer
 {
   Q_OBJECT
@@ -23,9 +28,14 @@ public:
 protected:
   bool OnInitialized() override;
   std::shared_ptr<TFMiniDriver> Sensor();
-  virtual bool I037BurnCallback(std::list<MiniCartStep> steps);
-  virtual bool I037TempBurnCallback(std::list<MiniCartStep> steps);
-  virtual bool AutoIntCheckCallback(std::list<MiniCartStep> steps);
+  bool I037BurnCallback(std::list<MiniCartStep> steps);
+  virtual bool I037BurnCallback(std::list<MiniCartStep29B> steps);
+  bool I037TempBurnCallback(std::list<MiniCartStep> steps);
+  virtual bool I037TempBurnCallback(std::list<MiniCartStep29B> steps);
+  bool AutoIntCheckCallback(std::list<MiniCartStep> steps);
+  virtual bool AutoIntCheckCallback(std::list<MiniCartStep29B> steps);
+  std::list<MiniCartStep29B> ConvertToMiniCartStep29B(
+      std::list<MiniCartStep> steps);
 signals:
   void I037Burn();
   void I037TempBurn();

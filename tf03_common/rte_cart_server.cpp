@@ -72,15 +72,49 @@ std::shared_ptr<TFMiniDriver> RTECartServer::Sensor() {
   return sensor_;
 }
 
+std::list<MiniCartStep29B> RTECartServer::ConvertToMiniCartStep29B(
+    std::list<MiniCartStep> steps) {
+  std::list<MiniCartStep29B> result;
+  for (auto& step : steps) {
+    if (!step.measures) {
+      continue;
+    }
+    MiniCartStep29B step29;
+    step29.position = step.position;
+    for (auto& measure : *step.measures) {
+      auto b29 =
+          dynamic_unique_ptr_cast<MiniMeasure29B>(std::move(measure.data));
+      if (!b29) {
+        continue;
+      }
+      step29.measures.push_back(*b29);
+    }
+    result.push_back(step29);
+  }
+  return result;
+}
+
 bool RTECartServer::I037BurnCallback(std::list<MiniCartStep> steps) {
+  return I037BurnCallback(ConvertToMiniCartStep29B(steps));
+}
+
+bool RTECartServer::I037BurnCallback(std::list<MiniCartStep29B> steps) {
   return true;
 }
 
 bool RTECartServer::I037TempBurnCallback(std::list<MiniCartStep> steps) {
+  return I037TempBurnCallback(ConvertToMiniCartStep29B(steps));
+}
+
+bool RTECartServer::I037TempBurnCallback(std::list<MiniCartStep29B> steps) {
   return true;
 }
 
 bool RTECartServer::AutoIntCheckCallback(std::list<MiniCartStep> steps) {
+  return AutoIntCheckCallback(ConvertToMiniCartStep29B(steps));
+}
+
+bool RTECartServer::AutoIntCheckCallback(std::list<MiniCartStep29B> steps) {
   return true;
 }
 

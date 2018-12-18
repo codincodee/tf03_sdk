@@ -27,13 +27,13 @@ void RTECartServerImpl::Spin() {
   RTECartServer::Spin();
 }
 
-bool RTECartServerImpl::I037BurnCallback(std::list<MiniCartStep> steps) {
+bool RTECartServerImpl::I037BurnCallback(std::list<MiniCartStep29B> steps) {
   return true;
 }
 
-bool RTECartServerImpl::I037TempBurnCallback(std::list<MiniCartStep> steps) {
+bool RTECartServerImpl::I037TempBurnCallback(std::list<MiniCartStep29B> steps) {
   return true;
 }
-bool RTECartServerImpl::AutoIntCheckCallback(std::list<MiniCartStep> steps) {
+bool RTECartServerImpl::AutoIntCheckCallback(std::list<MiniCartStep29B> steps) {
   return true;
 }
