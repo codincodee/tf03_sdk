@@ -32,16 +32,20 @@ public:
   void FinishedHeating();
   void RegisterIntTimeTriggerCallback(std::function<void(int)> func);
   void RegisterRetrieveMeasuresCallback(std::function<MessageList()> func);
+  std::list<MiniCartStep> Steps();
 protected:
   void OnStep(const int& position) override;
   void OnEndPoint() override;
   void OnStartPoint() override;
 private:
+  void ResetStepCache();
+
   std::atomic<RTEStageType> stage_;
   enum class I037Type {i0 = 0, i3 = 3, i7 = 7};
   std::atomic<I037Type> current_037_;
   std::function<void(int)> trigger_inttime_measure_;
   std::function<MessageList()> retrieve_measures_;
+  std::list<MiniCartStep> steps_;
 };
 
 #endif // MINI_RTE_CART_H

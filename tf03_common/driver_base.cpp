@@ -90,14 +90,14 @@ void DriverBase::ProcessBufferInWorkThread(QByteArray &buffer) {
         ++parsed_cnt;
         buffer = buffer.remove(0, to + 1);
         if (parsed.type == MessageType::measure) {
+          if (parsed.data) {
+            parsed.data->id = ++measure_id_;
+          }
           if (full_stream) {
             Message message;
             message.type = parsed.type;
             message.data = parsed.data->Clone();
             EnqueueReceivedMeasures(std::move(message));
-          }
-          if (parsed.data) {
-            parsed.data->id = ++measure_id_;
           }
           latest_measure_mutex_.lock();
           latest_measure_ = std::move(parsed);

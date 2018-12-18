@@ -40,6 +40,7 @@ bool RTECartServer::Start() {
     QThread::msleep(100);
     sensor_->SetIntTimeMode(TFMiniIntTimeMode::cyclic);
     QThread::msleep(100);
+    sensor_->SwitchOnMeasureStream(true);
   }
   return driver_->Start();
 }
@@ -71,18 +72,15 @@ std::shared_ptr<TFMiniDriver> RTECartServer::Sensor() {
   return sensor_;
 }
 
-bool RTECartServer::I037BurnCallback(
-    std::shared_ptr<std::list<CartStep>> steps) {
+bool RTECartServer::I037BurnCallback(std::list<MiniCartStep> steps) {
   return true;
 }
 
-bool RTECartServer::I037TempBurnCallback(
-    std::shared_ptr<std::list<CartStep>> steps) {
+bool RTECartServer::I037TempBurnCallback(std::list<MiniCartStep> steps) {
   return true;
 }
 
-bool RTECartServer::AutoIntCheckCallback(
-    std::shared_ptr<std::list<CartStep>> steps) {
+bool RTECartServer::AutoIntCheckCallback(std::list<MiniCartStep> steps) {
   return true;
 }
 
@@ -103,10 +101,10 @@ void RTECartServer::OnI037Burn() {
     return;
   }
   if (driver_) {
-    auto steps = driver_->GetStepBuffer();
+//    auto steps = driver_->GetStepBuffer();
+    auto steps = driver_->Steps();
     qDebug() << "I037 Burn";
     PrintSteps(steps);
-    // HandleOnI037BurnFinished(steps);
     I037BurnCallback(steps);
   }
   emit I037Burn();
@@ -117,9 +115,9 @@ void RTECartServer::OnI037TempBurn() {
     return;
   }
   if (driver_) {
-    auto steps = driver_->GetStepBuffer();
-//    qDebug() << "I037 Temp Burn";
-//    PrintSteps(steps);
+    auto steps = driver_->Steps();
+    qDebug() << "I037 Temp Burn";
+    PrintSteps(steps);
     I037TempBurnCallback(steps);
   }
   if (sensor_) {
@@ -141,12 +139,13 @@ void RTECartServer::OnStop() {
     return;
   }
   if (driver_) {
-    auto steps = driver_->GetStepBuffer();
-//    qDebug() << "Auto Int";
-//    PrintSteps(steps);
+    auto steps = driver_->Steps();
+    qDebug() << "Auto Int";
+    PrintSteps(steps);
     AutoIntCheckCallback(steps);
   }
   emit Finished();
+  sensor_->SwitchOnMeasureStream(false);
 }
 
 void RTECartServer::OnAutoI() {
@@ -168,6 +167,26 @@ void RTECartServer::OnI037Temp() {
     return;
   }
   emit I037Temp();
+}
+
+void RTECartServer::PrintSteps(
+    const std::list<MiniCartStep>& steps) {
+  for (auto& step : steps) {
+    if (!step.measures) {
+      continue;
+    }
+    qDebug() << "=== " << step.position << " ===";
+    for (auto& measure : *step.measures) {
+      auto m = measure.data->Clone();
+      std::unique_ptr<MiniMeasure29B> b29 =
+          dynamic_unique_ptr_cast<MiniMeasure29B>(std::move(m));
+      if (!b29) {
+        qDebug() << "One Corrupted Measure";
+        continue;
+      }
+      qDebug() << b29->Manifest();
+    }
+  }
 }
 
 void RTECartServer::PrintSteps(

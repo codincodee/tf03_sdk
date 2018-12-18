@@ -41,17 +41,18 @@ std::unique_ptr<ParsedBase> MiniMeasure29B::Clone() {
 QString MiniMeasure29B::Manifest() {
   QString s;
   s =
-      "Raw Dist: " + QString::number(raw_dist) + " "
-      "Temp: " + QString::number(temp) + " "
-      "Amb: " + QString::number(amb) + " "
-      "Temp Dist: " + QString::number(temp_d) + " "
-      "Amb Dist: " + QString::number(amb_d) + " "
-      "Ref Dist: " + QString::number(ref_d) + " "
+      "ID: " + QString::number(id) + " "
+//      "Raw Dist: " + QString::number(raw_dist) + " "
+//      "Temp: " + QString::number(temp) + " "
+//      "Amb: " + QString::number(amb) + " "
+//      "Temp Dist: " + QString::number(temp_d) + " "
+//      "Amb Dist: " + QString::number(amb_d) + " "
+//      "Ref Dist: " + QString::number(ref_d) + " "
       "Corr Dist: " + QString::number(cor_d) + " "
-      "Table Dist: " + QString::number(table_d) + " "
-      "Temp Amp: " + QString::number(temp_amp) + " "
-      "Amb Amp: " + QString::number(amb_amp) + " "
-      "DCS3: " + QString::number(dcs3) + " "
+//      "Table Dist: " + QString::number(table_d) + " "
+//      "Temp Amp: " + QString::number(temp_amp) + " "
+//      "Amb Amp: " + QString::number(amb_amp) + " "
+//      "DCS3: " + QString::number(dcs3) + " "
       "Int-time: " + QString::number(short(inttime));
   return s;
 }

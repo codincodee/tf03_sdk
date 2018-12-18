@@ -19,12 +19,13 @@ public:
   std::shared_ptr<MiniRTECart> Driver();
   void Spin() override;
   void PrintSteps(std::shared_ptr<std::list<CartStep>> measures);
+  void PrintSteps(const std::list<MiniCartStep>& measures);
 protected:
   bool OnInitialized() override;
   std::shared_ptr<TFMiniDriver> Sensor();
-  virtual bool I037BurnCallback(std::shared_ptr<std::list<CartStep>> steps);
-  virtual bool I037TempBurnCallback(std::shared_ptr<std::list<CartStep>> steps);
-  virtual bool AutoIntCheckCallback(std::shared_ptr<std::list<CartStep>> steps);
+  virtual bool I037BurnCallback(std::list<MiniCartStep> steps);
+  virtual bool I037TempBurnCallback(std::list<MiniCartStep> steps);
+  virtual bool AutoIntCheckCallback(std::list<MiniCartStep> steps);
 signals:
   void I037Burn();
   void I037TempBurn();

@@ -75,9 +75,11 @@ MainWindow::MainWindow(QWidget *parent) :
   }
 
   std::shared_ptr<MiniRTECart> cart_driver(new MiniRTECart);
-  cart_driver->RegisterMeasureCallback([driver](){return driver->Measure();});
-  cart_driver->RegisterIntTimeTriggerCallback(
-      [driver](int i){driver->TriggerIntTimeMeasure(i);});
+  cart_driver->RegisterRetrieveMeasuresCallback(
+      [driver](){return driver->GetMeasures();});
+//  cart_driver->RegisterMeasureCallback([driver](){return driver->Measure();});
+//  cart_driver->RegisterIntTimeTriggerCallback(
+//      [driver](int i){driver->TriggerIntTimeMeasure(i);});
 //  auto cart_driver = std::shared_ptr<CartDriver>(new CartDriver);
 
   auto cart_connect_widget = new ConnectionWidget(this);
