@@ -25,7 +25,7 @@ std::unique_ptr<MeasureDevel> API ToMeasureDevel(
     std::unique_ptr<MeasureBasic>& basic);
 
 enum class API Customization {
-  common, bl, i13, ql
+  common, bl, i13, ql, zc
 };
 
 class API Driver : public DriverBase

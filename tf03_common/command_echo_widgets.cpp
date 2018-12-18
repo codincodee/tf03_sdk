@@ -1078,6 +1078,8 @@ void CustomizationWidgets::ButtonClicked() {
     driver->SetCustomization(Customization::i13);
   } else if (lingual_equal(text, kQL)) {
     driver->SetCustomization(Customization::ql);
+  } else if (lingual_equal(text, kZC)) {
+    driver->SetCustomization(Customization::zc);;
   }
 }
 
@@ -1087,6 +1089,7 @@ void CustomizationWidgets::SetOptionLingual() {
   combo->addItem(which_lingual(kBL));
   combo->addItem(which_lingual(kI13));
   combo->addItem(which_lingual(kQL));
+  combo->addItem(which_lingual(kZC));
 }
 
 ////////////////////// RangeDetectWidgets /////////////////////////////

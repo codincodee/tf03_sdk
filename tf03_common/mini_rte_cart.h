@@ -14,6 +14,13 @@ enum class RTEStageType {
   stop
 };
 
+using MessageList = std::shared_ptr<std::list<Message>>;
+
+struct MiniCartStep {
+  int position = 0;
+  MessageList measures;
+};
+
 class API MiniRTECart : public CartDriver
 {
 public:
@@ -24,6 +31,7 @@ public:
   RTEStageType RTEStage();
   void FinishedHeating();
   void RegisterIntTimeTriggerCallback(std::function<void(int)> func);
+  void RegisterRetrieveMeasuresCallback(std::function<MessageList()> func);
 protected:
   void OnStep(const int& position) override;
   void OnEndPoint() override;
@@ -33,6 +41,7 @@ private:
   enum class I037Type {i0 = 0, i3 = 3, i7 = 7};
   std::atomic<I037Type> current_037_;
   std::function<void(int)> trigger_inttime_measure_;
+  std::function<MessageList()> retrieve_measures_;
 };
 
 #endif // MINI_RTE_CART_H

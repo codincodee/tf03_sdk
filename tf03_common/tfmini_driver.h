@@ -9,7 +9,7 @@ enum class TFMiniOutputFormat {
 };
 
 enum class TFMiniIntTimeMode {
-  typical = 0x00, fixed = 0x01
+  typical = 0x00, fixed = 0x01, cyclic = 0x02
 };
 
 class API TFMiniDriver : public DriverBase

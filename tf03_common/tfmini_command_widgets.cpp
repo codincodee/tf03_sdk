@@ -116,6 +116,7 @@ SetIntTimeMode::SetIntTimeMode(QWidget *parent)
   combo = new QComboBox(this);
   combo->addItem(kTypical);
   combo->addItem(kFixed);
+  combo->addItem(kCyclic);
   option = combo;
 }
 
@@ -128,6 +129,8 @@ void SetIntTimeMode::OnButtonClickedCommon() {
     driver->SetIntTimeMode(TFMiniIntTimeMode::typical);
   } else if (current == kFixed) {
     driver->SetIntTimeMode(TFMiniIntTimeMode::fixed);
+  } else if (current == kCyclic) {
+    driver->SetIntTimeMode(TFMiniIntTimeMode::cyclic);
   }
 }
 

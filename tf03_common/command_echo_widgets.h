@@ -360,6 +360,7 @@ struct CustomizationWidgets : public EchoWidgetsBase {
   const Lingual kBL = {"BL", "BL定制版"};
   const Lingual kI13 = {"I13", "I13定制版"};
   const Lingual kQL = {"QL", "QL定制版"};
+  const Lingual kZC = {"ZC", "ZC定制版"};
 };
 
 ////////////////////// RangeDetectWidgets /////////////////////////////

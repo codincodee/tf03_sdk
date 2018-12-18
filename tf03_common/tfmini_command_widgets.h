@@ -66,6 +66,7 @@ private:
   QComboBox* combo = nullptr;
   const QString kTypical = "Typical";
   const QString kFixed = "Fixed";
+  const QString kCyclic = "Cyclic";
 };
 } // namespace tfmini
 

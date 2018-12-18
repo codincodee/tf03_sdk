@@ -34,11 +34,11 @@ bool RTECartServer::Start() {
   if (sensor_) {
     sensor_->SetMetricUnit(true);
     QThread::msleep(100);
+    sensor_->SetTimer(true);
+    QThread::msleep(100);
     sensor_->SetOutputFormat(TFMiniOutputFormat::b_29);
     QThread::msleep(100);
-    sensor_->SetTimer(false);
-    QThread::msleep(100);
-    sensor_->TriggerIntTimeMeasure(0);
+    sensor_->SetIntTimeMode(TFMiniIntTimeMode::cyclic);
     QThread::msleep(100);
   }
   return driver_->Start();
@@ -124,7 +124,7 @@ void RTECartServer::OnI037TempBurn() {
   }
   if (sensor_) {
     sensor_->SetIntTimeMode(TFMiniIntTimeMode::typical);
-    sensor_->SetTimer(true);
+    QThread::msleep(100);
   }
   emit I037TempBurn();
 }

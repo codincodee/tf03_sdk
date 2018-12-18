@@ -33,6 +33,11 @@ void MiniRTECart::RegisterIntTimeTriggerCallback(
   trigger_inttime_measure_ = func;
 }
 
+void MiniRTECart::RegisterRetrieveMeasuresCallback(
+    std::function<MessageList ()> func) {
+
+}
+
 void MiniRTECart::OnStep(const int& position) {
   auto stage = stage_.load();
   if (stage == RTEStageType::i037 || stage == RTEStageType::i037_temp) {
@@ -44,9 +49,9 @@ void MiniRTECart::OnStep(const int& position) {
     } else if (current_037 == I037Type::i7) {
       current_037_ = I037Type::i0;
     }
-    if (trigger_inttime_measure_) {
-      trigger_inttime_measure_(int(current_037));
-    }
+//    if (trigger_inttime_measure_) {
+//      trigger_inttime_measure_(int(current_037));
+//    }
   }
   if (position < GetStepLength()) {
     if (stage == RTEStageType::i037_back) {
