@@ -1,7 +1,7 @@
 #include "main_window.h"
 #include "ui_main_window.h"
 #include <tf03_common/connection_widget.h>
-#include <tf03_common/tfmini_driver.h>
+#include <tf03_common/tfmini_driver_impl.h>
 #include <tf03_common/measure_display_widget.h>
 #include <tf03_common/config.h>
 #include <tf03_common/command_block.h>
@@ -10,7 +10,7 @@
 #include <tf03_common/tfmini_plot_widget.h>
 #include <tf03_common/driver_server.h>
 #include <tf03_common/mini_rte_cart.h>
-#include <tf03_common/rte_cart_server.h>
+#include <tf03_common/rte_cart_server_impl.h>
 #include <tf03_common/rte_cart_widget.h>
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -22,7 +22,7 @@ MainWindow::MainWindow(QWidget *parent) :
   this->setWindowIcon(QIcon(":/image/logo.png"));
   this->setWindowTitle(QString("TFMini Test v") + tf03_sdk_VERSION_STRING);
 
-  std::shared_ptr<TFMiniDriver> driver(new TFMiniDriver);
+  std::shared_ptr<TFMiniDriverImpl> driver(new TFMiniDriverImpl);
 
   std::vector<CustomWidget*> widgets;
 
@@ -85,9 +85,13 @@ MainWindow::MainWindow(QWidget *parent) :
   ui->gridLayout->addWidget(cart_connect_widget);
   widgets.push_back(cart_connect_widget);
 
-  auto cart_driver_server = std::shared_ptr<RTECartServer>(new RTECartServer);
+  auto cart_driver_server =
+      std::shared_ptr<RTECartServerImpl>(new RTECartServerImpl);
   cart_driver_server->SetMiniDriver(driver);
   cart_driver_server->SetDriver(cart_driver);
+  //////////////// configurations ////////////
+
+  ////////////////////////////////////////////
   if (!cart_driver_server->Initialize()) {
     exit(1);
   }

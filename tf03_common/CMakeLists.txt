@@ -204,6 +204,10 @@ add_library(
       mini_table_burner.h
       mini_table_burner_base.cpp
       mini_table_burner_base.h
+      rte_cart_server_impl.cpp
+      rte_cart_server_impl.h
+      tfmini_driver_impl.cpp
+      tfmini_driver_impl.h
       ${MATLAB_TF_ALGORITHM_PACK_SRC}
 )
 

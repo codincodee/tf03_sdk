@@ -4,3 +4,7 @@ TFMiniDriver::TFMiniDriver()
 {
 
 }
+
+TFMiniDriver::~TFMiniDriver() {
+
+}

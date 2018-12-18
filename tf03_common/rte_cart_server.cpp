@@ -10,6 +10,10 @@ RTECartServer::RTECartServer()
 
 }
 
+RTECartServer::~RTECartServer() {
+
+}
+
 void RTECartServer::SetDriver(std::shared_ptr<MiniRTECart> driver) {
   driver_ = driver;
 }
@@ -29,10 +33,13 @@ bool RTECartServer::Start() {
   last_stage_ = RTEStageType::i037;
   if (sensor_) {
     sensor_->SetMetricUnit(true);
+    QThread::msleep(100);
     sensor_->SetOutputFormat(TFMiniOutputFormat::b_29);
+    QThread::msleep(100);
     sensor_->SetTimer(false);
-    QThread::msleep(1000);
+    QThread::msleep(100);
     sensor_->TriggerIntTimeMeasure(0);
+    QThread::msleep(100);
   }
   return driver_->Start();
 }
@@ -60,6 +67,25 @@ void RTECartServer::Spin() {
   last_stage_ = stage;
 }
 
+std::shared_ptr<TFMiniDriver> RTECartServer::Sensor() {
+  return sensor_;
+}
+
+bool RTECartServer::I037BurnCallback(
+    std::shared_ptr<std::list<CartStep>> steps) {
+  return true;
+}
+
+bool RTECartServer::I037TempBurnCallback(
+    std::shared_ptr<std::list<CartStep>> steps) {
+  return true;
+}
+
+bool RTECartServer::AutoIntCheckCallback(
+    std::shared_ptr<std::list<CartStep>> steps) {
+  return true;
+}
+
 bool RTECartServer::OnInitialized() {
   if (!driver_) {
     return false;
@@ -81,6 +107,7 @@ void RTECartServer::OnI037Burn() {
     qDebug() << "I037 Burn";
     PrintSteps(steps);
     // HandleOnI037BurnFinished(steps);
+    I037BurnCallback(steps);
   }
   emit I037Burn();
 }
@@ -93,6 +120,7 @@ void RTECartServer::OnI037TempBurn() {
     auto steps = driver_->GetStepBuffer();
 //    qDebug() << "I037 Temp Burn";
 //    PrintSteps(steps);
+    I037TempBurnCallback(steps);
   }
   if (sensor_) {
     sensor_->SetIntTimeMode(TFMiniIntTimeMode::typical);
@@ -116,6 +144,7 @@ void RTECartServer::OnStop() {
     auto steps = driver_->GetStepBuffer();
 //    qDebug() << "Auto Int";
 //    PrintSteps(steps);
+    AutoIntCheckCallback(steps);
   }
   emit Finished();
 }

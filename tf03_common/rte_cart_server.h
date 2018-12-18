@@ -12,6 +12,7 @@ class API RTECartServer : public DriverServer
   Q_OBJECT
 public:
   RTECartServer();
+  virtual ~RTECartServer();
   bool Start();
   void SetDriver(std::shared_ptr<MiniRTECart> driver);
   void SetMiniDriver(std::shared_ptr<TFMiniDriver> driver);
@@ -20,6 +21,10 @@ public:
   void PrintSteps(std::shared_ptr<std::list<CartStep>> measures);
 protected:
   bool OnInitialized() override;
+  std::shared_ptr<TFMiniDriver> Sensor();
+  virtual bool I037BurnCallback(std::shared_ptr<std::list<CartStep>> steps);
+  virtual bool I037TempBurnCallback(std::shared_ptr<std::list<CartStep>> steps);
+  virtual bool AutoIntCheckCallback(std::shared_ptr<std::list<CartStep>> steps);
 signals:
   void I037Burn();
   void I037TempBurn();

@@ -16,6 +16,7 @@ class API TFMiniDriver : public DriverBase
 {
 public:
   TFMiniDriver();
+  virtual ~TFMiniDriver();
   void SetOutputFormat(const TFMiniOutputFormat& format);
   void TriggerIntTimeMeasure(const int& inttime);
   void SetMetricUnit(const bool& mm);
@@ -24,12 +25,12 @@ public:
   void EnterSettingMode();
 protected:
   void LoadAllParsers(std::vector<ReceiveParser>& parsers) override;
+  static QByteArray CommonCommand(const char& id, const char& single);
 private:
   bool ParseDevelModeMeasure(
       const QByteArray &buffer, Message &parsed, int &from, int &to);
   static QByteArray Parse29BytesMessageAtFront(
       const QByteArray &buffer, int &from, int &to);
-  static QByteArray CommonCommand(const char& id, const char& single);
 };
 
 #endif // TFMINI_DRIVER_H
