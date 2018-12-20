@@ -297,3 +297,9 @@ std::shared_ptr<std::list<Message>> DriverBase::GetMeasures() {
   receive_measures_mutex_.unlock();
   return ptr;
 }
+
+void DriverBase::EnqueueSendMessage(const QByteArray &message) {
+  EnqueueCommand([this, message](){
+    return SendMessage(message);
+  });
+}

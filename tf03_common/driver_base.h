@@ -35,6 +35,7 @@ public:
   void SwitchOnMeasureStream(const bool &on);
   std::vector<Message> GetMessages();
   std::shared_ptr<std::list<Message>> GetMeasures();
+  void EnqueueSendMessage(const QByteArray& message);
 
 protected:
   using ReceiveParser =

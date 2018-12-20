@@ -88,6 +88,13 @@ else()
         tf_algorithm_pack.h
         mini_generate_table_8.cpp
         mini_generate_table_8.h
+        rte_cart_server.cpp
+        rte_cart_server.h
+        rte_cart_widget.cpp
+        rte_cart_widget.h
+        rte_cart_widget.ui
+        rte_cart_server_impl.cpp
+        rte_cart_server_impl.h
     )
   endif()
 endif()
@@ -193,19 +200,12 @@ add_library(
       driver_server.h
       mini_rte_cart.cpp
       mini_rte_cart.h
-      rte_cart_server.cpp
-      rte_cart_server.h
-      rte_cart_widget.cpp
-      rte_cart_widget.h
-      rte_cart_widget.ui
       custom_object.cpp
       custom_object.h
       mini_table_burner.cpp
       mini_table_burner.h
       mini_table_burner_base.cpp
       mini_table_burner_base.h
-      rte_cart_server_impl.cpp
-      rte_cart_server_impl.h
       tfmini_driver_impl.cpp
       tfmini_driver_impl.h
       ${MATLAB_TF_ALGORITHM_PACK_SRC}

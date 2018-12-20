@@ -10,9 +10,9 @@ class API MiniTableBurner : public MiniTableBurnerBase
 public:
   MiniTableBurner();
   bool StartBurn(
-      const std::vector<uint16_t>& tab_0,
-      const std::vector<uint16_t>& tab_3,
-      const std::vector<uint16_t>& tab_7);
+      std::vector<uint16_t>& tab_0,
+      std::vector<uint16_t>& tab_3,
+      std::vector<uint16_t>& tab_7);
 };
 
 #endif // MINI_TABLE_BURNER_H

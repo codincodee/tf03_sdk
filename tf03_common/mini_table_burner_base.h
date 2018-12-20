@@ -11,6 +11,9 @@ public:
   void SetDriver(std::shared_ptr<TFMiniDriver> driver);
 protected:
   void EnterSettingMode();
+  static uint8_t DataRegFrom();
+  static uint8_t DataRegEnd();
+  void SendDataFrame(const uint8_t& addr, const QByteArray& data);
   std::shared_ptr<TFMiniDriver> driver;
 };
 
